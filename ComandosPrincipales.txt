@@ -1,0 +1,33 @@
+
+Instalar node.js https://nodejs.org/es
+
+powerShell
+npm install -g npx
+Set-ExecutionPolicy Unrestricted -Scope CurrentUser
+
+-----BACKEND
+npm init -y
+
+npm i express morgan cors
+
+npm i nodemon -D
+
+npm install pg
+
+npm i express body-parser jsonwebtoken cors
+
+npm install dotenv
+
+
+-----FRONTEND
+
+npm install --save axios
+npm install --save react-router-dom
+npm install sonner
+npm i react-data-table-component
+npm i sweetalert
+npm i react-select
+npm install react-icons --save
+npm install sweetalert2
+
+

@@ -1,0 +1,116 @@
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  
+  .form-group label {
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: #333;
+  }
+  
+  .form-group input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 1em;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .checkbox-group label {
+    font-size: 0.9em;
+    color: #555;
+  }
+  
+  .checkbox-group input[type="checkbox"] {
+    margin-right: 3px;
+  }
+  
+  .identification-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .identification-type {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .identification-type label {
+    font-size: 0.9em;
+    color: #555;
+  }
+  
+  .date-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .date-group input[type="text"] {
+    width: 50px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 1em;
+    text-align: center;
+  }
+  
+  .date-group label {
+    font-size: 0.9em;
+    color: #333;
+  }
+  
+  .sex-group,
+  .civil-status-group,
+  .height-group,
+  .weight-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .height-group input[type="text"],
+  .weight-group input[type="text"] {
+    width: 60px;
+  }
+  
+  .table-section {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: #fff;
+  }
+  
+  .table-section h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
