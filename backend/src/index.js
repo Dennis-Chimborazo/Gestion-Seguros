@@ -1,7 +1,7 @@
 const express = require('express');
 const { puerto } = require('./config.js');
 const cors = require('cors');
-const authMiddleware = require("../middlewares/authMiddleware.js")
+const authMiddleware = require("../middlewares/authMiddleware.js");
 const usuariosRoute = require("./routes/usuarios.routes.js");
 const clientesRoute = require("./routes/clientes.routes.js");
 const direccionesRoute = require("./routes/direcciones.routes.js");
@@ -11,12 +11,16 @@ app.use(cors());
 app.use(express.json());
 app.use("/user", usuariosRoute);
 
-//app.use(authMiddleware);
+//app.use(authMiddleware); // (Comentado temporalmente para pruebas)
 app.use("/client", clientesRoute);
 app.use("/direccion", direccionesRoute);
 
+// Exporta la app para SuperTest
+module.exports = app;
 
-
-app.listen(puerto, () => {
-  console.log(`Servidor escuchando en http://localhost:${puerto}`);
-});
+// Solo inicia el servidor si no está en modo prueba
+if (require.main === module) {
+  app.listen(puerto, () => {
+    console.log(`Servidor escuchando en http://localhost:${puerto}`);
+  });
+}
