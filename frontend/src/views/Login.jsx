@@ -28,7 +28,7 @@ export function Login() {
   
   const darValores =(e)=>{
     setFormulario({
-        ...formulario,[e.target.name]:[e.target.value],
+        ...formulario,[e.target.name]:e.target.value,
     });
   }
   return (
