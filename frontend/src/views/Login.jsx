@@ -33,6 +33,7 @@ export function Login() {
   }
   return (
     <div className={styles.container}>
+  <div className={styles.card}>
       <h1 className={styles.title}>Login</h1>
       <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
         <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
@@ -56,6 +57,7 @@ export function Login() {
         />
         <button className={styles.button} onClick={ingresar}>Ingresar</button>
       </form>
+      </div>
     </div>
   );
 }
