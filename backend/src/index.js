@@ -5,6 +5,7 @@ const authMiddleware = require("../middlewares/authMiddleware.js")
 const usuariosRoute = require("./routes/usuarios.routes.js");
 const clientesRoute = require("./routes/clientes.routes.js");
 const direccionesRoute = require("./routes/direcciones.routes.js");
+const seguroRoute = require("./routes/seguros.routes.js");
 
 const app = express();
 app.use(cors());
@@ -14,6 +15,8 @@ app.use("/user", usuariosRoute);
 //app.use(authMiddleware);
 app.use("/client", clientesRoute);
 app.use("/direccion", direccionesRoute);
+app.use("/seguro", seguroRoute);
+
 
 
 

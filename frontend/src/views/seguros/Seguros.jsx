@@ -11,36 +11,29 @@ export function Seguros({ mostrarSeccion }){
     const user = location.state?.user; // accedemos al usuario
     const [clientes, setClientes]= useState ();
     const [filtroCli, setFiltroCli]= useState ();
-/*
+    const [listaSeguros, setListaSeguros]= useState ();
+
 
     useEffect(()=>{
-        const traterClientes=async () => {
-            const dataClientes = await ClientesFun.obtenerCliente(navigate);
-            setFiltroCli(dataClientes.rows);
-            setClientes(dataClientes.rows);
+        const traterSeguros=async () => {
+            const dataSeguro = await SegurosFun.traerSeguros(navigate);
+            setListaSeguros(dataSeguro.rows);
+           // setClientes(dataClientes.rows);
 
         }
-
-        
-        traterClientes();
+        traterSeguros();
        
     },[]);
 
-    const columasClientes=[
-        {name:"Cedula/Pasaporte",selector:row=>row.cedr_cli},
-        {name:"Nombre",selector:row=>row.nom_cli},
-        {name:"Apellido",selector:row=>row.ape_cli},
-        {name:"Telefono",selector:row=>row.tel_pers},   
-        {name:"Celular",selector:row=>row.cel_pers},
-        {name:"Correo",selector:row=>row.email_pers},
-        {
-            name: "Opciones", cell: (row) =>
-            (<div>
-              <FcFinePrint size={25} onClick={()=>EditarCliente(row)}/>
-            </div>
-            ), ignoreRowClick: true
-          },
+
+    const columlistSeguro=[
+        {name:"N. Seguro",selector:row=>row.id_seguro},
+        {name:"Ciudad",selector:row=>row.ciud_seguro},
+        {name:"Mes",selector:row=>row.mes_seguro},
+        {name:"Anio",selector:row=>row.anio_seguro},   
+       
     ];
+/*
 
     const filtrarClientes =(e)=>{
         if (e.target.value!=='') {
@@ -84,7 +77,15 @@ export function Seguros({ mostrarSeccion }){
                         <button onClick={() => mostrarSeccion("Crearseguro")}>Crear</button>
                          <FcClearFilters size={25} />
                          </div>
-                           
+
+                         <DataTable 
+                            pagination
+                            paginationPerPage={20}
+                            columns={columlistSeguro} 
+                            data={listaSeguros}
+                            noDataComponent="No ha selecionado ningun Seguro"
+                            persistTableHead >
+                            </DataTable>
             </form>
             </div>
     );

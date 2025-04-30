@@ -142,4 +142,21 @@ router.put("/desactivar", async (req, res) => {
   }
 });
 
+router.get("/buscar", async (req, res) => {
+  const idCli = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+  try {
+    const query = "SELECT * FROM cliente WHERE cedr_cli = $1";
+    const data = await database.query(query, [idCli]);
+
+    if (data.rows.length === 0) {
+      return res.status(404).json({ message: "Cliente no encontrado" });
+    }
+    res.json(data.rows[0]); // ← Aquí retornas un solo objeto
+  } catch (error) {
+    console.error("Error en consulta:", error);
+    res.status(500).json({ message: "Error al obtener datos", error });
+  }
+});
+
+
 module.exports = router; 
