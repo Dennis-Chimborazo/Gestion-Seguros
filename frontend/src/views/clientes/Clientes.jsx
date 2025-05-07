@@ -2,6 +2,7 @@ import React, {useEffect,useState} from "react";
 import { useNavigate,useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import ClientesFun from "./ClientesFun";
+import styles from '../estilos/cliente.module.css';
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
 
 
@@ -68,28 +69,96 @@ export function Clientes({ mostrarSeccion }){
         mostrarSeccion("EditarCliente");
 
     }
+    const customStyles = {
+        header: {
+          style: {
+            minHeight: '56px',
+            fontSize: '15px',
+            fontWeight: 'bold',
+            color: '#ffffff',
+            backgroundColor: '#0077b6',
+            
+          },
+        },
+        headRow: {
+          style: {
+            backgroundColor: '#0077b6',
+            borderTop: '1px solid #dddddd',
+      
+          },
+        },
+        headCells: {
+            style: {
+              fontSize: '14px',
+              fontWeight: '600',
+              textTransform: 'capitalize',
+              paddingLeft: '8px',
+              paddingRight: '8px',
+              color: '#ffffff',
+            },
+          },
+        rows: {
+          style: {
+            backgroundColor: '#ffffff',
+            '&:nth-of-type(even)': {
+              backgroundColor: '#f9f9f9', // Color alternativo para filas pares
+            },
+            '&:hover': {
+              backgroundColor: '#ffe3e3', // Color al pasar el cursor
+            },
+          },
+        },
+        cells: {
+          style: {
+            paddingLeft: '8px',
+            paddingRight: '8px',
+          },
+        },
+        pagination: {
+          style: {
+            borderTop: '1px solid #dddddd',
+            backgroundColor: '#ffffff',
+            padding: '8px',
+          },
+          
+        },
+      };
 
-    return(
-        <div>
-            <form action="" method="get">
-               <h2>Clientes </h2>
-                    <div>
-                        <label htmlFor=""> Buscar</label>
-                        <input type="text" id="buscar" name="buscar" placeholder="Ingrese numero de cedula" onChange={filtrarClientes} />
-                        <label htmlFor=""> Nuevo cliente </label>
-                        <button onClick={() => mostrarSeccion("crearClientes")} >Crear</button>
-                         <FcClearFilters size={25}  onClick={borrarFiltro}/>
-                         </div>
-                            <DataTable 
-                            pagination
-                            paginationPerPage={20}
-                            columns={columasClientes} 
-                            data={filtroCli}
-                            noDataComponent="No ha selecionado ninguna actividad"
-                            persistTableHead >
-                            </DataTable>
-            </form>
+    return (
+        <div className={styles.container}>
+          <h2>Clientes</h2>
+          <form className={styles["form-row"]} onSubmit={(e) => e.preventDefault()}>
+            <div className={styles["form-group"]}>
+              <label htmlFor="buscar">Buscar</label>
+              <input
+                type="text"
+                id="buscar"
+                name="buscar"
+                placeholder="Ingrese número de cédula"
+                onChange={filtrarClientes}
+              />
             </div>
-    );
-}
+    
+           
+            <FcClearFilters size={25} onClick={borrarFiltro} style={{ cursor: "pointer", marginTop: "30px" }} />
+          </form>
+          <div className={styles["form-group"]}>
+              <button type="button" onClick={() => mostrarSeccion("crearClientes")}>Crear</button>
+            </div>
+    
+          <div className={styles["table-section"]}>
+            <DataTable
+              pagination
+              paginationPerPage={20}
+              columns={columasClientes}
+              data={filtroCli}
+              noDataComponent="No ha seleccionado ninguna actividad"
+          customStyles={customStyles}
+              persistTableHead
+
+            />
+          </div>
+        </div>
+      );
+    }
 export default Clientes;
