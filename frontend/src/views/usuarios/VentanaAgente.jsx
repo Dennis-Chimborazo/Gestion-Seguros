@@ -1,40 +1,57 @@
-import React, {useEffect} from "react";
-import { useNavigate,useLocation } from "react-router-dom";
+
+
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import ApiService from "../../services/ApiService";
+import styles from "../estilos/VentanaAdmin.module.css";
+import CrearClientes from "../clientes/CrearClientes";
+import Clientes from "../clientes/Clientes";
+import EditarClientes from "../clientes/EditarClientes";
 
+export function VentanaAgente() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const user = location.state?.user;
+  const [seccionActiva, setSeccionActiva] = useState("inicio");
 
-export function VentanaAgente(){
-    const navigate= useNavigate();
-    const location = useLocation();
-    const user = location.state?.user; // accedemos al usuario
-useEffect(()=>{
-    console.log("Ventana principal: "+user.rol)
-    
-   },[]);  
+  useEffect(() => {
+    console.log("Ventana principal: " + user?.nom_rol);
+  }, [user]);
 
-   const cerrarSesion = () => {
-    localStorage.setItem("login","");
-    navigate("/", { state: { user: "" } }); 
+  const cerrarSesion = () => {
+    localStorage.setItem("login", "");
+    navigate("/", { state: { user: "" } });
   };
 
- const valores =async(e)=>{
+  const mostrarSeccion = (nombre) => {
+    setSeccionActiva(nombre);
+  };
+
+  const valores = async (e) => {
     e.preventDefault();
-    const val= await ApiService.traerDatos("client/clientes",navigate);
-    //console.log(val);
- }
-    return(
-        <div>
-            <form action="" method="get">
-                <h2>Bienvenido {user?.rol}</h2>
-                <ul>
-                <li><a href="#">Clientes</a></li>
-                    <li><a href="#">Gestión de contratación</a></li>
-                    <li><a href="#">Reembolso</a></li>
-                    <li><a href="#">Reportes</a></li>
-                     <li><a href="#" onClick={cerrarSesion}>Cerrar sesión</a></li>
-                </ul>
-            </form>
-            </div>
-    );
+    const val = await ApiService.traerDatos("client/clientes", navigate);
+    console.log(val);
+  };
+
+  return (
+    <div className={styles.container}>
+      <h2>Bienvenido {user?.nom_rol}</h2>
+      <ul className={styles.menu}>
+      <li><a onClick={() => mostrarSeccion("clientes")}>Clientes</a></li>
+        <li><a onClick={() => mostrarSeccion("gestion")}>Gestión de contratación</a></li>
+        <li><a onClick={() => mostrarSeccion("reembolso")}>Reembolso</a></li>
+        <li><a onClick={() => mostrarSeccion("reportes")}>Reportes</a></li>
+        <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
+      </ul>
+
+      <section className={styles.section}>
+      {seccionActiva === "clientes" && <Clientes mostrarSeccion={mostrarSeccion}/>}
+        {seccionActiva === "crearClientes" && <CrearClientes mostrarSeccion={mostrarSeccion}/>}
+        {seccionActiva === "EditarCliente" && <EditarClientes mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "reportes" && <p>Sección de reportes</p>}
+        {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
+      </section>
+    </div>
+  );
 }
 export default VentanaAgente;

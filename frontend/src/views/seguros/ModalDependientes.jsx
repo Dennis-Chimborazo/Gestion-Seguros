@@ -2,10 +2,12 @@ import React ,{useState} from "react";
 import {Toaster,toast} from "sonner";
 
 
-export function ModalDependientes({ cerrarModal }) {
+export function ModalDependientes({ cerrarModal,setListDependientes }) {
+
        const [formulario,setFormulario]=useState({cedr_depen:'',tipo_cedr_depen:'',nacion_depen:'',
             nom_depen:'',ape_depen:'',fecha_naci_depen:'',lugar_naci_depen:'',edad_depen:'',
-            sexo_depen:'',peso_depen:'',parent_depen:'',parent_depen:''});
+            sexo_depen:'',peso_depen:'',parent_depen:'',estatura_depen:'',discapci:'',diagnos:'',
+            fecha_ini:'',fecha_fin:'',boolDis:'',boolCond:''});
         const [tipoIdentificacion, setTipoIdentificacion] = useState('');
 
         const agregarClaveFormulario  =(e)=>{
@@ -44,14 +46,46 @@ export function ModalDependientes({ cerrarModal }) {
     
         };
 
-        const guardarDependiente=()=>{
-            console.log(formulario)
-            localStorage.setItem("dependiente", JSON.stringify({
-                edidependientet: true,
-                depen: formulario
-              }));
-              cerrarModal();
-        }
+       const valorCondicion=(e)=>{
+        const valor = e.target.value.trim();
+        const boolDis = valor === "" ? "no" : "si";
+      
+        setFormulario({
+          ...formulario,
+          diagnos: valor,
+          boolCond: boolDis
+        });
+       }
+
+       const valorDiscapacidad=(e)=>{
+        const valor = e.target.value.trim();
+        const boolDis = valor === "" ? "no" : "si";
+      
+        setFormulario({
+          ...formulario,
+          discapci: valor,
+          boolDis: boolDis
+        });
+        
+       }
+       
+       const guardarDependiente = () => {
+        const discapci = formulario.discapci?.trim() || '';
+        const diagnos = formulario.diagnos?.trim() || '';
+      
+        const boolDis = discapci !== '' ? 'si' : 'no';
+        const boolCond = diagnos !== '' ? 'si' : 'no';
+      
+        const nuevoFormulario = {
+          ...formulario,
+          boolDis,
+          boolCond
+        };
+      
+        setListDependientes(prev => [...prev, nuevoFormulario]);
+        cerrarModal();
+      };
+      
   return (
     <form>
       <h3>Dependiente 2</h3>
@@ -108,7 +142,7 @@ export function ModalDependientes({ cerrarModal }) {
       {/* Estatura y peso */}
       <div>
         <label>Estatura</label>
-        <input type="text"  name="" id="" onChange={agregarClaveFormulario} />
+        <input type="text"  name="estatura_depen" id="estatura_depen" onChange={agregarClaveFormulario} />
         <label>cm</label>
       </div>
 
@@ -120,8 +154,21 @@ export function ModalDependientes({ cerrarModal }) {
         <input type="checkbox" id="kg" name="kg"  onChange={chechkTipoPeso} />
         <label htmlFor="pesoKg">kg</label>
       </div>
-
-      {/* Botones */}
+      <div>
+            <h2>Discapacidad</h2>
+            <label htmlFor="">Favor detallar los diagnósticos que causaron la discapacidad</label>
+            <input type="text" name="discapci" id="discapci" onChange={valorDiscapacidad}/>
+          </div>
+          <div>
+            <h2>Condiciones medicas</h2>
+            <label htmlFor="">Diagnóstico</label>
+            <input type="text" name="diagnos" id="diagnos" onChange={valorCondicion}/>
+            <label htmlFor=""> fecha desde </label>
+            <input type="text" name="fecha_ini" id="fecha_ini" onChange={agregarClaveFormulario}/>
+            <label htmlFor="">Fecha hasta</label>
+            <input type="text" name="fecha_fin" id="fecha_fin" onChange={agregarClaveFormulario}/>
+          </div>
+        
       <div>
         <button type="button" onClick={cerrarModal}>Cerrar</button>
         <button type="button" onClick={guardarDependiente}>Guardar</button>

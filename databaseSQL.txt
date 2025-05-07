@@ -80,19 +80,71 @@ CREATE TABLE roles_usuarios (
   FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );
 
-CREATE TABLE discapacidad ();
-CREATE TABLE datos_facturacion ();
 
 
-
-CREATE TABLE seguros (
-  id_seguros SERIAL PRIMARY KEY,
-  nom_rol VARCHAR(20) NOT NULL,
-  cliente INTEGER,
-  FOREIGN KEY (cliente) REFERENCES cliente(cliente)
+CREATE TABLE dat_agencia (
+  id_dat_agencia SERIAL PRIMARY KEY,
+  nom_trabj_dat_agencia VARCHAR(100) NOT NULL,
+  nom_agencia_dat_agencia VARCHAR(100) NOT NULL,
+  email_dat_agencia VARCHAR(100) NOT NULL,
+  firma_dat_agencia VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Dependientes (
+
+  CREATE TABLE excl_empresa (
+    id_excl_empresa SERIAL PRIMARY KEY,
+    ciud_excl_empresa VARCHAR(100) NOT NULL,
+    dia_excl_empresa VARCHAR(100) NOT NULL,
+    mes_excl_empresa VARCHAR(100) NOT NULL,
+    anio_excl_empresa VARCHAR(100) NOT NULL,
+    firma_excl_empresa VARCHAR(100) NOT NULL,
+    nombre_excl_empresa VARCHAR(100) NOT NULL,
+    cargo_excl_empresa VARCHAR(100) NOT NULL
+  
+  );
+
+CREATE TABLE persona_fac (
+  id_pers_fac SERIAL PRIMARY KEY,
+  cedr_pers_fac VARCHAR(15) NOT NULL,
+  razon_pers_fac VARCHAR(15) NOT NULL,
+  tipo_pers_fac VARCHAR(20) NOT NULL,
+  nacion_pers_fac VARCHAR(30) NOT NULL,
+  nom_pers_fac VARCHAR(100) NOT NULL,
+  ape_pers_fac VARCHAR(100) NOT NULL,
+  tel_pers_fac VARCHAR(10),
+  cel_pers_fac VARCHAR(10),
+  email_pers_fac VARCHAR(100) NOT NULL,
+  direc_pers_fac VARCHAR(20) NOT NULL,
+  parent_pers_fac VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE cuenta_banco (
+  id_cuent_Ban SERIAL PRIMARY KEY,
+  tipo_cuent_Ban VARCHAR(50) NOT NULL,
+  nom_cuent_Ban VARCHAR(50) NOT NULL,
+  mun_cuent_Ban VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE seguros (
+  id_seguro SERIAL PRIMARY KEY,
+  ciud_seguro VARCHAR(100) NOT NULL,
+  dia_seguro VARCHAR(100) NOT NULL,
+  mes_seguro VARCHAR(100) NOT NULL,
+  anio_seguro VARCHAR(100) NOT NULL,
+  firma_seguro VARCHAR(100) NOT NULL,
+  id_pers INTEGER,
+  id_dat_agencia INTEGER,
+  id_excl_empresa INTEGER,
+  id_pers_fac INTEGER,
+  id_cuent_Ban INTEGER,
+  FOREIGN KEY (id_pers) REFERENCES cliente(id_pers)
+  FOREIGN KEY (id_dat_agencia) REFERENCES dat_agencia(id_dat_agencia)
+  FOREIGN KEY (id_excl_empresa) REFERENCES excl_empresa(id_excl_empresa)
+  FOREIGN KEY (id_pers_fac) REFERENCES persona_fac(id_pers_fac)
+  FOREIGN KEY (id_cuent_Ban) REFERENCES cuenta_banco(id_cuent_Ban)
+);
+
+CREATE TABLE dependientes (
   id_depen SERIAL PRIMARY KEY,
   cedr_depen VARCHAR(15) NOT NULL,
   tipo_cedr_depen VARCHAR(20) NOT NULL,
@@ -104,18 +156,48 @@ CREATE TABLE Dependientes (
   edad_depen VARCHAR(20) NOT NULL,
   sexo_depen VARCHAR(20) NOT NULL,
   peso_depen VARCHAR(20) NOT NULL,
+  estatura_depen VARCHAR(20) NOT NULL,
   parent_depen VARCHAR(70) NOT NULL,
   discap_depen VARCHAR(70) NOT NULL,
-  id_pers INTEGER,
-  FOREIGN KEY (id_pers) REFERENCES persona(id_pers)
+  id_seguro INTEGER,
+  FOREIGN KEY (id_seguro) REFERENCES seguros(id_seguro)
+);
+
+CREATE TABLE salud (
+  id_salud SERIAL PRIMARY KEY,
+  discapci_salud VARCHAR(150) NOT NULL,
+  diagnos_salud VARCHAR(150) NOT NULL,
+  fecha_ini_salud VARCHAR(50) NOT NULL
+ fecha_fin_salud VARCHAR(50) NOT NULL,
 );
 
 
-CREATE TABLE cuenta_banco (
-  id_cuent_Ban SERIAL PRIMARY KEY,
-  tipo_cuent_Ban VARCHAR(50) NOT NULL,
-  nom_cuent_Ban VARCHAR(50) NOT NULL,
-  mun_cuent_Ban VARCHAR(50) NOT NULL,
-  id_pers INTEGER,
-  FOREIGN KEY (id_pers) REFERENCES persona(id_pers)
+CREATE TABLE categoria (
+  id_categoria SERIAL PRIMARY KEY,
+  nom_categoria VARCHAR(450) NOT NULL,
+);
+
+
+CREATE TABLE beneficios (
+  id_beneficios SERIAL PRIMARY KEY,
+  nom_beneficios VARCHAR(450) NOT NULL,
+  id_categoria INTEGER,
+  FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
+);
+
+CREATE TABLE tipo_seguro (
+  id_tip_seg SERIAL PRIMARY KEY,
+  nom_tip_seg VARCHAR(450) NOT NULL,
+  descrip_tip_seg VARCHAR(450) NOT NULL,
+  pago_tip_seg VARCHAR(450) NOT NULL,
+  suma_tip_seg VARCHAR(450) NOT NULL,
+  id_estado INTEGER,
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
+
+CREATE TABLE seguro_bedeficio (
+  id_tip_seg INTEGER,
+  id_beneficios INTEGER,
+  FOREIGN KEY (id_tip_seg) REFERENCES tipo_seguro(id_tip_seg),
+  FOREIGN KEY (id_beneficios) REFERENCES beneficios(id_beneficios)
 );

@@ -19,6 +19,9 @@ export function Clientes({ mostrarSeccion }){
             const dataClientes = await ClientesFun.obtenerCliente(navigate);
             setFiltroCli(dataClientes.rows);
             setClientes(dataClientes.rows);
+            console.log("---------------")
+            console.log(dataClientes.rows)
+            console.log("---------------")
 
         }
 
@@ -43,12 +46,15 @@ export function Clientes({ mostrarSeccion }){
           },
     ];
 
-    const filtrarClientes =(e)=>{
-        if (e.target.value!=='') {
-            const filtro = clientes.filter((a)=>a.cedr_cli.startsWith(e.target.value));
-            setFiltroCli(filtro)
+    const filtrarClientes = (e) => {
+        if (e.target.value !== '') {
+            const filtro = clientes.filter((a) => 
+                a.cedr_cli && a.cedr_cli.startsWith(e.target.value)
+            );
+            setFiltroCli(filtro);
         }
-    }
+    };
+    
 
     const borrarFiltro=()=>{
         setFiltroCli(clientes);

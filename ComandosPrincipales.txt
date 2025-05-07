@@ -18,6 +18,9 @@ npm i express body-parser jsonwebtoken cors
 
 npm install dotenv
 
+npm install cors
+
+
 
 -----FRONTEND
 
