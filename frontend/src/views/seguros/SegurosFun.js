@@ -2,40 +2,39 @@ import ApiService from "../../services/ApiService";
 
 class SegurosFun {
 
-    static async traerPaises(navigate){
-       const response =  await ApiService.traerDatos("direccion/pais",navigate);
-       return response;
-    }
-    static async traerProvincias(id,navigate){
-       const response =  await ApiService.buscarDatos("direccion/provincia",id,navigate);
-       return response;
-    }
-    static async traerCiudades(id,navigate){
-       const response =  await ApiService.buscarDatos("direccion/ciudad",id,navigate);
-       return response;
-    }
-    static async guardarCliente(formulario,navigate){
-      const response =  await ApiService.enviarDatos("client/save",formulario,navigate);
-      return response;
-   }
-   static async obtenerCliente(navigate){
-      const response =  await ApiService.traerDatos("client/listar",navigate);
-      return response;
-   }
-   static async buscarDireccionCliente(id,navigate){
-      const response =  await ApiService.buscarDatos("direccion/client",id,navigate);
+
+
+   static async traerSeguros(navigate){
+      const response =  await ApiService.traerDatos("seguro/listar",navigate);
       return response;
    }
 
-   static async actualizarCliente(formulario,navigate){
-      const response =  await ApiService.actualizarDatos("client/update",formulario,navigate);
+   static async buscarCliente(id,navigate){
+      const response =  await ApiService.buscarDatos("client/buscar",id,navigate);
+      return response.data;
+   }
+
+   static async guardarSeguro(formulario,navigate){
+      const response =  await ApiService.enviarDatos("seguro/saveSeguro",formulario,navigate);
       return response;
    }
 
-   static async actualizarEstadoCliente(formulario,navigate){
-      const response =  await ApiService.actualizarDatos("client/desactivar",formulario,navigate);
+   static async guardarAgencia(formulario,navigate){
+      const response =  await ApiService.enviarDatos("seguro/agencia/save",formulario,navigate);
       return response;
    }
-   
+   static async guardarExclusivoEmpresa(formulario,navigate){
+      const response =  await ApiService.enviarDatos("seguro/exclisivempresa/save",formulario,navigate);
+      return response;
+   }
+   static async guardarPersonaFact(formulario,navigate){
+      const response =  await ApiService.enviarDatos("seguro/personafac/save",formulario,navigate);
+      return response;
+   }
+   static async guardarCuentaBanco(formulario,navigate){
+      const response =  await ApiService.enviarDatos("seguro/cuentabanco/save",formulario,navigate);
+      return response;
+   }
+
 }
     export default SegurosFun;
