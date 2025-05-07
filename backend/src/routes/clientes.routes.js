@@ -7,17 +7,13 @@ const database = db.getConexion();
 
 router.get("/listar", async (req, res) => {
   try {
-    const query = `SELECT * FROM cliente WHERE id_estado = $1`;
-    const id_estado = '1'; // o un número si corresponde
-    const data = await database.query(query, [id_estado]);
-  
+    const data = await database.query("SELECT * FROM cliente");
     res.json(data);
   } catch (error) {
-    console.error("Error en consulta:", error);
     res.status(500).json({ message: "Error al obtener datos", error });
   }
-  
 });
+
 
 router.post("/save", async (req, res) => {
   const formulario = req.body;  

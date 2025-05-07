@@ -170,3 +170,34 @@ CREATE TABLE salud (
   fecha_ini_salud VARCHAR(50) NOT NULL
  fecha_fin_salud VARCHAR(50) NOT NULL,
 );
+
+
+CREATE TABLE categoria (
+  id_categoria SERIAL PRIMARY KEY,
+  nom_categoria VARCHAR(450) NOT NULL,
+);
+
+
+CREATE TABLE beneficios (
+  id_beneficios SERIAL PRIMARY KEY,
+  nom_beneficios VARCHAR(450) NOT NULL,
+  id_categoria INTEGER,
+  FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
+);
+
+CREATE TABLE tipo_seguro (
+  id_tip_seg SERIAL PRIMARY KEY,
+  nom_tip_seg VARCHAR(450) NOT NULL,
+  descrip_tip_seg VARCHAR(450) NOT NULL,
+  pago_tip_seg VARCHAR(450) NOT NULL,
+  suma_tip_seg VARCHAR(450) NOT NULL,
+  id_estado INTEGER,
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
+
+CREATE TABLE seguro_bedeficio (
+  id_tip_seg INTEGER,
+  id_beneficios INTEGER,
+  FOREIGN KEY (id_tip_seg) REFERENCES tipo_seguro(id_tip_seg),
+  FOREIGN KEY (id_beneficios) REFERENCES beneficios(id_beneficios)
+);
