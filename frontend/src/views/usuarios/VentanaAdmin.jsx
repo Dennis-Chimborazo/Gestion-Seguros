@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ApiService from "../../services/ApiService";
 import styles from "../estilos/VentanaAdmin.module.css";
-import CrearClientes from "../clientes/CrearClientes";
-import Clientes from "../clientes/Clientes";
-import EditarClientes from "../clientes/EditarClientes";
-import Seguros from "../seguros/Seguros";
-import CrearSeguro from "../seguros/CrearSeguro";
-import SegurosAdmin from "../segurosAdmin/SegurosAdmin";
-import CrearSeguroAdmin from "../segurosAdmin/CrearSeguroAdmin";
+import CrearClientes from "../clientes/CrearClientes.jsx";
+import Clientes from "../clientes/Clientes.jsx";
+import EditarClientes from "../clientes/EditarClientes.jsx";
+import Seguros from "../seguros/Seguros.jsx";
+import CrearSeguro from "../seguros/CrearSeguro.jsx";
+import SegurosAdmin from "../segurosAdmin/SegurosAdmin.jsx";
+import CrearSeguroAdmin from "../segurosAdmin/CrearSeguroAdmin.jsx";
 
 export function VentanaAdmin() {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React, {useEffect,useState} from "react";
 import { useNavigate,useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import ClientesFun from "./ClientesFun";
+import ClientesFun from "./ClientesFun.js";
 import styles from '../estilos/cliente.module.css';
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
 
