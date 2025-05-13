@@ -12,29 +12,31 @@
 
 .form-row {
   display: flex;
-  gap: 20px;
-  align-items: center;
+  align-items: center; /* Alinea verticalmente */
+  gap: 10px;           /* Espacio entre el input y el ícono */
+  margin-bottom: 15px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-}
-
-.form-group label {
-  margin-bottom: 5px;
-  font-size: 0.9em;
-  color: #333;
 }
 
 .form-group input[type="text"] {
   padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 3px;
-  font-size: 1em;
-  background-color: #ffffff;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 1000px; /* Aumenta el ancho del input */
+  max-width: 100%;
+  margin-top: 10px;
 }
+
+.icon {
+  cursor: pointer;
+  margin-top: 20px; /* Opcional: ajusta verticalmente si se ve descentrado */
+}
+
 
 /* Botón personalizado */
 .form-group button {

@@ -11,6 +11,7 @@ import SegurosAdmin from "../segurosAdmin/SegurosAdmin";
 import CrearSeguroAdmin from "../segurosAdmin/CrearSeguroAdmin";
 import EditarSeguroAdmin from "../segurosAdmin/EditarSeguroAdmin";
 
+
 export function VentanaAdmin() {
   const navigate = useNavigate();
   const location = useLocation();
