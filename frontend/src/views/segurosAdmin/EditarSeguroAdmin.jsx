@@ -132,7 +132,8 @@ export function EditarSeguroAdmin({ mostrarSeccion }){
             }).then(async(respuesta)=>{
                 if (respuesta.isConfirmed) {
                     if (cambiosFormulario) {
-                        const api = await SegurosAdminFun.actualizarTipoSeguro(formulario,navigate)
+                        try {
+                            const api = await SegurosAdminFun.actualizarTipoSeguro(formulario,navigate)
                         swal.fire({
                                 title:"<label>Exito</label>",
                                 text:"Se ha aplicado los cambios correctamente",
@@ -143,7 +144,13 @@ export function EditarSeguroAdmin({ mostrarSeccion }){
                             guardarBeneficios(formulario.id_tip_seg )
                         }
                             mostrarSeccion("segurosAdmin")
-
+                            
+                        } catch (error) {
+                             swal.fire({
+                                title:"<label>Advertencia</label>",
+                                text:"El nombre ya se encuentra registrado",
+                                timer:3500,})
+                        }
                         }else{
                             const data={ id: formulario.id_tip_seg }
                             const api= await SegurosAdminFun.borrarBeneficios(data,navigate)
@@ -197,7 +204,7 @@ const actualzarEstado = async(e)=>{
             <form action="" method="">
         <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
 
-               <h2>Nuevo Seguro</h2>
+               <h2>Editar Seguro</h2>
                 <div>
                     <div> <button onClick={actualzarEstado}> Desactivar Seguro</button></div>
 
@@ -232,7 +239,7 @@ const actualzarEstado = async(e)=>{
                 </div>
 
                 <div>
-                  <button onClick={guardarTipoSeguro}>Guardar</button>
+                  <button onClick={guardarTipoSeguro}>Editar</button>
                   <button>cancelar </button>
                 </div>
 

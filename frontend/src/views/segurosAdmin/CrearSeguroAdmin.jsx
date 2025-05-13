@@ -73,16 +73,21 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
 
       if (listbeneficios.length==0) {
       toast.error("Debe seleccionar minimo un beneficio ⚠️");
-        
       }else{
-        const res= await SegurosAdminFun.guardarTipoSeguro(formulario,navigate);
-        guardarBeneficios(res.data.id_tip_seg);
-        swal.fire({
-                                title:"<label>Exito</label>",
-                                text:"Nuevo Tipo de seguro creado",
-                                timer:3500,
-                            })
+        try {
+            const res = await SegurosAdminFun.guardarTipoSeguro(formulario, navigate);
+            guardarBeneficios(res.data.id_tip_seg);
+            swal.fire({
+                    title:"<label>Exito</label>",
+                    text:"Nuevo Seguro creado",
+                    timer:3500,})
                     mostrarSeccion("segurosAdmin")
+          } catch (error) {
+             swal.fire({
+                    title:"<label>Advertencia</label>",
+                    text:"Este seguro ya existe",
+                    timer:3500,})
+          }
       }
     }else{
       toast.error("Faltan campos por llenar ⚠️");

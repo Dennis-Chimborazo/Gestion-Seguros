@@ -18,10 +18,6 @@ export function Clientes({ mostrarSeccion }){
             const dataClientes = await ClientesFun.obtenerCliente(navigate);
             setFiltroCli(dataClientes.rows);
             setClientes(dataClientes.rows);
-            console.log("---------------")
-            console.log(dataClientes.rows)
-            console.log("---------------")
-
         }
 
         
