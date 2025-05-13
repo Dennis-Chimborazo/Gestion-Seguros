@@ -75,14 +75,16 @@ class ApiService {
   }
 
   static async borrarDatos(deleteApi, form) {
-      const response = await axios.delete(apiUrl + `${deleteApi}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: form, 
-      });
-      return response.data;
-  }
+  const response = await axios.delete(apiUrl + `${deleteApi}`, {
+    data: form,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return response;
+}
+
 
   static async login(form) {
     const response = await axios.post(

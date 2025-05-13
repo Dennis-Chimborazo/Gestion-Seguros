@@ -9,6 +9,7 @@ import Seguros from "../seguros/Seguros";
 import CrearSeguro from "../seguros/CrearSeguro";
 import SegurosAdmin from "../segurosAdmin/SegurosAdmin";
 import CrearSeguroAdmin from "../segurosAdmin/CrearSeguroAdmin";
+import EditarSeguroAdmin from "../segurosAdmin/EditarSeguroAdmin";
 
 export function VentanaAdmin() {
   const navigate = useNavigate();
@@ -55,6 +56,8 @@ export function VentanaAdmin() {
         {seccionActiva === "Crearseguro" && <CrearSeguro mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "segurosAdmin" && <SegurosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "CrearSeguroAdmin" && <CrearSeguroAdmin mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "EditarSeguroAdmin" && <EditarSeguroAdmin mostrarSeccion={mostrarSeccion} />}
+
 
         
         {seccionActiva === "reportes" && <p>Sección de reportes</p>}

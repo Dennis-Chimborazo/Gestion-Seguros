@@ -59,8 +59,6 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
         });
       };
       
-      
-
     const cargarBeneficios=async(val)=>{
         let apiBeneficio= await SegurosAdminFun.beneficios(val.value,navigate);
        setBeneficios(apiBeneficio);
