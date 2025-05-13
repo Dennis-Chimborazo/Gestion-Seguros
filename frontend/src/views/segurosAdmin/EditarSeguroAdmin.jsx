@@ -129,7 +129,7 @@ export function EditarSeguroAdmin({ mostrarSeccion }){
                 showDenyButton:true,
                 denyButtonText:"No",
                 confirmButtonText:"Si"
-            }).then(async(respuesta)=>{
+             }).then(async(respuesta)=>{
                 if (respuesta.isConfirmed) {
                     if (cambiosFormulario) {
                         try {
@@ -198,6 +198,20 @@ const actualzarEstado = async(e)=>{
                 }
         });
 }
+const cancelarOperacion = (e)=>{
+      e.preventDefault()
+        swal.fire({
+                title:"<label>Confirmacion</label>",
+                text:"Seguro desea cancelar ",
+                showDenyButton:true,
+                denyButtonText:"No",
+                confirmButtonText:"Si"
+            }).then(async(respuesta)=>{
+                if (respuesta.isConfirmed) {
+                    mostrarSeccion("segurosAdmin")
+                }
+            });
+    }
 
     return(
         <div>
@@ -240,7 +254,7 @@ const actualzarEstado = async(e)=>{
 
                 <div>
                   <button onClick={guardarTipoSeguro}>Editar</button>
-                  <button>cancelar </button>
+                  <button onClick={cancelarOperacion}>cancelar </button>
                 </div>
 
                 </div>

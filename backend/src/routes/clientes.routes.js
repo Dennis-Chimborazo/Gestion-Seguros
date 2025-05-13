@@ -19,6 +19,13 @@ router.post("/save", async (req, res) => {
   const formulario = req.body;  
   const estado='1';
   try {
+     const existe = await database.query(`
+      SELECT 1 FROM cliente WHERE cedr_cli = $1;
+    `, [formulario.cedr_cli]);
+
+    if (existe.rowCount > 0) {
+      return res.status(400).json({ message: "El nombre del tipo de seguro ya existe" });
+    }
     const data = await database.query(`
       INSERT INTO cliente (
         cedr_cli, tipo_cedr_cli, nacion_cli, nom_cli, ape_cli, fecha_naci_cli, 
@@ -63,7 +70,6 @@ router.post("/save", async (req, res) => {
 
 router.put("/update", async (req, res) => {
   const formulario = req.body;
-  console.log(formulario);
   try {
     const data = await database.query(`
       UPDATE cliente SET

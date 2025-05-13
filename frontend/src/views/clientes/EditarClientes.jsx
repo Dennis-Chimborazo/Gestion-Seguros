@@ -231,10 +231,11 @@ export function EditarClientes({ mostrarSeccion }){
 
     const guardarCliente = async()=>{
         const verf=verificacionCambios();
-          if (!verf) {
+        if (!verf) {
             toast.error("No se ha realizado  ningun cambio");
-          } else {
-            swal.fire({
+        } else {
+            if (Object.values(formulario).every(valor => valor !== '')) {
+                swal.fire({
                 title:"<label>Confirmacion</label>",
                 text:"Desea aplicar los cambios",
                 showDenyButton:true,
@@ -243,16 +244,19 @@ export function EditarClientes({ mostrarSeccion }){
             }).then(async(respuesta)=>{
                 if (respuesta.isConfirmed) {
                     const res= await ClientesFun.actualizarCliente(formulario,navigate);
-                     swal.fire({
+                    if (res) {
+                        swal.fire({
                                 title:"<label>Exito</label>",
                                 text:"Informacion del cliente acrualizada",
-                                timer:3500,
-                            })
+                                timer:3500})
                     mostrarSeccion("clientes")
+                    }
                 }
             });
+              } else {
+                 toast.error("Faltan campos por llenar ⚠️");
+              } 
           }
-
     }
 
     const verificacionCambios = () => {
@@ -326,7 +330,7 @@ export function EditarClientes({ mostrarSeccion }){
                 <div className={styles.formGroup}>
                     <label htmlFor="">Número de Identificación </label>
                     <input type="text" name="cedr_cli" id="cedr_cli" placeholder="Ingrese ID"
-                     onChange={(e)=>{agregarClaveFormulario(e); setCedr_cli(e.target.value)}} value={cedr_cli}/>
+                     onChange={(e)=>{agregarClaveFormulario(e); }} value={cedr_cli}/>
                 </div>
             </div>
             <div className={styles.formRow}>
