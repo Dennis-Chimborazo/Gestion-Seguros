@@ -26,7 +26,22 @@ class SegurosAdminFun {
       const response =  await ApiService.enviarDatos("tiposeguro/savebeneficios",formulario,navigate);
       return response;
    }
-  
+    static async SeguroBeneficios(id,navigate){
+      const response =  await ApiService.buscarDatos("tiposeguro/seguroBeneficio",id,navigate);
+      return response;
+   }
+    static async actualizarTipoSeguro(formulario,navigate){
+      const response =  await ApiService.actualizarDatos("tiposeguro/updateSeguro",formulario,navigate);
+      return response;
+   }
+   static async borrarBeneficios(id,navigate){
+      const response =  await ApiService.borrarDatos("tiposeguro/deleteBeneficios",id,navigate);
+      return response;
+   }
+    static async actualizarEstado(formulario,navigate){
+      const response =  await ApiService.actualizarDatos("tiposeguro/desactivar",formulario,navigate);
+      return response;
+   }
   
 }
     export default SegurosAdminFun;

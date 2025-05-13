@@ -19,18 +19,34 @@ export function SegurosAdmin({ mostrarSeccion }) {
             const dataSeguro = await SegurosAdminFun.traerTiposSeguros(navigate);
             setListaSeguros(dataSeguro.rows);
             setFiltroSeguros(dataSeguro.rows);
+            console.log(dataSeguro);
         }
         traterTipoSeguros();
 
     }, []);
 
 
-    const columlistSeguro = [
-        { name: "Nombre ", selector: row => row.nom_tip_seg },
-        { name: "Descripcion", selector: row => row.descrip_tip_seg },
-        { name: "Pago mesual", selector: row => row.pago_tip_seg },
-    ];
+    const columlistSeguro=[
+        {name:"Nombre ",selector:row=>row.nom_tip_seg},
+        {name:"Descripcion",selector:row=>row.descrip_tip_seg},
+        {name:"Pago mesual",selector:row=>row.pago_tip_seg},
+         {
+                    name: "Opciones", cell: (row) =>
+                    (<div>
+                      <FcFinePrint size={25} onClick={()=>editarSeguro(row)}/>
+                    </div>
+                    ), ignoreRowClick: true
+                  },
 
+    ];
+    const editarSeguro =(row)=>{
+          localStorage.setItem("editSeguro", JSON.stringify({
+            edit: true,
+            seguro: row
+          }));
+          
+        mostrarSeccion("EditarSeguroAdmin");
+    }
     const filtrarClientes = (e) => {
         if (e.target.value !== '') {
             const filtro = listaSeguros.filter((a) =>
