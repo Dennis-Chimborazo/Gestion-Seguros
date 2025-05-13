@@ -49,45 +49,79 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
         },
       ];
 
-      const selecionBeneficio = (e, row) => {
-        setListBeneficios(prev => {
-          const exists = prev.some(item => item.id_beneficios === row.id_beneficios);
-          if (exists) {
-            return prev.filter(item => item.id_beneficios !== row.id_beneficios);
-          } else {
-            return [...prev, row];
-          }
-        });
-      };
-      
+    const selecionBeneficio = (e, row) => {
+      setListBeneficios(prev => {
+        const exists = prev.some(item => item.id_beneficios === row.id_beneficios);
+        if (exists) {
+          return prev.filter(item => item.id_beneficios !== row.id_beneficios);
+        } else {
+          return [...prev, row];
+        }
+      });
+    };
+        
     const cargarBeneficios=async(val)=>{
         let apiBeneficio= await SegurosAdminFun.beneficios(val.value,navigate);
-       setBeneficios(apiBeneficio);
+        setBeneficios(apiBeneficio);
     }
-    const agregarClaveFormulario  =(e)=>{
-      setFormulario({...formulario,[e.target.name]:e.target.value})
-  }
+      const agregarClaveFormulario  =(e)=>{
+        setFormulario({...formulario,[e.target.name]:e.target.value})
+    }
 
-  const guardarTipoSeguro= async(e)=>{
-    e.preventDefault()
-    if (Object.values(formulario).every(valor => valor !== '')) {
+    const guardarTipoSeguro= async(e)=>{
+      e.preventDefault()
+      if (Object.values(formulario).every(valor => valor !== '')) {
 
-      if (listbeneficios.length==0) {
-      toast.error("Debe seleccionar minimo un beneficio ⚠️");
-        
+        if (listbeneficios.length==0) {
+        toast.error("Debe seleccionar minimo un beneficio ⚠️");
+        }else{
+          try {
+              const res = await SegurosAdminFun.guardarTipoSeguro(formulario, navigate);
+              guardarBeneficios(res.data.id_tip_seg);
+              swal.fire({
+                      title:"<label>Exito</label>",
+                      text:"Nuevo Seguro creado",
+                      timer:3500,})
+                      mostrarSeccion("segurosAdmin")
+            } catch (error) {
+                swal.fire({
+                      title:"<label>Advertencia</label>",
+                      text:"Este seguro ya existe",
+                      timer:3500,})
+            }
+        }
       }else{
-        const res= await SegurosAdminFun.guardarTipoSeguro(formulario,navigate);
-        guardarBeneficios(res.data.id_tip_seg);
-        swal.fire({
-                                title:"<label>Exito</label>",
-                                text:"Nuevo Tipo de seguro creado",
-                                timer:3500,
-                            })
-                    mostrarSeccion("segurosAdmin")
+        toast.error("Faltan campos por llenar ⚠️");
       }
-    }else{
-      toast.error("Faltan campos por llenar ⚠️");
+
     }
+    const guardarBeneficios = async (id) => {
+      const valores = listbeneficios.map(b => [id, b.id_beneficios]);
+      const res = await SegurosAdminFun.guardarBeneficioSeguro(valores, navigate);
+    };
+    const cancelarOperacion = (e)=>{
+      e.preventDefault()
+      console.log("cancelarOperacion")
+      if (Object.values(formulario).some(valor => valor !== '')||listbeneficios.length>0) {
+      console.log("if")
+
+        swal.fire({
+                title:"<label>Confirmacion</label>",
+                text:"Desea descartar los Avances",
+                showDenyButton:true,
+                denyButtonText:"No",
+                confirmButtonText:"Si"
+            }).then(async(respuesta)=>{
+                if (respuesta.isConfirmed) {
+                    mostrarSeccion("segurosAdmin")
+                }
+            });
+      }else{
+          mostrarSeccion("segurosAdmin")
+
+      }
+    }
+
 
   }
   const cancelar = () => {

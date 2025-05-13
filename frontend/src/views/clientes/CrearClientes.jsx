@@ -108,7 +108,9 @@ export function CrearClientes({ mostrarSeccion }) {
 
     const guardarCliente = async () => {
         if (Object.values(formulario).every(valor => valor !== '')) {
-            const res = await ClientesFun.guardarCliente(formulario, navigate);
+            try {
+                const res= await ClientesFun.guardarCliente(formulario,navigate);
+
             if (res) {
                 swal.fire({
                     title: "<label>Exito</label>",
@@ -117,6 +119,15 @@ export function CrearClientes({ mostrarSeccion }) {
                 })
                 mostrarSeccion("clientes")
             }
+            } catch (error) {
+                console.log(error)
+                 swal.fire({
+                        title:"<label>Advertencia</label>",
+                        text:"Ya existe un usuario con el mismo numero de cedula y/o pasaporte",
+                        timer:3500,
+                    })
+            }
+        
         } else {
             toast.error("Faltan campos por llenar ⚠️");
         }
