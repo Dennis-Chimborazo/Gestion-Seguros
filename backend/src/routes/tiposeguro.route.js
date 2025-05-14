@@ -21,6 +21,13 @@ router.post("/save", async (req, res) => {
   const nuevoTipoSeguro = req.body;
 
   try {
+    const existe = await database.query(`
+      SELECT 1 FROM tipo_seguro WHERE nom_tip_seg = $1;
+    `, [nuevoTipoSeguro.nom_tip_seg]);
+
+    if (existe.rowCount > 0) {
+      return res.status(400).json({ message: "El nombre del tipo de seguro ya existe" });
+    }
     const data = await database.query(`
       INSERT INTO tipo_seguro (
         nom_tip_seg, descrip_tip_seg, pago_tip_seg, suma_tip_seg, id_estado
@@ -141,6 +148,14 @@ router.put("/updateSeguro", async (req, res) => {
   }
 
   try {
+
+    const existe = await database.query(`
+      SELECT 1 FROM tipo_seguro WHERE nom_tip_seg = $1;
+    `, [tipoSeguro.nom_tip_seg]);
+
+    if (existe.rowCount > 0) {
+      return res.status(400).json({ message: "El nombre del tipo de seguro ya existe" });
+    }
     const result = await database.query(`
       UPDATE tipo_seguro
       SET

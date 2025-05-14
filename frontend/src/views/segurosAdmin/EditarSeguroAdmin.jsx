@@ -95,7 +95,6 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
         });
     };
 
-
     const cargarBeneficios = async (val) => {
         setListBeneficios([]);
         setCategoriaCombo(val);
@@ -304,6 +303,7 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
                             value={descrip_tip_seg}
                         />
                     </div>
+
                 </div>
 
                 <div className={styles.formRow}>
@@ -327,7 +327,6 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
                         persistTableHead
                     />
                 </div>
-
                 <div className={styles.formRow}>
                     <div className={styles.formGroup}>
                         <label>Prima mensual o anual (costo base)</label>
