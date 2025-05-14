@@ -363,7 +363,7 @@ export function EditarClientes({ mostrarSeccion }) {
 
             <div className={styles.formRow}>
                 <div className={styles.formGroup}>
-                    <label htmlFor="">Telefono fijo </label>
+                    <label htmlFor="">Teléfono fijo </label>
                     <input type="text" name="tel_pers" id="tel_pers" placeholder="Ingrese telefono convencional/fijo"
                         onChange={(e) => { agregarClaveFormulario(e); setTel_pers(e.target.value) }} value={tel_pers} />
                 </div>
@@ -375,7 +375,7 @@ export function EditarClientes({ mostrarSeccion }) {
                     </div>
                 </div>
                 <div className={styles.formGroup}>
-                    <label htmlFor="">correo electronico </label>
+                    <label htmlFor="">Correo Electrónico </label>
                     <div className={styles.dateGroup}>
                         <input type="text" name="email_pers" id="email_pers" placeholder="Ingrese correo electronico"
                             onChange={(e) => { agregarClaveFormulario(e); setEmail_pers(e.target.value) }} value={email_pers} />
@@ -419,7 +419,7 @@ export function EditarClientes({ mostrarSeccion }) {
             </div>
             <div className={styles.formRow}> {/* Filas para agrupar elementos */}
                 <div className={styles.locationGroup}>
-                        <label htmlFor="">Pais</label>
+                        <label htmlFor="">País</label>
                         <Select
                             options={Array.isArray(pais) ? pais.map((r) => ({
                                 value: r.id_pais,

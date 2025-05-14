@@ -26,39 +26,53 @@ export function SegurosAdmin({ mostrarSeccion }) {
     }, []);
 
 
-    const columlistSeguro=[
-        {name:"Nombre ",selector:row=>row.nom_tip_seg},
-        {name:"Descripcion",selector:row=>row.descrip_tip_seg},
-        {name:"Pago mesual",selector:row=>row.pago_tip_seg},
-         {
-                    name: "Opciones", cell: (row) =>
-                    (<div>
-                      <FcFinePrint size={25} onClick={()=>editarSeguro(row)}/>
-                    </div>
-                    ), ignoreRowClick: true
-                  },
+    const columlistSeguro = [
+        { name: "Nombre ", selector: row => row.nom_tip_seg },
+        { name: "Descripcion", selector: row => row.descrip_tip_seg },
+        { name: "Pago mesual", selector: row => row.pago_tip_seg },
+        {
+            name: "Opciones", cell: (row) =>
+            (<div>
+                <FcFinePrint
+                    size={25}
+                    data-testid={`editar-icon-${row.nom_tip_seg}`}
+                    onClick={() => editarSeguro(row)}
+                />
+
+            </div>
+            ), ignoreRowClick: true
+        },
 
     ];
-    const editarSeguro =(row)=>{
-          localStorage.setItem("editSeguro", JSON.stringify({
+    const editarSeguro = (row) => {
+        localStorage.setItem("editSeguro", JSON.stringify({
             edit: true,
             seguro: row
-          }));
-          
+        }));
+
         mostrarSeccion("EditarSeguroAdmin");
     }
     const filtrarClientes = (e) => {
-        if (e.target.value !== '') {
+        const texto = e.target.value.toLowerCase();
+        if (!listaSeguros) return; // <-- Protección
+
+        if (texto !== '') {
             const filtro = listaSeguros.filter((a) =>
-                a.nom_tip_seg && a.nom_tip_seg.startsWith(e.target.value)
+                a.nom_tip_seg && a.nom_tip_seg.toLowerCase().includes(texto)
             );
             setFiltroSeguros(filtro);
+        } else {
+            setFiltroSeguros(listaSeguros);
         }
     };
 
+
+
     const borrarFiltro = () => {
+        if (!listaSeguros) return;
         setFiltroSeguros(listaSeguros);
-    }
+    };
+
     const customStyles = {
         header: {
             style: {
@@ -129,7 +143,12 @@ export function SegurosAdmin({ mostrarSeccion }) {
                         onChange={filtrarClientes}
                     />
                 </div>
-                <FcClearFilters size={25} className={styles.icon} onClick={borrarFiltro} />
+                <FcClearFilters
+                    size={25}
+                    className={styles.icon}
+                    data-testid="clear-filter-icon"
+                    onClick={borrarFiltro}
+                />
             </div>
 
             <div className={styles["form-group"]}>

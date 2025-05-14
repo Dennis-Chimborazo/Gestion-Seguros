@@ -1,15 +1,16 @@
 // jest.config.js
 
-export default {
+module.exports = {
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!axios)/', // Don't ignore axios
+    '/node_modules/(?!axios)/', // No ignores axios
   ],
   globals: {
     'babel-jest': {
-      useESM: true,  // Enable Babel to use ESM
+      useESM: true,  // Opcional, pero generalmente innecesario si ya usas CommonJS
     },
   },
+  testEnvironment: 'jsdom',
 };

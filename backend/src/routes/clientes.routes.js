@@ -16,7 +16,7 @@ router.get("/listar", async (req, res) => {
     const data = await database.query(query, [ESTADO_ACTIVO]);
  
 
-    res.json(data.rows);
+    res.json(data);
   } catch (error) {
     console.error("Error en consulta:", error);
     res.status(500).json({ success: false, message: "Error al obtener datos", error: error.message });
