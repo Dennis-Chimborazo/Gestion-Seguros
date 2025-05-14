@@ -1,12 +1,13 @@
-const express = require('express');
-const { puerto } = require('./config.js');
 const cors = require('cors');
+const express = require('express');
+
+const { puerto } = require('./config.js');
 const authMiddleware = require("../middlewares/authMiddleware.js");
-const usuariosRoute = require("./routes/usuarios.routes.js");
 const clientesRoute = require("./routes/clientes.routes.js");
 const direccionesRoute = require("./routes/direcciones.routes.js");
 const seguroRoute = require("./routes/seguros.routes.js");
 const tipoSeguroeguroRoute = require("./routes/tiposeguro.route.js");
+const usuariosRoute = require("./routes/usuarios.routes.js");
 
 
 const app = express();

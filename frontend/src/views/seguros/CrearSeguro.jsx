@@ -1,12 +1,15 @@
 import React, {useEffect,useState} from "react";
-import { useNavigate,useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import ModalDependientes from "./ModalDependientes";
-import styles from "../estilos/modalDependientes.module.css";
-import SegurosFun from "./SegurosFun";
+import { useNavigate,useLocation } from "react-router-dom";
 import {Toaster,toast} from "sonner";
-import ClientesFun from "../clientes/ClientesFun";
 import swal from "sweetalert2";
+
+import ModalDependientes from "./ModalDependientes";
+import SegurosFun from "./SegurosFun";
+import ClientesFun from "../clientes/ClientesFun";
+import styles from "../estilos/modalDependientes.module.css";
+
+
 
 
 export function CrearSeguro({ mostrarSeccion }){

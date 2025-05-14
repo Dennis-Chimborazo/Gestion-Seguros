@@ -1,10 +1,11 @@
 import React, {useEffect,useState} from "react";
-import Select from "react-select";
-import SegurosAdminFun from "./SegurosAdminFun";
 import DataTable from "react-data-table-component";
 import { useNavigate,useLocation } from "react-router-dom";
+import Select from "react-select";
 import {Toaster,toast} from "sonner";
 import swal from "sweetalert2";
+
+import SegurosAdminFun from "./SegurosAdminFun";
 
 export function CrearSeguroAdmin({ mostrarSeccion }){
     const [categorias,setCategorias]= useState([]);
@@ -17,7 +18,7 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
 
     useEffect(()=>{
         const apiCateg= async()=>{
-            let api= await SegurosAdminFun.categoria(navigate);
+            const api= await SegurosAdminFun.categoria(navigate);
             const apiConv = api.map((datos) => ({
                 value: datos.id_categoria,
                 label: datos.nom_categoria,
@@ -62,7 +63,7 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
       
 
     const cargarBeneficios=async(val)=>{
-        let apiBeneficio= await SegurosAdminFun.beneficios(val.value,navigate);
+        const apiBeneficio= await SegurosAdminFun.beneficios(val.value,navigate);
        setBeneficios(apiBeneficio);
     }
     const agregarClaveFormulario  =(e)=>{

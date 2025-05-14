@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import styles from '../estilos/cliente.module.css'; // Importa los estilos
-import ClientesFun from "./ClientesFun";
-import Select from "react-select";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
 import { Toaster, toast } from "sonner";
 import swal from "sweetalert2";
+
+import ClientesFun from "./ClientesFun";
+import styles from '../estilos/cliente.module.css'; // Importa los estilos
 
 export function CrearClientes({ mostrarSeccion }) {
     const [pais, setPais] = useState([]);
@@ -98,7 +99,7 @@ export function CrearClientes({ mostrarSeccion }) {
     };
 
     const textPeso = (e) => {
-        let peso = e.target.value;
+        const peso = e.target.value;
         if (peso == '') {
             document.getElementById("lb").checked = false;
             document.getElementById("kg").checked = false;

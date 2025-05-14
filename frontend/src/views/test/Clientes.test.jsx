@@ -1,7 +1,8 @@
 // __tests__/Clientes.test.jsx
-import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import React from "react";
 import { BrowserRouter } from "react-router-dom";
+
 import Clientes from "../clientes/Clientes";
 import ClientesFun from "../clientes/ClientesFun";
 

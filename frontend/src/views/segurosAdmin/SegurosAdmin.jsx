@@ -1,8 +1,10 @@
 import React, {useEffect,useState} from "react";
-import { useNavigate,useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import SegurosAdminFun from "./SegurosAdminFun";
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
+import { useNavigate,useLocation } from "react-router-dom";
+
+import SegurosAdminFun from "./SegurosAdminFun";
+
 
 
 export function SegurosAdmin({ mostrarSeccion }){

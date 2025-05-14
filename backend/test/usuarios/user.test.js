@@ -1,7 +1,8 @@
-const { expect } = require('chai');
-const request = require('supertest');
-const app = require('../../src/index');
+
 const jwt = require('jsonwebtoken');
+const request = require('supertest');
+
+const app = require('../../src/index');
 
 
 const USUARIO_VALIDO = {

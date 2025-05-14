@@ -1,9 +1,10 @@
 // __tests__/CrearClientes.test.jsx
-import React from "react";
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import CrearClientes from "../clientes/CrearClientes";
+
 import ClientesFun from "../clientes/ClientesFun";
+import CrearClientes from "../clientes/CrearClientes";
 
 // Mock de sonner
 jest.mock("sonner", () => ({

@@ -1,5 +1,6 @@
-const { expect } = require('chai');
+
 const request = require('supertest');
+
 const app = require('../../src/index');
 
 // Datos de prueba para cliente

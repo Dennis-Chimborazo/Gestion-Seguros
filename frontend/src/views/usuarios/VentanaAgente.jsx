@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
 import ApiService from "../../services/ApiService";
-import styles from "../estilos/VentanaAdmin.module.css";
-import CrearClientes from "../clientes/CrearClientes";
 import Clientes from "../clientes/Clientes";
+import CrearClientes from "../clientes/CrearClientes";
 import EditarClientes from "../clientes/EditarClientes";
+import styles from "../estilos/VentanaAdmin.module.css";
 
 export function VentanaAgente() {
   const navigate = useNavigate();

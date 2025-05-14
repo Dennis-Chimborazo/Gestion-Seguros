@@ -1,10 +1,11 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Login from "./views/Login";
+import Buscador from "./views/Prueba/Prueba";
 import VentanaAdmin from "./views/usuarios/VentanaAdmin";
 import VentanaAgente from "./views/usuarios/VentanaAgente";
 import VentanaCliente from "./views/usuarios/ventanaCliente";
-import Buscador from "./views/Prueba/Prueba";
 
 
 function App() {

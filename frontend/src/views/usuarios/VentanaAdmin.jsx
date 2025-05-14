@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
 import ApiService from "../../services/ApiService";
-import styles from "../estilos/VentanaAdmin.module.css";
-import CrearClientes from "../clientes/CrearClientes";
 import Clientes from "../clientes/Clientes";
+import CrearClientes from "../clientes/CrearClientes";
 import EditarClientes from "../clientes/EditarClientes";
-import Seguros from "../seguros/Seguros";
+import styles from "../estilos/VentanaAdmin.module.css";
 import CrearSeguro from "../seguros/CrearSeguro";
-import SegurosAdmin from "../segurosAdmin/SegurosAdmin";
+import Seguros from "../seguros/Seguros";
 import CrearSeguroAdmin from "../segurosAdmin/CrearSeguroAdmin";
+import SegurosAdmin from "../segurosAdmin/SegurosAdmin";
 
 export function VentanaAdmin() {
   const navigate = useNavigate();

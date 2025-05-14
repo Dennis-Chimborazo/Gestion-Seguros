@@ -1,0 +1,6 @@
+projectKey=BackendProject
+serverUrl=http://localhost:9000
+serverVersion=25.4.0.105899
+dashboardUrl=http://localhost:9000/dashboard?id=BackendProject
+ceTaskId=fa2b68aa-77f6-48c0-beff-cef47dbc184b
+ceTaskUrl=http://localhost:9000/api/ce/task?id=fa2b68aa-77f6-48c0-beff-cef47dbc184b

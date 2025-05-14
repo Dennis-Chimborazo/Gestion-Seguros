@@ -1,6 +1,6 @@
-import http from 'k6/http';
 import { check, group } from 'k6';
 import { SharedArray } from 'k6/data';
+import http from 'k6/http';
 
 // 1. Configuración
 export const options = {
@@ -24,7 +24,7 @@ const users = new SharedArray('credenciales', () => [
 export default function () {
   group('Pruebas de autenticación', () => {
     // Escenario 1: Login exitoso
-    let resValid = http.post(
+    const resValid = http.post(
       'http://localhost:3000/user/ingreso',
       JSON.stringify(users[0]), // Usuario válido
       { headers: { 'Content-Type': 'application/json' } }
@@ -36,7 +36,7 @@ export default function () {
     });
 
     // Escenario 2: Login fallido
-    let resInvalid = http.post(
+    const resInvalid = http.post(
       'http://localhost:3000/user/ingreso',
       JSON.stringify(users[1]), // Usuario inválido
       { headers: { 'Content-Type': 'application/json' } }

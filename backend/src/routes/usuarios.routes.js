@@ -1,6 +1,7 @@
 const { Router } = require("express");
-const { DataBase } = require("../database.js");
 const jwt= require('jsonwebtoken');
+
+const { DataBase } = require("../database.js");
 
 const router = Router();
 const db = new DataBase();
