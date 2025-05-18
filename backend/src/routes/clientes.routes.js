@@ -1,8 +1,10 @@
 const { Router } = require("express");
 const { DataBase } = require("../database.js");
+const jwt = require("jsonwebtoken");
 const router = Router();
 const db = new DataBase();
 const database = db.getConexion();
+
 
 
 const ESTADO_ACTIVO = '1';
@@ -11,11 +13,8 @@ const ESTADO_INACTIVO = '2';
 
 router.get("/listar", async (req, res) => {
   try {
-
     const query = `SELECT * FROM cliente WHERE id_estado = $1`;
     const data = await database.query(query, [ESTADO_ACTIVO]);
- 
-
     res.json(data);
   } catch (error) {
     console.error("Error en consulta:", error);
@@ -26,6 +25,8 @@ router.get("/listar", async (req, res) => {
 
 router.post("/save", async (req, res) => {
   const formulario = req.body;  
+  const estado='3';
+
   
   try {
      const existe = await database.query(`
@@ -46,7 +47,8 @@ router.post("/save", async (req, res) => {
         $1, $2, $3, $4, $5, $6,
         $7, $8, $9, $10, $11, $12,
         $13, $14, $15, $16, $17, $18, $19, $20
-      ) RETURNING id_pers, cedr_cli, nom_cli, ape_cli
+      )  RETURNING id_pers;
+
     `, [
       formulario.cedr_cli,
       formulario.tipo_cedr_cli,
@@ -69,12 +71,10 @@ router.post("/save", async (req, res) => {
       formulario.id_ciud,
       ESTADO_ACTIVO
     ]);
-   
-    res.status(201).json({ 
-      success: true,
-      message: "Cliente guardado exitosamente", 
-      cliente: data.rows[0] 
-    });
+    
+    const idInsertado = data.rows[0].id_pers;
+    res.json({ message: "Cliente guardado exitosamente", id_pers: idInsertado });
+
   } catch (error) {
     console.error(error);
     // Verificar si es error de duplicado
@@ -94,6 +94,38 @@ router.post("/save", async (req, res) => {
   }
 });
 
+router.post("/comprobCredenciales", async (req, res) => {
+  const { cedr_cli, email_pers } = req.body;
+
+  try {
+    const resultado = await database.query(
+      ` SELECT 
+        CASE 
+          WHEN cedr_cli = $1 THEN 'cedula'
+          WHEN email_pers = $2 THEN 'correo'
+        END AS tipo
+      FROM cliente
+      WHERE cedr_cli = $1 OR email_pers = $2
+      LIMIT 1; `,
+      [cedr_cli, email_pers]
+    );
+
+    if (resultado.rowCount > 0) {
+      const tipo = resultado.rows[0].tipo;
+      const mensaje =
+        tipo === 'cedula'
+          ? "La cédula ya está registrada"
+          : "El correo ya está registrado";
+      return res.status(400).json({ message: mensaje });
+    }
+
+    res.status(200).json({ message: "Credenciales disponibles" });
+
+  } catch (error) {
+    console.error("Error al verificar credenciales:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+});
 
 router.put("/update", async (req, res) => {
   const formulario = req.body;
@@ -236,6 +268,89 @@ router.get("/buscar", async (req, res) => {
     res.status(500).json({ message: "Error al obtener datos", error });
   }
 });
+
+router.post("/validar-token-email", async (req, res) => {
+  const { url } = req.body; // Espera: { url: "URLgenerada" }
+
+  try {
+    // 1. Buscar token asociado al URL
+    const result = await database.query(
+      "SELECT token_val_email,id_val_email FROM validar_email WHERE url_emal = $1",
+      [url]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ success: false, message: "URL no encontrada." });
+    }
+
+    const token = result.rows[0].token_val_email;
+
+    // 2. Verificar el token JWT
+    let payload;
+    try {
+      payload = jwt.verify(token, "emailCliente"); // clave secreta que usaste al generar
+    } catch (err) {
+      return res.status(401).json({ success: false, message: "Token inválido o expirado." });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Token válido.",
+      data: payload,// contiene id_pers
+      idvalid:result.rows[0].id_val_email
+    });
+
+  } catch (error) {
+    console.error("Error al validar token:", error);
+    res.status(500).json({ success: false, message: "Error interno del servidor." });
+  }
+});
+
+router.get("/buscarclienteID", async (req, res) => {
+      const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+
+  try {
+    const query = `SELECT * FROM cliente WHERE id_pers = $1`;
+    const data = await database.query(query, [id]);
+    res.json(data.rows);
+  } catch (error) {
+    console.error("Error en consulta:", error);
+    res.status(500).json({ success: false, message: "Error al obtener datos", error: error.message });
+  }
+});
+
+router.put("/activar-cuenta", async (req, res) => {
+  const { id, idvalid } = req.body;
+  const estadoActivo = '1';
+  
+  if (!id || !idvalid) {
+    return res.status(400).json({ error: "Faltan datos requeridos (id o idvalid)." });
+  }
+  try {
+    const updateResult = await database.query(`
+      UPDATE cliente 
+      SET id_estado = $1
+      WHERE id_pers = $2
+    `, [estadoActivo, id]);
+
+    if (updateResult.rowCount === 0) {
+      return res.status(404).json({ error: "Cliente no encontrado." });
+    }
+
+    await database.query(
+      "DELETE FROM validar_email WHERE id_val_email = $1",
+      [idvalid]
+    );
+
+    res.status(200).json({ message: "Cuenta del cliente activada con éxito." });
+
+  } catch (error) {
+    console.error("Error al activar cuenta:", error);
+    res.status(500).json({ error: "Error interno al actualizar cliente." });
+  }
+});
+
+
 
 
 module.exports = router; 
