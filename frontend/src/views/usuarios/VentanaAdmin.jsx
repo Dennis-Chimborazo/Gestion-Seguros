@@ -13,6 +13,7 @@ import EditarSeguroAdmin from "../segurosAdmin/EditarSeguroAdmin";
 import GestionContratacion from "../gestionContratacion/gestionContratacion";
 import CrearContratacion from "../gestionContratacion/CrearContratacion";
 
+
 export function VentanaAdmin() {
   const navigate = useNavigate();
   const location = useLocation();
