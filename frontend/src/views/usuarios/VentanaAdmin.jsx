@@ -10,6 +10,8 @@ import CrearSeguro from "../seguros/CrearSeguro";
 import SegurosAdmin from "../segurosAdmin/SegurosAdmin";
 import CrearSeguroAdmin from "../segurosAdmin/CrearSeguroAdmin";
 import EditarSeguroAdmin from "../segurosAdmin/EditarSeguroAdmin";
+import GestionContratacion from "../gestionContratacion/gestionContratacion";
+import CrearContratacion from "../gestionContratacion/CrearContratacion";
 
 export function VentanaAdmin() {
   const navigate = useNavigate();
@@ -42,8 +44,8 @@ export function VentanaAdmin() {
       <ul className={styles.menu}>
       <li><a onClick={() => mostrarSeccion("clientes")}>Clientes</a></li>
         <li><a onClick={() => mostrarSeccion("segurosAdmin")}>Seguros</a></li>
-        <li><a onClick={() => mostrarSeccion("seguros")}>Gestión de contratación</a></li>
-        <li><a onClick={() => mostrarSeccion("reembolso")}>Reembolso</a></li>
+        <li><a onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</a></li>
+        <li><a onClick={() => mostrarSeccion("seguros")}>Reembolso</a></li>
         <li><a onClick={() => mostrarSeccion("reportes")}>Reportes</a></li>
         <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
       </ul>
@@ -57,9 +59,8 @@ export function VentanaAdmin() {
         {seccionActiva === "segurosAdmin" && <SegurosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "CrearSeguroAdmin" && <CrearSeguroAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "EditarSeguroAdmin" && <EditarSeguroAdmin mostrarSeccion={mostrarSeccion} />}
-
-
-        
+        {seccionActiva === "GestionContratacion" && <GestionContratacion mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "CrearContratacion" && <CrearContratacion mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reportes" && <p>Sección de reportes</p>}
         {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
       </section>

@@ -5,6 +5,9 @@ import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import {Toaster,toast} from "sonner";
 import swal from "sweetalert2";
+import ModalCuentasClientes from "./ModalCuentasClientes";
+import stylesmod from "../estilos/modalDependientes.module.css";
+
 
 export function CrearClientes({mostrarSeccion}){
     const [pais,setPais]=useState([]);
@@ -13,6 +16,8 @@ export function CrearClientes({mostrarSeccion}){
     const [selectedProvincia, setSelectedProvincia] = useState(null);
     const [selectedCiudad, setSelectedCiudad] = useState(null);
     const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    
     const [formulario,setFormulario]=useState({cedr_cli:'',tipo_cedr_cli:'',nacion_cli:'',
         nom_cli:'',ape_cli:'',fecha_naci_cli:'',lugar_naci_cli:'',tel_pers:'',
         cel_pers:'',email_pers:'',edad_pers:'',sexo_cli:'',estado_civil_pers:'',
@@ -28,6 +33,8 @@ export function CrearClientes({mostrarSeccion}){
 
      },[]);
 
+    const cerrarModal = () => setIsModalOpen(false);
+    const abrirModal = () => setIsModalOpen(true);
     const cargarProvincia = async (val)=>{
         setSelectedProvincia(null); 
         setSelectedCiudad(null);    
@@ -107,24 +114,18 @@ export function CrearClientes({mostrarSeccion}){
     const guardarCliente = async()=>{
         if (Object.values(formulario).every(valor => valor !== '')) {
             try {
-                const res= await ClientesFun.guardarCliente(formulario,navigate);
-            if (res) {
-            swal.fire({
-                        title:"<label>Exito</label>",
-                        text:"Nuevo usuario creado",
-                        timer:3500,
-                    })
-            mostrarSeccion("clientes")
-            }
+                const res= await ClientesFun.comprobarCredenciales(formulario,navigate);
+                if (res) {
+                  abrirModal()
+                }
             } catch (error) {
                 console.log(error)
                  swal.fire({
                         title:"<label>Advertencia</label>",
-                        text:"Ya existe un usuario con el mismo numero de cedula y/o pasaporte",
+                        text:"Ya existe un usuario con el mismo numero \nde identificacion o correo electronico",
                         timer:3500,
                     })
             }
-        
         } else {
             toast.error("Faltan campos por llenar ⚠️");
         } 
@@ -307,6 +308,14 @@ export function CrearClientes({mostrarSeccion}){
             <button onClick={guardarCliente}> guardar</button>
             <button onClick={cancelar}> cancelar</button>
             </div>
+             {isModalOpen && (
+                <div className={stylesmod.overlay}>
+                    <div className={stylesmod.modal}>
+                    <button className={stylesmod.closeBtn} onClick={cerrarModal}>X</button>
+                    <ModalCuentasClientes cerrarModal={cerrarModal} datosCliente={formulario} mostrarSeccion={mostrarSeccion} />
+                    </div>
+                </div>
+                )}
 
         </div>
     );

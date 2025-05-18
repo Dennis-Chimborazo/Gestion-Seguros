@@ -19,7 +19,6 @@ export function SegurosAdmin({ mostrarSeccion }){
             const dataSeguro = await SegurosAdminFun.traerTiposSeguros(navigate);
             setListaSeguros(dataSeguro.rows);
             setFiltroSeguros(dataSeguro.rows);
-            console.log(dataSeguro);
         }
         traterTipoSeguros();
        

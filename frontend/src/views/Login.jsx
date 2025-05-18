@@ -13,7 +13,6 @@ export function Login() {
       toast.error("Complete todos los campos");
     }else{
     const res= await ApiService.login(formulario);
-    console.log(res);
     if (res.success) {
      localStorage.setItem("login",JSON.stringify({
         login: true,

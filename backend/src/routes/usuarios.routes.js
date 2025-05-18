@@ -40,6 +40,56 @@ router.post("/ingreso", async (req, res) => {
   }
 });
 
+router.post("/crearusuariocliente", async (req, res) => {
+  try {
+    const id_rol='3';
+    const { user, pass } = req.body;
+
+    if (!user || !pass || !id_rol) {
+      return res.status(400).json({ success: false, message: "Faltan campos obligatorios" });
+    }
+
+    const query = `
+      INSERT INTO usuarios (users, pass, id_rol)
+      VALUES ($1, $2, $3)
+      RETURNING *;
+    `;
+    const values = [user, pass, id_rol];
+
+    const result = await database.query(query, values);
+
+    res.status(201).json({
+      success: true,
+      message: "Usuario creado correctamente",
+      usuario: result.rows[0]
+    });
+  } catch (error) {
+    console.error("Error al crear usuario:", error);
+    res.status(500).json({ success: false, message: "Error interno del servidor" });
+  }
+  
+});
+
+router.post("/generar_token_email", async (req, res) => {
+  
+  try {
+    const { id_pers, url } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
+    const payload = { id_pers };
+    const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
+
+    await database.query(
+      "INSERT INTO validar_email (url_emal, token_val_email) VALUES ($1, $2)",
+      [url, token]
+    );
+
+    res.json({ success: true, token, message: "Token creado y guardado exitosamente." });
+  } catch (error) {
+    console.error("Error en /generar_token_email:", error);
+    res.status(500).json({ success: false, message: "Error del servidor" });
+  }
+});
+
+
 
 
 module.exports = router;
