@@ -24,15 +24,6 @@ CREATE TABLE cliente (
   FOREIGN KEY (id_estado) REFERENCES estado(id_estado),
 );
 
-CREATE TABLE persona (
-  id_pers SERIAL PRIMARY KEY,
-  ced_pers VARCHAR(100) NOT NULL,
-  nom_pers VARCHAR(100) NOT NULL,
-  ape_pers VARCHAR(100) NOT NULL,
-  parent_pers VARCHAR(100) NOT NULL,
-
-);
-
 CREATE TABLE estado (
   id_estado SERIAL PRIMARY KEY,
   nom_estado VARCHAR(100) NOT NULL,
@@ -80,14 +71,12 @@ CREATE TABLE roles_usuarios (
   FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );
 
-
-
-CREATE TABLE dat_agencia (
-  id_dat_agencia SERIAL PRIMARY KEY,
-  nom_trabj_dat_agencia VARCHAR(100) NOT NULL,
-  nom_agencia_dat_agencia VARCHAR(100) NOT NULL,
-  email_dat_agencia VARCHAR(100) NOT NULL,
-  firma_dat_agencia VARCHAR(100) NOT NULL
+CREATE TABLE empleado (
+  id_emple SERIAL PRIMARY KEY,
+  ced_emple VARCHAR(15) NOT NULL,
+  nom_emple VARCHAR(100) NOT NULL,
+  email_emple VARCHAR(100) NOT NULL,
+  firma_emple VARCHAR(100) NOT NULL
 );
 
 
@@ -131,16 +120,19 @@ CREATE TABLE seguros (
   dia_seguro VARCHAR(100) NOT NULL,
   mes_seguro VARCHAR(100) NOT NULL,
   anio_seguro VARCHAR(100) NOT NULL,
-  firma_seguro VARCHAR(100) NOT NULL,
+  monto_seguro VARCHAR(100) NOT NULL,
+  tiempo_seguro VARCHAR(100) NOT NULL,
   id_pers INTEGER,
-  id_dat_agencia INTEGER,
-  id_excl_empresa INTEGER,
+  id_emple INTEGER,
+  id_tip_seg INTEGER,
   id_pers_fac INTEGER,
   id_cuent_Ban INTEGER,
-  FOREIGN KEY (id_pers) REFERENCES cliente(id_pers)
-  FOREIGN KEY (id_dat_agencia) REFERENCES dat_agencia(id_dat_agencia)
-  FOREIGN KEY (id_excl_empresa) REFERENCES excl_empresa(id_excl_empresa)
-  FOREIGN KEY (id_pers_fac) REFERENCES persona_fac(id_pers_fac)
+  id_estado INTEGER,
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado),
+  FOREIGN KEY (id_pers) REFERENCES cliente(id_pers),
+  FOREIGN KEY (id_emple) REFERENCES empleado(id_emple),
+  FOREIGN KEY (id_tip_seg) REFERENCES tipo_seguro(id_tip_seg),
+  FOREIGN KEY (id_pers_fac) REFERENCES persona_fac(id_pers_fac),
   FOREIGN KEY (id_cuent_Ban) REFERENCES cuenta_banco(id_cuent_Ban)
 );
 
@@ -148,17 +140,14 @@ CREATE TABLE dependientes (
   id_depen SERIAL PRIMARY KEY,
   cedr_depen VARCHAR(15) NOT NULL,
   tipo_cedr_depen VARCHAR(20) NOT NULL,
-  nacion_depen VARCHAR(30) NOT NULL,
   nom_depen VARCHAR(100) NOT NULL,
   ape_depen VARCHAR(100) NOT NULL,
   fecha_naci_depen VARCHAR(12) NOT NULL,
-  lugar_naci_depen VARCHAR(100) NOT NULL,
-  edad_depen VARCHAR(20) NOT NULL,
-  sexo_depen VARCHAR(20) NOT NULL,
-  peso_depen VARCHAR(20) NOT NULL,
-  estatura_depen VARCHAR(20) NOT NULL,
   parent_depen VARCHAR(70) NOT NULL,
-  discap_depen VARCHAR(70) NOT NULL,
+  discap_depen VARCHAR(170) NOT NULL,
+  cond_depen VARCHAR(170) NOT NULL,
+  fecha_fin_cond VARCHAR(20) NOT NULL,
+  fecha_ini_cond VARCHAR(20) NOT NULL,
   id_seguro INTEGER,
   FOREIGN KEY (id_seguro) REFERENCES seguros(id_seguro)
 );
@@ -200,4 +189,16 @@ CREATE TABLE seguro_bedeficio (
   id_beneficios INTEGER,
   FOREIGN KEY (id_tip_seg) REFERENCES tipo_seguro(id_tip_seg),
   FOREIGN KEY (id_beneficios) REFERENCES beneficios(id_beneficios)
+);
+
+CREATE TABLE validar_email (
+  id_val_email SERIAL PRIMARY KEY,
+  url_emal VARCHAR(20) NOT NULL,
+  token_val_email VARCHAR(512) NOT NULL
+);
+
+CREATE TABLE validar_contratacion (
+  id_val_contra SERIAL PRIMARY KEY,
+  url_contra VARCHAR(20) NOT NULL,
+  token_val_contra VARCHAR(512) NOT NULL
 );

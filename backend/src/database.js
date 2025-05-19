@@ -14,6 +14,9 @@ const { Client } = pkg;
       database: 'Gestion_Seguros',
       password: 'root',
       port: 5432, 
+       ssl: {
+        rejectUnauthorized: false // ⚠️ Importante para Render
+      }
     });
 
     this.#connect(); 

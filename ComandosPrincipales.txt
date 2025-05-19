@@ -20,6 +20,7 @@ npm install dotenv
 
 npm install cors
 
+npm install nodemailer
 
 
 -----FRONTEND

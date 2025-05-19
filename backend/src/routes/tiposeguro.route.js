@@ -206,4 +206,20 @@ router.put("/desactivar", async (req, res) => {
   }
 });
 
+router.get("/buscar", async (req, res) => {
+  try {
+    const id = 1; 
+    const nombre = req.query.nombre; 
+
+    const query = "SELECT * FROM tipo_seguro WHERE nom_tip_seg = $1 AND id_estado = $2 ";
+    const values = [ nombre,id];
+
+    const data = await database.query(query, values);
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener datos", error });
+  }
+});
+
+
 module.exports = router; 

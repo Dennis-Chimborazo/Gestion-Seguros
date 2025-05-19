@@ -1,8 +1,6 @@
 import ApiService from "../../services/ApiService";
 
-class SegurosFun {
-
-
+class GestionContratacionFun {
 
    static async traerSeguros(navigate){
       const response =  await ApiService.traerDatos("seguro/listar",navigate);
@@ -13,20 +11,16 @@ class SegurosFun {
       const response =  await ApiService.buscarDatos("client/buscar",id,navigate);
       return response.data;
    }
+    static async buscarEmpleado(id,navigate){
+      const response =  await ApiService.buscarDatos("empleado/buscarempleado",id,navigate);
+      return response;
+   }
 
    static async guardarSeguro(formulario,navigate){
       const response =  await ApiService.enviarDatos("seguro/saveSeguro",formulario,navigate);
       return response;
    }
 
-   static async guardarAgencia(formulario,navigate){
-      const response =  await ApiService.enviarDatos("seguro/agencia/save",formulario,navigate);
-      return response;
-   }
-   static async guardarExclusivoEmpresa(formulario,navigate){
-      const response =  await ApiService.enviarDatos("seguro/exclisivempresa/save",formulario,navigate);
-      return response;
-   }
    static async guardarPersonaFact(formulario,navigate){
       const response =  await ApiService.enviarDatos("seguro/personafac/save",formulario,navigate);
       return response;
@@ -35,6 +29,13 @@ class SegurosFun {
       const response =  await ApiService.enviarDatos("seguro/cuentabanco/save",formulario,navigate);
       return response;
    }
-
+   static async guardarDependientes(formulario,navigate){
+      const response =  await ApiService.enviarDatos("seguro/saveDependientes",formulario,navigate);
+      return response;
+   }
+    static async enviarValidacionEmailGestCont(formulario,navigate){
+      const response =  await ApiService.enviarDatos("email/correo-Gest-contratacion",formulario,navigate);
+      return response;
+   }
 }
-    export default SegurosFun;
+    export default GestionContratacionFun;

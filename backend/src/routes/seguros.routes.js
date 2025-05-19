@@ -40,72 +40,6 @@ router.post("/save", async (req, res) => {
     }
   });
   
-  router.post("/agencia/save", async (req, res) => {
-    const formulario = req.body;
-  
-    try {
-      const data = await database.query(`
-        INSERT INTO dat_agencia (
-          nom_trabj_dat_agencia,
-          nom_agencia_dat_agencia,
-          email_dat_agencia,
-          firma_dat_agencia
-        ) VALUES (
-          $1, $2, $3, $4
-        ) RETURNING id_dat_agencia
-      `, [
-        formulario.nom_trabj_dat_agencia,
-        formulario.nom_agencia_dat_agencia,
-        formulario.email_dat_agencia,
-        formulario.firma_dat_agencia
-      ]);
-  
-      res.json({ 
-        message: "Datos de agencia guardados exitosamente",
-        id_dat_agencia: data.rows[0].id_dat_agencia 
-      });
-    } catch (error) {
-      console.error("Error al guardar datos de agencia:", error);
-      res.status(500).json({ message: "Error al guardar datos de agencia", error });
-    }
-  });
-  
-  router.post("/exclisivempresa/save", async (req, res) => {
-    const formulario = req.body;
-  
-    try {
-      const data = await database.query(`
-        INSERT INTO excl_empresa (
-          ciud_excl_empresa,
-          dia_excl_empresa,
-          mes_excl_empresa,
-          anio_excl_empresa,
-          firma_excl_empresa,
-          nombre_excl_empresa,
-          cargo_excl_empresa
-        ) VALUES (
-          $1, $2, $3, $4, $5, $6, $7
-        ) RETURNING id_excl_empresa
-      `, [
-        formulario.ciud_excl_empresa,
-        formulario.dia_excl_empresa,
-        formulario.mes_excl_empresa,
-        formulario.anio_excl_empresa,
-        formulario.firma_excl_empresa,
-        formulario.nombre_excl_empresa,
-        formulario.cargo_excl_empresa
-      ]);
-  
-      res.json({ 
-        message: "Datos de exclusión de empresa guardados exitosamente",
-        id_excl_empresa: data.rows[0].id_excl_empresa 
-      });
-    } catch (error) {
-      console.error("Error al guardar datos de exclusión de empresa:", error);
-      res.status(500).json({ message: "Error al guardar datos de exclusión de empresa", error });
-    }
-  });
-  
   router.post("/personafac/save", async (req, res) => {
     const formulario = req.body;
   
@@ -177,37 +111,44 @@ router.post("/save", async (req, res) => {
       res.status(500).json({ message: "Error al guardar cuenta bancaria", error });
     }
   });
+
   router.post("/saveSeguro", async (req, res) => {
     const formulario = req.body;
+    console.log(formulario);
+    const idEstado =3
     try {
-      const data = await database.query(`
-        INSERT INTO seguros (
-          ciud_seguro,
-          dia_seguro,
-          mes_seguro,
-          anio_seguro,
-          firma_seguro,
-          id_pers,
-          id_dat_agencia,
-          id_excl_empresa,
-          id_pers_fac,
-          id_cuent_Ban
-        ) VALUES (
-          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
-        ) RETURNING id_seguro
-      `, [
-        formulario.ciud_seguro,
-        formulario.dia_seguro,
-        formulario.mes_seguro,
-        formulario.anio_seguro,
-        formulario.firma_seguro,
-        formulario.id_pers,
-        formulario.id_dat_agencia,
-        formulario.id_excl_empresa,
-        formulario.id_pers_fac,
-        formulario.id_cuent_Ban
-      ]);
-  
+     const data = await database.query(`
+            INSERT INTO seguros (
+              ciud_seguro,
+              dia_seguro,
+              mes_seguro,
+              anio_seguro,
+              monto_seguro,
+              tiempo_seguro,
+              id_pers,
+              id_emple,
+              id_tip_seg,
+              id_pers_fac,
+              id_cuent_Ban,
+              id_estado
+            ) VALUES (
+              $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+            ) RETURNING id_seguro
+          `, [
+            formulario.ciud_seguro,
+            formulario.dia_seguro,
+            formulario.mes_seguro,
+            formulario.anio_seguro,
+            formulario.monto_seguro,
+            formulario.tiempo_seguro,
+            formulario.id_pers,
+            formulario.id_emple,
+            formulario.id_tip_seg,
+            formulario.id_pers_fac,
+            formulario.id_cuent_Ban,
+            idEstado
+          ]);
+
       res.json({
         message: "Seguro guardado exitosamente",
         id_seguro: data.rows[0].id_seguro
@@ -217,6 +158,57 @@ router.post("/save", async (req, res) => {
       res.status(500).json({ message: "Error al guardar seguro", error });
     }
   });
-  
+
+  router.post("/saveDependientes", async (req, res) => {
+  const dependientes = req.body; // Se espera un array de objetos
+
+  if (!Array.isArray(dependientes) || dependientes.length === 0) {
+    return res.status(400).json({ message: "No se enviaron datos válidos." });
+  }
+
+  const values = [];
+  const placeholders = dependientes.map((dep, i) => {
+    const idx = i * 11;
+    values.push(
+      dep.cedr_depen,
+      dep.tipo_cedr_depen,
+      dep.nom_depen,
+      dep.ape_depen,
+      dep.fecha_naci_depen,
+      dep.parent_depen,
+      dep.discap_depen,
+      dep.cond_depen,
+      dep.fecha_fin_cond,
+      dep.fecha_ini_cond,
+      dep.id_seguro
+    );
+    return `($${idx + 1}, $${idx + 2}, $${idx + 3}, $${idx + 4}, $${idx + 5}, $${idx + 6}, $${idx + 7}, $${idx + 8}, $${idx + 9}, $${idx + 10}, $${idx + 11})`;
+  }).join(", ");
+
+  const query = `
+    INSERT INTO dependientes (
+      cedr_depen,
+      tipo_cedr_depen,
+      nom_depen,
+      ape_depen,
+      fecha_naci_depen,
+      parent_depen,
+      discap_depen,
+      cond_depen,
+      fecha_fin_cond,
+      fecha_ini_cond,
+      id_seguro
+    ) VALUES ${placeholders};
+  `;
+
+  try {
+    await database.query(query, values);
+    res.json({ message: "Dependientes guardados exitosamente." });
+  } catch (error) {
+    console.error("Error al insertar dependientes:", error);
+    res.status(500).json({ message: "Error al insertar dependientes", error });
+  }
+});
+
 
 module.exports = router; 

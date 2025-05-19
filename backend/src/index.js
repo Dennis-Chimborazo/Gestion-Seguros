@@ -7,6 +7,8 @@ const clientesRoute = require("./routes/clientes.routes.js");
 const direccionesRoute = require("./routes/direcciones.routes.js");
 const seguroRoute = require("./routes/seguros.routes.js");
 const tipoSeguroeguroRoute = require("./routes/tiposeguro.route.js");
+const empleadosRoute = require("./routes/empleados.routes.js");
+const emailRoute = require("./routes/email.routes.js");
 
 
 const app = express();
@@ -19,8 +21,8 @@ app.use("/client", clientesRoute);
 app.use("/direccion", direccionesRoute);
 app.use("/seguro", seguroRoute);
 app.use("/tiposeguro", tipoSeguroeguroRoute);
-
-
+app.use("/empleado", empleadosRoute);
+app.use("/email", emailRoute);
 
 // Exporta la app para SuperTest
 module.exports = app;
