@@ -5,8 +5,6 @@ import styles from "../estilos/VentanaAdmin.module.css";
 import CrearClientes from "../clientes/CrearClientes";
 import Clientes from "../clientes/Clientes";
 import EditarClientes from "../clientes/EditarClientes";
-import Seguros from "../seguros/Seguros";
-import CrearSeguro from "../seguros/CrearSeguro";
 import SegurosAdmin from "../segurosAdmin/SegurosAdmin";
 import CrearSeguroAdmin from "../segurosAdmin/CrearSeguroAdmin";
 import EditarSeguroAdmin from "../segurosAdmin/EditarSeguroAdmin";
@@ -54,8 +52,6 @@ export function VentanaAdmin() {
       {seccionActiva === "clientes" && <Clientes mostrarSeccion={mostrarSeccion}/>}
         {seccionActiva === "crearClientes" && <CrearClientes mostrarSeccion={mostrarSeccion}/>}
         {seccionActiva === "EditarCliente" && <EditarClientes mostrarSeccion={mostrarSeccion} />}
-        {seccionActiva === "seguros" && <Seguros mostrarSeccion={mostrarSeccion} />}
-        {seccionActiva === "Crearseguro" && <CrearSeguro mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "segurosAdmin" && <SegurosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "CrearSeguroAdmin" && <CrearSeguroAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "EditarSeguroAdmin" && <EditarSeguroAdmin mostrarSeccion={mostrarSeccion} />}
