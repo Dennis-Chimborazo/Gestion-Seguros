@@ -95,6 +95,7 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
       }
 
     }
+
     const guardarBeneficios = async (id) => {
       const valores = listbeneficios.map(b => [id, b.id_beneficios]);
       const res = await SegurosAdminFun.guardarBeneficioSeguro(valores, navigate);
@@ -123,7 +124,7 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
     }
 
 
-  }
+  
   const cancelar = () => {
     const algunCampoLleno = Object.values(formulario).some(valor => valor.trim() !== '');
     if (algunCampoLleno) {
@@ -143,10 +144,6 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
         mostrarSeccion("segurosAdmin")
     }
 };
-  const guardarBeneficios = async (id) => {
-    const valores = listbeneficios.map(b => [id, b.id_beneficios]);
-    const res = await SegurosAdminFun.guardarBeneficioSeguro(valores, navigate);
-  };
   
   const customStyles = {
     header: {
