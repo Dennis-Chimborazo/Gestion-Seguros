@@ -5,11 +5,11 @@ import ModalDependientes from "./ModalDependientes";
 import styles from "../estilos/modalDependientes.module.css";
 import SegurosFun from "../seguros/SegurosFun";
 import {Toaster,toast} from "sonner";
-import ClientesFun from "../clientes/ClientesFun";
 import swal from "sweetalert2";
 import Select from "react-select";
 import GestionContratacionFun from "./GestionContratacionFun";
 import SegurosAdminFun from "../segurosAdmin/SegurosAdminFun";
+import ClientesFun from "../clientes/ClientesFun";
 
 export function CrearContratacion({ mostrarSeccion }){
     const navigate= useNavigate();
@@ -35,7 +35,7 @@ export function CrearContratacion({ mostrarSeccion }){
     const cerrarModal = () => setIsModalOpen(false);
     
     const [nuevoSeguro,setNuevoSeguro]=useState({ ciud_seguro:'',dia_seguro:'',mes_seguro:'',
-          anio_seguro:'',monto_seguro:'',tiempo_seguro:'',id_pers:'',id_tip_seg:'',id_emple:'',id_pers_fac:'',email_pers:''})
+          anio_seguro:'',monto_seguro:'',tiempo_seguro:'',id_pers:'',id_tip_seg:'',id_emple:'',email_pers:''})
         
     const [personaFac,setPersonaFac]=useState({cedr_pers_fac:'',razon_pers_fac:'',tipo_pers_fac:'',
           nacion_pers_fac:'',nom_pers_fac:'',ape_pers_fac:'',tel_pers_fac:'',cel_pers_fac:'',
@@ -166,18 +166,18 @@ export function CrearContratacion({ mostrarSeccion }){
     }
     const guardarSeguro= async(e)=>{
       e.preventDefault();
-      console.log(listDependientes)
+      console.log(nuevoSeguro)
       if (verficarDatosCorrectos()) {
        try {
-        const personFac= await SegurosFun.guardarPersonaFact(personaFac,navigate)
-        const cuentaBan= await SegurosFun.guardarCuentaBanco(cuentaBancaria,navigate)
+        const personFac= await GestionContratacionFun.guardarPersonaFact(personaFac,navigate)
+        const cuentaBan= await GestionContratacionFun.guardarCuentaBanco(cuentaBancaria,navigate)
         const data ={ciud_seguro:nuevoSeguro.ciud_seguro,dia_seguro:nuevoSeguro.dia_seguro,
           mes_seguro:nuevoSeguro.mes_seguro,anio_seguro:nuevoSeguro.anio_seguro,
           id_pers:nuevoSeguro.id_pers,id_cuent_Ban: cuentaBan.id_cuent_Ban,
           id_pers_fac:personFac.id_pers_fac,id_emple: empleado.id_emple,
           monto_seguro:nuevoSeguro.monto_seguro,tiempo_seguro:nuevoSeguro.tiempo_seguro,
           id_tip_seg:nuevoSeguro.id_tip_seg}
-        const idSeduro = await SegurosFun.guardarSeguro(data,navigate)
+        const idSeduro = await GestionContratacionFun.guardarSeguro(data,navigate)
         const dependientesConSeguro = listDependientes.map(dep => ({
           ...dep,
           id_seguro: idSeduro.id_seguro
@@ -196,6 +196,7 @@ export function CrearContratacion({ mostrarSeccion }){
     }
      
     const buscarEmpleado= async(e)=>{
+
       e.preventDefault()
       const id = document.getElementById("ced_emple").value;
       if (id!=='') {
@@ -224,7 +225,6 @@ export function CrearContratacion({ mostrarSeccion }){
                      toast.error("Empleado responsable de la contratacion no ha sigo asigando");
                      return false;
                   }
-                  toast.error("pk ⚠️");
                 }else{
                    toast.error("Debe de asignar minimo un dependiente⚠️");
                   return false;
