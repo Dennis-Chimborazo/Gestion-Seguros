@@ -3,7 +3,6 @@ import { useNavigate,useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import ModalDependientes from "./ModalDependientes";
 import styles from "../estilos/modalDependientes.module.css";
-import SegurosFun from "../seguros/SegurosFun";
 import {Toaster,toast} from "sonner";
 import swal from "sweetalert2";
 import Select from "react-select";
