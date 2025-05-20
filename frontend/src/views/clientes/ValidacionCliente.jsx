@@ -2,23 +2,25 @@ import React, {useEffect,useState} from "react";
 import { useNavigate,useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import ClientesFun from "./ClientesFun";
-import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
+import { FcClearFilters } from "react-icons/fc";
+import { TfiEmail } from "react-icons/tfi";
 import CargarTablas from "../cargando/CargarTablas";
-import InfoCard from "../cargando/InfoCards";
+import ModalReenvioValidacion from "./ModalReenvioValidacion";
+import stylesmod from "../estilos/modalDependientes.module.css";
 
-
-export function Clientes({ mostrarSeccion }){
+export function ValidacionCliente({ mostrarSeccion }){
     const navigate= useNavigate();
-    const location = useLocation();
-    const user = location.state?.user; // accedemos al usuario
     const [clientes, setClientes]= useState ();
     const [filtroCli, setFiltroCli]= useState ();
     const [loading, setLoading] = useState(true); 
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const cerrarModal = () => setIsModalOpen(false);
+    const abrirModal = () => setIsModalOpen(true);
+    const [formulario,setFormulario]=useState({})
     useEffect(()=>{
         const traterClientes=async () => {
             try {
-                const dataClientes = await ClientesFun.obtenerCliente(navigate);
+                const dataClientes = await ClientesFun.obtenerClientePeniente(navigate);
                 setFiltroCli(dataClientes.rows);
                 setClientes(dataClientes.rows);
             } catch (error) {
@@ -27,10 +29,7 @@ export function Clientes({ mostrarSeccion }){
                 setLoading(false)
             }
         }
-
-        
         traterClientes();
-       
     },[]);
 
     const columasClientes=[
@@ -41,9 +40,9 @@ export function Clientes({ mostrarSeccion }){
         {name:"Celular",selector:row=>row.cel_pers},
         {name:"Correo",selector:row=>row.email_pers},
         {
-            name: "Opciones", cell: (row) =>
+            name: "Reenviar Correo", cell: (row) =>
             (<div>
-              <FcFinePrint size={25} onClick={()=>EditarCliente(row)}/>
+              <TfiEmail  size={25} onClick={()=>reenviarCorreo(row)}/>
             </div>
             ), ignoreRowClick: true
           },
@@ -57,45 +56,28 @@ export function Clientes({ mostrarSeccion }){
             setFiltroCli(filtro);
         }
     };
-    
-
     const borrarFiltro=()=>{
         setFiltroCli(clientes);
     }
-
-    const EditarCliente= (row)=>{
-        localStorage.setItem("edit", JSON.stringify({
+    const reenviarCorreo= (row)=>{
+        localStorage.setItem("editCorreo", JSON.stringify({
             edit: true,
             cliente: row
           }));
-          
-        mostrarSeccion("EditarCliente");
-
+          abrirModal()
     }
+   
 
     return(
         <div>
             <form action="" method="get">
                 <div>
-                     <h2>Clientes </h2>
+                     <h2>Vadicacion de cuenta Pendiente </h2>
                     <div>
                         <label htmlFor=""> Buscar</label>
                         <input type="text" id="buscar" name="buscar" placeholder="Ingrese numero de cedula" onChange={filtrarClientes} />
                         <FcClearFilters size={25}  onClick={borrarFiltro}/>
-                        <div style={{ display: 'flex', justifyContent: 'flex-start', margin: '20px 0' }}>
-                            <InfoCard
-                            text="Nuevo Cliente"
-                            color="#00AEEF" // Color azul de la imagen
-                            onClick={() => mostrarSeccion('crearClientes')}
-                            />
-                            <InfoCard
-                            text="Validaciones pendientes"
-                            color="#4CAF50" // Color verde de la imagen
-                            onClick={() => mostrarSeccion('clientePendiente')}
-                            />
                         </div>
-                        </div>
-
                          </div>
                          {loading?(<CargarTablas />):
                             <DataTable 
@@ -107,7 +89,16 @@ export function Clientes({ mostrarSeccion }){
                             persistTableHead >
                             </DataTable>}
             </form>
+
+            {isModalOpen && (
+                            <div className={stylesmod.overlay}>
+                                <div className={stylesmod.modal}>
+                                <button className={stylesmod.closeBtn} onClick={cerrarModal}>X</button>
+                                <ModalReenvioValidacion cerrarModal={cerrarModal} datosCliente={formulario} mostrarSeccion={mostrarSeccion} />
+                                </div>
+                            </div>
+                            )}
             </div>
     );
 }
-export default Clientes;
+export default ValidacionCliente;

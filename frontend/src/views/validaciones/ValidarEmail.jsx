@@ -18,8 +18,13 @@ export function ValidarEmail() {
     const verificar = async () => {
       try {
         const res = await ClientesFun.validarTokenEmail({ url: id }, navigate);
+        console.log(res)
+        console.log(res.data.id_pers)
+
         if (res?.success && res.data?.id_pers) {
           const resCli = await ClientesFun.buscarclienteIDValEmail(res.data.id_pers, navigate);
+        console.log(resCli)
+
           setCliente({
             id_pers:resCli[0].id_pers,
             nombre: resCli[0].nom_cli,

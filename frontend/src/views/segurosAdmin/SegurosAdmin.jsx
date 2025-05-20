@@ -3,6 +3,7 @@ import { useNavigate,useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import SegurosAdminFun from "./SegurosAdminFun";
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
+import CargarTablas from "../cargando/CargarTablas";
 
 
 export function SegurosAdmin({ mostrarSeccion }){
@@ -11,14 +12,23 @@ export function SegurosAdmin({ mostrarSeccion }){
     const user = location.state?.user; // accedemos al usuario
     const [filtroSeguros, setFiltroSeguros]= useState ();
     const [listaSeguros, setListaSeguros]= useState ();
+    const [loading, setLoading] = useState(true); 
 
 
     useEffect(()=>{
         
         const traterTipoSeguros=async () => {
-            const dataSeguro = await SegurosAdminFun.traerTiposSeguros(navigate);
+            try {
+                const dataSeguro = await SegurosAdminFun.traerTiposSeguros(navigate);
             setListaSeguros(dataSeguro.rows);
             setFiltroSeguros(dataSeguro.rows);
+            } catch (error) {
+                console.log('HA OCURRIDO UN ERROR')
+            } finally{
+                setLoading(false)
+
+            }
+            
         }
         traterTipoSeguros();
        
@@ -66,11 +76,11 @@ export function SegurosAdmin({ mostrarSeccion }){
                     <div>
                         <label htmlFor=""> Buscar</label>
                         <input type="text" id="buscar" name="buscar" placeholder="Ingrese Codigo del seguro" onChange={filtrarClientes} />
+                         <FcClearFilters size={25} onClick={borrarFiltro} />
                         <label htmlFor=""> nuevo tipo de seguro </label>
                         <button onClick={() => mostrarSeccion("CrearSeguroAdmin")}>Crear</button>
-                         <FcClearFilters size={25} onClick={borrarFiltro} />
                          </div>
-
+                         {loading?(<CargarTablas />):
                          <DataTable 
                             pagination
                             paginationPerPage={20}
@@ -78,7 +88,7 @@ export function SegurosAdmin({ mostrarSeccion }){
                             data={filtroSeguros}
                             noDataComponent="No ha selecionado ningun Seguro"
                             persistTableHead >
-                            </DataTable>
+                            </DataTable> }
             </form>
             </div>
     );

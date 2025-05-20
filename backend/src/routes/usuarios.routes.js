@@ -70,24 +70,6 @@ router.post("/crearusuariocliente", async (req, res) => {
   
 });
 
-router.post("/generar_token_email", async (req, res) => {
-  
-  try {
-    const { id_pers, url } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
-    const payload = { id_pers };
-    const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
-
-    await database.query(
-      "INSERT INTO validar_email (url_emal, token_val_email) VALUES ($1, $2)",
-      [url, token]
-    );
-
-    res.json({ success: true, token, message: "Token creado y guardado exitosamente." });
-  } catch (error) {
-    console.error("Error en /generar_token_email:", error);
-    res.status(500).json({ success: false, message: "Error del servidor" });
-  }
-});
 
 
 

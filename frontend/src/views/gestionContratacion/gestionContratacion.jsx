@@ -3,24 +3,26 @@ import { useNavigate,useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import GestionContratacionFun from "./GestionContratacionFun";
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
+import CargarTablas from "../cargando/CargarTablas";
 
 
 export function GestionContratacion({ mostrarSeccion }){
     const navigate= useNavigate();
     const location = useLocation();
     const user = location.state?.user; // accedemos al usuario
-    const [clientes, setClientes]= useState ();
-    const [filtroCli, setFiltroCli]= useState ();
     const [listaSeguros, setListaSeguros]= useState ();
-
+    const [loading,setLoading]= useState(true)
 
     useEffect(()=>{
         const traterSeguros=async () => {
-            const dataSeguro = await GestionContratacionFun.traerSeguros(navigate);
+            try {
+                const dataSeguro = await GestionContratacionFun.traerSeguros(navigate);
             setListaSeguros(dataSeguro.rows);
-           // setClientes(dataClientes.rows);
-           console.log('gestionContratacion')
-
+            } catch (error) {
+                console.log('Ha ocurrido un error: '+error)
+            }finally{
+                setLoading(false)
+            }
         }
         traterSeguros();
        
@@ -28,9 +30,13 @@ export function GestionContratacion({ mostrarSeccion }){
 
     const columlistSeguro=[
         {name:"N. Seguro",selector:row=>row.id_seguro},
-        {name:"Ciudad",selector:row=>row.ciud_seguro},
-        {name:"Mes",selector:row=>row.mes_seguro},
-        {name:"Anio",selector:row=>row.anio_seguro},   
+        {name:"Titular ",selector:row=>row.cedr_cli},
+        {name:"Nombre",selector:row=>row.nom_cli},   
+        {name:"Apellido",selector:row=>row.ape_cli},
+        {name:"Seguro",selector:row=>row.nom_tip_seg},
+        {name:"Valor anual",selector:row=>row.pago_tip_seg},   
+        {name:"Tipo de pago",selector:row=>row.tiempo_seguro},   
+        {name:"Valor a pagar",selector:row=>row.monto_seguro},   
     ];
 
     return(
@@ -40,11 +46,11 @@ export function GestionContratacion({ mostrarSeccion }){
                     <div>
                         <label htmlFor=""> Buscar</label>
                         <input type="text" id="buscar" name="buscar" placeholder="Ingrese Codigo del seguro"  />
+                         <FcClearFilters size={25} />
                         <label htmlFor=""> Nuevo seguro </label>
                         <button onClick={() => mostrarSeccion("CrearContratacion")}>Crear</button>
-                         <FcClearFilters size={25} />
                          </div>
-
+                         {loading? (<CargarTablas />):
                          <DataTable 
                             pagination
                             paginationPerPage={20}
@@ -52,7 +58,7 @@ export function GestionContratacion({ mostrarSeccion }){
                             data={listaSeguros}
                             noDataComponent="No ha selecionado ningun Seguro"
                             persistTableHead >
-                            </DataTable>
+                            </DataTable> }
             </form>
             </div>
     );

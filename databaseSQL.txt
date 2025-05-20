@@ -194,7 +194,9 @@ CREATE TABLE seguro_bedeficio (
 CREATE TABLE validar_email (
   id_val_email SERIAL PRIMARY KEY,
   url_emal VARCHAR(20) NOT NULL,
-  token_val_email VARCHAR(512) NOT NULL
+  token_val_email VARCHAR(512) NOT NULL,
+  id_pers INTEGER,
+  FOREIGN KEY (id_pers) REFERENCES cliente(id_pers)
 );
 
 CREATE TABLE validar_contratacion (
