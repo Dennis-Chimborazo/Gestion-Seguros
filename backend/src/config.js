@@ -1,1 +1,2 @@
-export const puerto = process.env.PORT || 4000;
+import { puerto } from './config.js';
+
