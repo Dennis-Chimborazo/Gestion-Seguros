@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "jest --coverage",
-    "sonar": "jest --coverage && sonar-scanner"
+    "test:coverage": "react-scripts test --coverage --watchAll=false"
   },
   "keywords": [],
   "author": "",
