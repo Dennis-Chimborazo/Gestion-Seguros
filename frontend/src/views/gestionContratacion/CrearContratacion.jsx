@@ -460,13 +460,13 @@ export function CrearContratacion({ mostrarSeccion }){
                     <input type="text" name="email_emple" id="email_emple" value={empleado?.email_emple||''} />
                    </div>
                   <div>
-                    <button>Cancelar</button>
-                    <button onClick={guardarSeguro}>Guardar</button>
+                    <button className="btn-cancelar">Cancelar</button>
+                    <button className="btn-guardar" onClick={guardarSeguro}>Guardar</button>
 
                   </div>
                    {isModalOpen && (
                     <div className={styles.overlay}>
-                        <div className={styles.modal}>
+                        <div className={styles.modal} style={{maxHeight: '90vh', overflowY: 'auto', width: '40%'}}>
                         <button className={styles.closeBtn} onClick={cerrarModal}>X</button>
                         <ModalDependientes cerrarModal={cerrarModal} setListDependientes={setListDependientes} listDependientes={listDependientes}/>
                         </div>

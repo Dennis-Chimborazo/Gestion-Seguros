@@ -135,8 +135,8 @@ const verificarCondiciones = () => {
             <input type="date" name="fecha_fin" id="fecha_fin" />
           </div>
       <div>
-        <button type="button" onClick={cerrarModal}>Cerrar</button>
-        <button type="button" onClick={guardarDependiente}>Guardar</button>
+        <button type="button" className="btn-cancelar" onClick={cerrarModal}>Cancelar</button>
+        <button type="button" className="btn-guardar" onClick={guardarDependiente}>Guardar</button>
       </div>
     </form>
   );
