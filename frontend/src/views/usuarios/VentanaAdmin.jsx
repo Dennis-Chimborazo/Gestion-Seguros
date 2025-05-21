@@ -10,6 +10,7 @@ import CrearSeguroAdmin from "../segurosAdmin/CrearSeguroAdmin";
 import EditarSeguroAdmin from "../segurosAdmin/EditarSeguroAdmin";
 import GestionContratacion from "../gestionContratacion/gestionContratacion";
 import CrearContratacion from "../gestionContratacion/CrearContratacion";
+import ValidacionCliente from "../clientes/ValidacionCliente";
 
 
 export function VentanaAdmin() {
@@ -58,6 +59,7 @@ export function VentanaAdmin() {
         {seccionActiva === "EditarSeguroAdmin" && <EditarSeguroAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "GestionContratacion" && <GestionContratacion mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "CrearContratacion" && <CrearContratacion mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "clientePendiente" && <ValidacionCliente mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reportes" && <p>Sección de reportes</p>}
         {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
       </section>

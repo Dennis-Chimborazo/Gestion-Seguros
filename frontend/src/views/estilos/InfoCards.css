@@ -1,0 +1,45 @@
+/* InfoCard.css */
+.info-card {
+  width: 150px;       /* antes 200px */
+  height: 90px;       /* antes 120px */
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;      /* antes 15px */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  margin: 8px;        /* antes 10px */
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+}
+
+.info-card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.info-card-number {
+  font-size: 2em;      /* antes 3em */
+  font-weight: bold;
+  text-align: left;
+}
+
+.info-card-text {
+  font-size: 0.9em;    /* antes 1em */
+  text-align: left;
+  margin-top: 3px;     /* antes 5px */
+}
+
+.info-card-more-info {
+  font-size: 0.7em;    /* antes 0.8em */
+  text-align: left;
+  opacity: 0.8;
+  margin-top: 8px;     /* antes 10px */
+}

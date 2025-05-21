@@ -9,68 +9,17 @@ const database = db.getConexion();
 
 // Nueva ruta: enviar correo
 router.post("/enviar-correo", async (req, res) => {
-    const { to, token } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
-    const subject='Validar la creacion de la cuenta'
+  const { to, token } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
+  const subject='Validar la creacion de la cuenta'
   const text = `
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>¡Gracias por registrarte en Seguros.SA!</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          color: #333;
-          margin: 20px;
-        }
-        .container {
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 20px;
-          border: 1px solid #ddd;
-          border-radius: 5px;
-        }
-        h2 {
-          color: #4CAF50;
-        }
-        p {
-          line-height: 1.6;
-        }
-        .button-container {
-          text-align: center;
-          margin: 30px 0;
-        }
-        .button {
-          display: inline-block;
-          padding: 12px 25px;
-          background-color: #4CAF50;
-          color: white;
-          text-decoration: none;
-          border-radius: 5px;
-          font-size: 16px;
-        }
-        .signature {
-          margin-top: 40px;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <h2>🎉 ¡Gracias por registrarte en Seguros.SA!</h2>
-        <p>Nos complace darte la bienvenida a nuestra plataforma. Tu cuenta ha sido creada con éxito y estás a un paso de comenzar a disfrutar de todos los beneficios que ofrecemos.</p>
-        <p>🔐 Para garantizar la seguridad de tu información y asegurarnos de que tú solicitaste esta cuenta, necesitamos que confirmes tu dirección de correo electrónico.</p>
-        <p>👉 Por favor, haz clic en el siguiente botón para validar tu cuenta:</p>
-        <div class="button-container">
-          <a href="http://localhost:3000/validacionEmail/${token}" class="button">
+        🎉 ¡Gracias por registrarte en Seguros.SA!
+        Nos complace darte la bienvenida a nuestra plataforma. Tu cuenta ha sido creada con éxito y estás a un paso de comenzar a disfrutar de todos los beneficios que ofrecemos.
+        🔐 Para garantizar la seguridad de tu información y asegurarnos de que tú solicitaste esta cuenta, necesitamos que confirmes tu dirección de correo electrónico.
+        👉 Por favor, haz clic en el siguiente botón para validar tu cuenta:
+         "http://localhost:3000/validacionEmail/${token}" 
             Validar mi cuenta
-          </a>
-        </div>
-        <p>Si tú no solicitaste esta cuenta, puedes ignorar este mensaje. No se tomará ninguna acción sin tu confirmación.</p>
-        <p class="signature">Atentamente,<br><strong>El equipo de Seguros.SA</strong></p>
-      </div>
-    </body>
-    </html>
+        Si tú no solicitaste esta cuenta, puedes ignorar este mensaje. No se tomará ninguna acción sin tu confirmación.
+        Atentamente,<br><strong>El equipo de Seguros.SA
     `;
 
 //mznp sfmv ihna scjb
@@ -108,70 +57,18 @@ router.post("/enviar-correo", async (req, res) => {
 });
 
 router.post("/correo-Gest-contratacion", async (req, res) => {
-    const { to, token } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
-    console.log(to);
-   const subject = 'Validación de contratación de seguro en Seguros.SA';
-const text = `
-  <!DOCTYPE html>
-  <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validación de Contratación de Seguro</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        color: #333;
-        margin: 20px;
-      }
-      .container {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-      }
-      h2 {
-        color: #2E86C1;
-      }
-      p {
-        line-height: 1.6;
-      }
-      .button-container {
-        text-align: center;
-        margin: 30px 0;
-      }
-      .button {
-        display: inline-block;
-        padding: 12px 25px;
-        background-color: #2E86C1;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        font-size: 16px;
-      }
-      .signature {
-        margin-top: 40px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h2>📄 Validación de Contratación de Seguro</h2>
-      <p>Estimado/a cliente,</p>
-      <p>Recientemente se ha generado una solicitud de contratación de un nuevo seguro a tu nombre en nuestra plataforma <strong>Seguros.SA</strong>.</p>
-      <p>🔐 Para confirmar que estás de acuerdo con este contrato, es necesario que valides tu aceptación.</p>
-      <p>👉 Haz clic en el siguiente botón para revisar los detalles y confirmar la contratación:</p>
-      <div class="button-container">
-        <a href="http://localhost:3000/validacionContratacion/${token}" class="button">
-          Validar Contrato
-        </a>
-      </div>
-      <p>Si tú no solicitaste este contrato, puedes ignorar este mensaje. No se realizará ninguna acción sin tu confirmación.</p>
-      <p class="signature">Atentamente,<br><strong>El equipo de Seguros.SA</strong></p>
-    </div>
-  </body>
-  </html>
+  const { to, token } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
+  const subject = 'Validación de contratación de seguro en Seguros.SA';
+  const text = `
+      📄 Validación de Contratación de Seguro
+      Estimado/a cliente,
+      Recientemente se ha generado una solicitud de contratación de un nuevo seguro a tu nombre en nuestra plataforma Seguros.SA
+      🔐 Para confirmar que estás de acuerdo con este contrato, es necesario que valides tu aceptación.
+      👉 Haz clic en el siguiente botón para revisar los detalles y confirmar la contratación:
+        "http://localhost:3000/validacionContratacion/${token}" 
+      Si tú no solicitaste este contrato, puedes ignorar este mensaje. No se realizará ninguna acción sin tu confirmación
+      Atentamente,
+      El equipo de Seguros.SA
 `;
 
   if (!to || !subject || !text) {
