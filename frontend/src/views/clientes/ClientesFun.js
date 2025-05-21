@@ -44,11 +44,11 @@ class ClientesFun {
       const response =  await ApiService.enviarDatos("user/crearusuariocliente",formulario,navigate);
       return response;
    }
-   static async peticionValidacionEmail(formulario,navigate){
-      const response =  await ApiService.enviarDatos("user/generar_token_email",formulario,navigate);
+   static async generarTokenValidacion(formulario,navigate){
+      const response =  await ApiService.enviarDatos("client/generar_token_email",formulario,navigate);
       return response;
    }
-    static async enviarValidacionEmail(formulario,navigate){
+    static async enviarCorreoEmail(formulario,navigate){
       const response =  await ApiService.enviarDatos("email/enviar-correo",formulario,navigate);
       return response;
    }
@@ -66,6 +66,17 @@ class ClientesFun {
       const response =  await ApiService.actualizarDatos("client/activar-cuenta",id,navigate);
       return response;
    }
-
+   static async obtenerClientePeniente(navigate){
+      const response =  await ApiService.traerDatos("client/listarPendientes",navigate);
+      return response;
+   }
+      static async actualizarTokenValidacion(id,navigate){
+      const response =  await ApiService.actualizarDatos("client/actualizar_token_email",id,navigate);
+      return response;
+   }
+   static async actualizarEmailCliente(id,navigate){
+      const response =  await ApiService.actualizarDatos("client/update-correo",id,navigate);
+      return response;
+   }
 }
     export default ClientesFun;

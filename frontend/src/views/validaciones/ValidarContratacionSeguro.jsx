@@ -1,68 +1,128 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import styles from "../estilos/validarEmail.module.css";
+import CargarInf from "../cargando/CargarInf";
+import swal from "sweetalert2";
+import GestionContratacionFun from "../gestionContratacion/GestionContratacionFun";
+
 
 export function ValidarContratacionSeguro() {
-  const [aceptaTerminos, setAceptaTerminos] = useState(false);
-  
-  const handleContratar = () => {
-    if (aceptaTerminos) {
-      // Aquí puedes enviar confirmación al backend si lo deseas
-    } else {
-      alert("Debe aceptar los términos y condiciones para continuar.");
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [cliente, setCliente] = useState({ id_pers:'',idseguro:'',idvalid:'', nombre: "",
+     apellido: "",cedula: "",monto_seguro: "",tiempo_seguro: "",frecuencia:'' });
+  const [error, setError] = useState(""); // para errores de token
+  const [success, setSuccess] = useState(false); // si todo sale bien
+  const [loading, setLoading] = useState(true);
+
+ useEffect(() => {
+  const verificar = async () => {
+    try {
+      const res = await GestionContratacionFun.validarTokenContratacion({ url: id }, navigate);
+      console.log(res.idvalid);
+
+      const datosCliente = res.client[0];
+      const datosSeguro = res.contr[0];
+
+      setCliente({
+        id_pers: datosCliente.id_pers,
+        idseguro: res.data.id_seguro,
+        idvalid: res.idvalid,
+        nombre: datosCliente.nom_cli,
+        apellido: datosCliente.ape_cli,
+        cedula: datosCliente.cedr_cli,
+        tipo_seguro: datosSeguro.id_tip_seg,
+        monto_seguro: datosSeguro.monto_seguro,
+        frecuencia: datosSeguro.tiempo_seguro,
+      });
+      setSuccess(true);
+    } catch (error) {
+      setError("El enlace ya expiró o no es válido.");
+    } finally {
+      setLoading(false);  
     }
   };
 
-  
+  verificar();
+}, [id, navigate]);
 
-  return (
-    <div className="container" style={{ padding: "20px", maxWidth: "700px", margin: "auto" }}>
-      <h2>Validar Contratación de Seguro</h2>
-      {/* <p><strong>Cédula:</strong> {cedula}</p> */}
 
-      <div style={{ margin: "20px 0" }}>
-        <h4>Detalles del Seguro:</h4>
-        {/* <ul>
-          <li><strong>Compañía:</strong> Seguros S.A.</li>
-          <li><strong>Tipo de Seguro:</strong> Vida Individual</li>
-          <li><strong>Duración:</strong> 1 año renovable</li>
-          <li><strong>Monto asegurado:</strong> $3,500</li>
-          <li><strong>Periodicidad de pago:</strong> Trimestral</li>
-        </ul> */}
-      </div>
+  if (loading) {
+    return <CargarInf />;
+  }
 
-      <div style={{ margin: "20px 0" }}>
-        <h4>Términos y Condiciones</h4>
-        <p>
-          Al aceptar estos términos, el asegurado confirma que ha leído y comprendido las condiciones del contrato con Seguros S.A.,
-           incluyendo cláusulas de cobertura, exclusiones, renovación automática y derecho de cancelación. 
-           Este contrato estará sujeto a las leyes del país en que se emite.
-        </p>
+  const validarCuenta=async(e)=>{
+    e.preventDefault()
+    try {
+      const api = await GestionContratacionFun.activarContratacion(({id:cliente.idseguro, idvalid:cliente.idvalid}),navigate)
+      console.log(api)
+      if (api) {
+        swal.fire({
+              title:"<label>Muchas Felicidades</label>",
+              text:"se ha completado con exito la validacion de tu cuenta en Seguros.SA \nYa puedes comenzar desde ahora mismo",
+              timer:4500,
+          })
+        navigate('/');
+      }
+      
+    } catch (error) {
+      console.log(error)
+      swal.fire({
+              title:"<label>Advertencia</label>",
+              text:"A ocurrido un fallo en tu validacion",
+              timer:3500,
+          })
+    }
+  }
 
-        <label>
-          <input
-            type="checkbox"
-            checked={aceptaTerminos}
-            onChange={(e) => setAceptaTerminos(e.target.checked)}
-          />{" "}
-          Acepto los términos y condiciones del contrato de seguro.
-        </label>
-      </div>
+ return (
+  <div className={styles.container}>
+    <div className={styles.card}>
+      {success ? (
+        <>
+          <h2 className={styles.title}>🎉 ¡Validación de Contratación Exitosa!</h2>
+          
+          <p className={styles.message}>
+            Estimado/a <strong>{cliente.nombre} {cliente.apellido}</strong>,
+          </p>
+          
+          <p className={styles.message}>
+            Nos complace informarte que la contratación de tu seguro ha sido procesada correctamente. A continuación, te compartimos un resumen de tu póliza:
+          </p>
 
-      <button
-        onClick={handleContratar}
-        disabled={!aceptaTerminos}
-        style={{
-          padding: "10px 20px",
-          backgroundColor: aceptaTerminos ? "#007bff" : "#ccc",
-          color: "white",
-          border: "none",
-          cursor: aceptaTerminos ? "pointer" : "not-allowed"
-        }}
-      >
-        Aceptar Contratación
-      </button>
+          <p className={styles.message}><strong>🪪 Cédula:</strong> {cliente.cedula}</p>
+
+          <ul className={styles.message}>
+            <li><strong>💰 Monto asegurado:</strong> ${cliente.monto_seguro}</li>
+            <li><strong>📆 Frecuencia de pago:</strong> {cliente.frecuencia}</li>
+          </ul>
+
+          <p className={styles.message}>
+            Esta validación confirma la autenticidad de tu información personal y contractual, y nos permite ofrecerte un servicio seguro, confiable y personalizado.
+          </p>
+
+          <p className={styles.message}>
+            Para finalizar el proceso , haz clic en el siguiente botón:
+          </p>
+
+          <button className={styles.button} onClick={validarCuenta}>
+            Validar contratación
+          </button>
+        </>
+      ) : (
+        <>
+          <h2 className={styles.title}>⚠️ Enlace inválido o expirado</h2>
+          <p className={styles.message}>{error}</p>
+          <p className={styles.message}>
+            Si consideras que esto es un error o deseas solicitar un nuevo enlace de validación, por favor comunícate con nuestro equipo de soporte de Seguros.SA.
+          </p>
+          <button className={styles.button} onClick={() => navigate("/")}>Volver al inicio</button>
+        </>
+      )}
     </div>
-  );
+  </div>
+);
+
 }
 
 export default ValidarContratacionSeguro;

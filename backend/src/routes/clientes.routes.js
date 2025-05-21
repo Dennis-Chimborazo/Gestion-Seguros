@@ -19,6 +19,18 @@ router.get("/listar", async (req, res) => {
   }
 });
 
+router.get("/listarPendientes", async (req, res) => {
+  const idEstado=3
+  try {
+    const query = `SELECT * FROM cliente WHERE id_estado = $1`;
+    const data = await database.query(query, [idEstado]);
+    res.json(data);
+  } catch (error) {
+    console.error("Error en consulta:", error);
+    res.status(500).json({ success: false, message: "Error al obtener datos", error: error.message });
+  }
+});
+
 router.post("/save", async (req, res) => {
   const formulario = req.body;
 
@@ -39,13 +51,6 @@ router.post("/save", async (req, res) => {
   }
 
   try {
-    const existe = await database.query(`
-      SELECT 1 FROM cliente WHERE cedr_cli = $1;
-    `, [formulario.cedr_cli]);
-
-    if (existe.rowCount > 0) {
-      return res.status(400).json({ message: "El cliente con esa cédula ya existe" });
-    }
 
     const data = await database.query(`
       INSERT INTO cliente (
@@ -280,7 +285,6 @@ router.post("/validar-token-email", async (req, res) => {
       "SELECT token_val_email,id_val_email FROM validar_email WHERE url_emal = $1",
       [url]
     );
-
     if (result.rowCount === 0) {
       return res.status(404).json({ success: false, message: "URL no encontrada." });
     }
@@ -350,5 +354,69 @@ router.put("/activar-cuenta", async (req, res) => {
     res.status(500).json({ error: "Error interno al actualizar cliente." });
   }
 });
+router.post("/generar_token_email", async (req, res) => {
+  
+  try {
+    const { id_pers, url } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
+    const payload = { id_pers };
+    const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
 
-module.exports = router;
+    await database.query(
+      "INSERT INTO validar_email (url_emal, token_val_email,id_pers) VALUES ($1, $2)",
+      [url, token,id_pers]
+    );
+
+    res.json({ success: true, token, message: "Token creado y guardado exitosamente." });
+  } catch (error) {
+    console.error("Error en /generar_token_email:", error);
+    res.status(500).json({ success: false, message: "Error del servidor" });
+  }
+});
+
+router.put("/actualizar_token_email", async (req, res) => {
+  try {
+    const { id_pers, url } = req.body;
+    console.log('-------------')
+    console.log(id_pers,url);
+
+    console.log('-------------')
+
+    const payload = { id_pers };
+    const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
+    const result = await database.query(
+      `UPDATE validar_email
+       SET url_emal = $1, token_val_email = $2
+       WHERE id_pers = $3`,
+      [url, token, id_pers]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ success: false, message: "No se encontró el registro para actualizar." });
+    }
+    res.json({ success: true, token, message: "Token actualizado exitosamente." });
+  } catch (error) {
+    console.error("Error en /actualizar_token_email:", error);
+    res.status(500).json({ success: false, message: "Error del servidor" });
+  }
+});
+
+router.put("/update-correo", async (req, res) => {
+  const formulario = req.body;
+  try {
+    const data = await database.query(`
+      UPDATE cliente SET
+        email_pers = $1
+      WHERE id_pers = $2
+    `, [
+      formulario.newEmail,
+      formulario.id_pers
+    ]);
+
+    res.status(200).json({ message: "Cliente actualizado correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al actualizar cliente" });
+  }
+});
+
+module.exports = router; 
+
