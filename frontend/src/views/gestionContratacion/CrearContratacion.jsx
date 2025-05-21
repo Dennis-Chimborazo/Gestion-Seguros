@@ -4,11 +4,11 @@ import DataTable from "react-data-table-component";
 import ModalDependientes from "./ModalDependientes";
 import styles from "../estilos/modalDependientes.module.css";
 import {Toaster,toast} from "sonner";
-import ClientesFun from "../clientes/ClientesFun";
 import swal from "sweetalert2";
 import Select from "react-select";
 import GestionContratacionFun from "./GestionContratacionFun";
 import SegurosAdminFun from "../segurosAdmin/SegurosAdminFun";
+import ClientesFun from "../clientes/ClientesFun";
 
 export function CrearContratacion({ mostrarSeccion }){
     const navigate= useNavigate();
@@ -216,6 +216,7 @@ export function CrearContratacion({ mostrarSeccion }){
       }
     };
     const buscarEmpleado= async(e)=>{
+
       e.preventDefault()
       const id = document.getElementById("ced_emple").value;
       if (id!=='') {
@@ -243,7 +244,6 @@ export function CrearContratacion({ mostrarSeccion }){
                      toast.error("Empleado responsable de la contratacion no ha sigo asigando");
                      return false;
                   }
-                  toast.error("pk ⚠️");
                 }else{
                    toast.error("Debe de asignar minimo un dependiente⚠️");
                   return false;

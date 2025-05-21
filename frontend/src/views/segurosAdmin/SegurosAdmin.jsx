@@ -13,22 +13,17 @@ export function SegurosAdmin({ mostrarSeccion }){
     const [filtroSeguros, setFiltroSeguros]= useState ();
     const [listaSeguros, setListaSeguros]= useState ();
     const [loading, setLoading] = useState(true); 
-
-
     useEffect(()=>{
-        
         const traterTipoSeguros=async () => {
             try {
                 const dataSeguro = await SegurosAdminFun.traerTiposSeguros(navigate);
-            setListaSeguros(dataSeguro.rows);
-            setFiltroSeguros(dataSeguro.rows);
+                setListaSeguros(dataSeguro.rows);
+                setFiltroSeguros(dataSeguro.rows);
             } catch (error) {
                 console.log('HA OCURRIDO UN ERROR')
             } finally{
                 setLoading(false)
-
             }
-            
         }
         traterTipoSeguros();
        
@@ -63,12 +58,9 @@ export function SegurosAdmin({ mostrarSeccion }){
             setFiltroSeguros(filtro);
         }
     };
-
     const borrarFiltro=()=>{
         setFiltroSeguros(listaSeguros);
     }
-    
-
     return(
         <div>
             <form action="" method="">
