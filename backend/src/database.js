@@ -15,7 +15,7 @@ const { Client } = pkg;
       password: 'cTbyF9p3fcC4Yo7xpFNzcLwtvK6TboTH',
       port: 5432, 
        ssl: {
-        rejectUnauthorized: false // ⚠️ Importante para Render
+        rejectUnauthorized: false // ⚠ Importante para Render
       }
     });
 
