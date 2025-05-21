@@ -11,7 +11,7 @@ class ApiService {
   
     const response = await axios.get(apiUrl + getApi, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "applicat   ion/json",
         Authorization: `Bearer ${token}`,
       },
     });
