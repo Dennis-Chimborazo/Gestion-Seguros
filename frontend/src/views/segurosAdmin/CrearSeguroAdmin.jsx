@@ -95,6 +95,7 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
       }
 
     }
+
     const guardarBeneficios = async (id) => {
       const valores = listbeneficios.map(b => [id, b.id_beneficios]);
       const res = await SegurosAdminFun.guardarBeneficioSeguro(valores, navigate);

@@ -8,7 +8,7 @@ const { Client } = pkg;
       return DataBase.instancia;
     }
 
-    this.client = new Client({
+   this.client = new Client({
       user: 'admin',
       host: 'dpg-d0j12bd6ubrc73cko57g-a.oregon-postgres.render.com',
       database: 'gestionpruebas',

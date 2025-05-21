@@ -37,5 +37,17 @@ class GestionContratacionFun {
       const response =  await ApiService.enviarDatos("email/correo-Gest-contratacion",formulario,navigate);
       return response;
    }
+     static async generarTokenContratacion(formulario,navigate){
+      const response =  await ApiService.enviarDatos("seguro/generar_token_contr",formulario,navigate);
+      return response;
+   }
+    static async validarTokenContratacion(formulario,navigate){
+      const response =  await ApiService.enviarDatos("seguro/validar-token-contr",formulario,navigate);
+      return response;
+   }
+   static async activarContratacion(formulario,navigate){
+      const response =  await ApiService.actualizarDatos("seguro/activar-seguro",formulario,navigate);
+      return response;
+   }
 }
     export default GestionContratacionFun;

@@ -4,6 +4,8 @@ import DataTable from "react-data-table-component";
 import ClientesFun from "./ClientesFun.js";
 import styles from '../estilos/cliente.module.css';
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
+import CargarTablas from "../cargando/CargarTablas";
+import InfoCard from "../cargando/InfoCards";
 
 
 export function Clientes({ mostrarSeccion }){
@@ -12,13 +14,19 @@ export function Clientes({ mostrarSeccion }){
     const user = location.state?.user; // accedemos al usuario
     const [clientes, setClientes]= useState ();
     const [filtroCli, setFiltroCli]= useState ();
-
+    const [loading, setLoading] = useState(true); 
 
     useEffect(()=>{
         const traterClientes=async () => {
-            const dataClientes = await ClientesFun.obtenerCliente(navigate);
-            setFiltroCli(dataClientes.rows);
-            setClientes(dataClientes.rows);
+            try {
+                const dataClientes = await ClientesFun.obtenerCliente(navigate);
+                setFiltroCli(dataClientes.rows);
+                setClientes(dataClientes.rows);
+            } catch (error) {
+                console.log("Ha ocurrido un error");
+            } finally{
+                setLoading(false)
+            }
         }
 
         
@@ -120,41 +128,41 @@ export function Clientes({ mostrarSeccion }){
         },
       };
 
-    return (
-        <div className={styles.container}>
-          <h2>Clientes</h2>
-          <form className={styles["form-row"]} onSubmit={(e) => e.preventDefault()}>
-            <div className={styles["form-group"]}>
-              <label htmlFor="buscar">Buscar</label>
-              <input
-                type="text"
-                id="buscar"
-                name="buscar"
-                placeholder="Ingrese número de cédula"
-                onChange={filtrarClientes}
-              />
-            </div>
-    
-           
-            <FcClearFilters size={25} onClick={borrarFiltro} style={{ cursor: "pointer", marginTop: "30px" }} />
-          </form>
-          <div className={styles["form-group"]}>
-              <button type="button" onClick={() => mostrarSeccion("crearClientes")}>Crear</button>
-            </div>
-    
-          <div className={styles["table-section"]}>
-            <DataTable
-              pagination
-              paginationPerPage={20}
-              columns={columasClientes}
-              data={filtroCli}
-              noDataComponent="No ha seleccionado ninguna actividad"
-          customStyles={customStyles}
-              persistTableHead
+   return(
+        <div>
+            <form action="" method="get">
+                <div>
+                     <h2>Clientes </h2>
+                    <div>
+                        <label htmlFor=""> Buscar</label>
+                        <input type="text" id="buscar" name="buscar" placeholder="Ingrese numero de cedula" onChange={filtrarClientes} />
+                        <FcClearFilters size={25}  onClick={borrarFiltro}/>
+                        <div style={{ display: 'flex', justifyContent: 'flex-start', margin: '20px 0' }}>
+                            <InfoCard
+                            text="Nuevo Cliente"
+                            color="#00AEEF" // Color azul de la imagen
+                            onClick={() => mostrarSeccion('crearClientes')}
+                            />
+                            <InfoCard
+                            text="Validaciones pendientes"
+                            color="#4CAF50" // Color verde de la imagen
+                            onClick={() => mostrarSeccion('clientePendiente')}
+                            />
+                        </div>
+                        </div>
 
-            />
-          </div>
-        </div>
-      );
+                         </div>
+                         {loading?(<CargarTablas />):
+                            <DataTable 
+                            pagination
+                            paginationPerPage={20}
+                            columns={columasClientes} 
+                            data={filtroCli}
+                            noDataComponent="No ha selecionado ninguna actividad"
+                            persistTableHead >
+                            </DataTable>}
+            </form>
+            </div>
+    );
     }
 export default Clientes;

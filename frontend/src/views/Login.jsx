@@ -20,7 +20,7 @@ export function Login() {
       }));
       navigate("/"+res.user.nom_rol, { state: { user: res.user } }); 
     }else{
-      toast.error("Usuario o contrasena incorrecta");
+       toast.error(res.user || "Error desconocido");
       }
     }
   };

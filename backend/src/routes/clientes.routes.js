@@ -5,11 +5,8 @@ const router = Router();
 const db = new DataBase();
 const database = db.getConexion();
 
-
-
 const ESTADO_ACTIVO = '1';
 const ESTADO_INACTIVO = '2';
-
 
 router.get("/listar", async (req, res) => {
   try {
@@ -22,20 +19,38 @@ router.get("/listar", async (req, res) => {
   }
 });
 
+router.get("/listarPendientes", async (req, res) => {
+  const idEstado=3
+  try {
+    const query = `SELECT * FROM cliente WHERE id_estado = $1`;
+    const data = await database.query(query, [idEstado]);
+    res.json(data);
+  } catch (error) {
+    console.error("Error en consulta:", error);
+    res.status(500).json({ success: false, message: "Error al obtener datos", error: error.message });
+  }
+});
 
 router.post("/save", async (req, res) => {
-  const formulario = req.body;  
-  const estado='3';
+  const formulario = req.body;
 
-  
+  const camposObligatorios = [
+    'cedr_cli', 'tipo_cedr_cli', 'nacion_cli', 'nom_cli', 'ape_cli',
+    'fecha_naci_cli', 'lugar_naci_cli', 'tel_pers', 'cel_pers', 'email_pers',
+    'edad_pers', 'sexo_cli', 'estado_civil_pers', 'estatura_cli', 'peso_cli',
+    'parroq_cli', 'calle_princ_pers', 'calle_secun_pers', 'id_ciud'
+  ];
+
+  const camposFaltantes = camposObligatorios.filter(campo => !formulario[campo]);
+
+  if (camposFaltantes.length > 0) {
+    return res.status(400).json({
+      success: false,
+      message: `Faltan campos obligatorios: ${camposFaltantes.join(", ")}`
+    });
+  }
+
   try {
-     const existe = await database.query(`
-      SELECT 1 FROM cliente WHERE cedr_cli = $1;
-    `, [formulario.cedr_cli]);
-
-    if (existe.rowCount > 0) {
-      return res.status(400).json({ message: "El nombre del tipo de seguro ya existe" });
-    }
 
     const data = await database.query(`
       INSERT INTO cliente (
@@ -48,7 +63,6 @@ router.post("/save", async (req, res) => {
         $7, $8, $9, $10, $11, $12,
         $13, $14, $15, $16, $17, $18, $19, $20
       )  RETURNING id_pers;
-
     `, [
       formulario.cedr_cli,
       formulario.tipo_cedr_cli,
@@ -71,25 +85,24 @@ router.post("/save", async (req, res) => {
       formulario.id_ciud,
       ESTADO_ACTIVO
     ]);
-    
+
     const idInsertado = data.rows[0].id_pers;
     res.json({ message: "Cliente guardado exitosamente", id_pers: idInsertado });
 
   } catch (error) {
     console.error(error);
-    // Verificar si es error de duplicado
-    if (error.code === '23505') { // Código PostgreSQL para violación de clave única
-      return res.status(409).json({ 
-        success: false, 
-        message: "Ya existe un cliente con esa cédula", 
-        error: error.message 
+    if (error.code === '23505') {
+      return res.status(409).json({
+        success: false,
+        message: "Ya existe un cliente con esa cédula",
+        error: error.message
       });
     }
-    
-    res.status(500).json({ 
-      success: false, 
-      message: "Error al guardar cliente", 
-      error: error.message 
+
+    res.status(500).json({
+      success: false,
+      message: "Error al guardar cliente",
+      error: error.message
     });
   }
 });
@@ -130,11 +143,10 @@ router.post("/comprobCredenciales", async (req, res) => {
 router.put("/update", async (req, res) => {
   const formulario = req.body;
   try {
-  
     if (!formulario.id_pers) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "Se requiere el ID del cliente para actualizar" 
+      return res.status(400).json({
+        success: false,
+        message: "Se requiere el ID del cliente para actualizar"
       });
     }
 
@@ -183,43 +195,40 @@ router.put("/update", async (req, res) => {
       formulario.id_ciud,
       formulario.id_pers
     ]);
-    
-    // Verificar si se actualizó algún cliente
+
     if (data.rowCount === 0) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Cliente no encontrado" 
+      return res.status(404).json({
+        success: false,
+        message: "Cliente no encontrado"
       });
     }
-    
-    res.status(200).json({ 
-      success: true, 
+
+    res.status(200).json({
+      success: true,
       message: "Cliente actualizado correctamente",
-      cliente: data.rows[0] 
+      cliente: data.rows[0]
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ 
-      success: false, 
-      error: "Error al actualizar cliente", 
-      message: error.message 
+    res.status(500).json({
+      success: false,
+      error: "Error al actualizar cliente",
+      message: error.message
     });
   }
 });
 
-// Desactivar cliente (cambiar estado)
 router.put("/desactivar", async (req, res) => {
   const formulario = req.body;
-  
+
   try {
-    // Validar que exista el ID de cliente
     if (!formulario.id_pers) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "Se requiere el ID del cliente para desactivar" 
+      return res.status(400).json({
+        success: false,
+        message: "Se requiere el ID del cliente para desactivar"
       });
     }
-    
+
     const data = await database.query(`
       UPDATE cliente SET
         id_estado = $1
@@ -229,26 +238,25 @@ router.put("/desactivar", async (req, res) => {
       ESTADO_INACTIVO,
       formulario.id_pers
     ]);
-    
-    // Verificar si se actualizó algún cliente
+
     if (data.rowCount === 0) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Cliente no encontrado" 
+      return res.status(404).json({
+        success: false,
+        message: "Cliente no encontrado"
       });
     }
-    
-    res.status(200).json({ 
-      success: true, 
+
+    res.status(200).json({
+      success: true,
       message: "Cliente desactivado correctamente",
-      cliente: data.rows[0] 
+      cliente: data.rows[0]
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ 
-      success: false, 
-      error: "Error al desactivar cliente", 
-      message: error.message 
+    res.status(500).json({
+      success: false,
+      error: "Error al desactivar cliente",
+      message: error.message
     });
   }
 });
@@ -262,7 +270,7 @@ router.get("/buscar", async (req, res) => {
     if (data.rows.length === 0) {
       return res.status(404).json({ message: "Cliente no encontrado" });
     }
-    res.json(data.rows[0]); // ← Aquí retornas un solo objeto
+    res.json(data.rows[0]);
   } catch (error) {
     console.error("Error en consulta:", error);
     res.status(500).json({ message: "Error al obtener datos", error });
@@ -270,25 +278,22 @@ router.get("/buscar", async (req, res) => {
 });
 
 router.post("/validar-token-email", async (req, res) => {
-  const { url } = req.body; // Espera: { url: "URLgenerada" }
+  const { url } = req.body;
 
   try {
-    // 1. Buscar token asociado al URL
     const result = await database.query(
       "SELECT token_val_email,id_val_email FROM validar_email WHERE url_emal = $1",
       [url]
     );
-
     if (result.rowCount === 0) {
       return res.status(404).json({ success: false, message: "URL no encontrada." });
     }
 
     const token = result.rows[0].token_val_email;
 
-    // 2. Verificar el token JWT
     let payload;
     try {
-      payload = jwt.verify(token, "emailCliente"); // clave secreta que usaste al generar
+      payload = jwt.verify(token, "emailCliente");
     } catch (err) {
       return res.status(401).json({ success: false, message: "Token inválido o expirado." });
     }
@@ -296,8 +301,8 @@ router.post("/validar-token-email", async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Token válido.",
-      data: payload,// contiene id_pers
-      idvalid:result.rows[0].id_val_email
+      data: payload,
+      idvalid: result.rows[0].id_val_email
     });
 
   } catch (error) {
@@ -307,7 +312,7 @@ router.post("/validar-token-email", async (req, res) => {
 });
 
 router.get("/buscarclienteID", async (req, res) => {
-      const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+  const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
 
   try {
     const query = `SELECT * FROM cliente WHERE id_pers = $1`;
@@ -322,7 +327,7 @@ router.get("/buscarclienteID", async (req, res) => {
 router.put("/activar-cuenta", async (req, res) => {
   const { id, idvalid } = req.body;
   const estadoActivo = '1';
-  
+
   if (!id || !idvalid) {
     return res.status(400).json({ error: "Faltan datos requeridos (id o idvalid)." });
   }
@@ -349,9 +354,69 @@ router.put("/activar-cuenta", async (req, res) => {
     res.status(500).json({ error: "Error interno al actualizar cliente." });
   }
 });
+router.post("/generar_token_email", async (req, res) => {
+  
+  try {
+    const { id_pers, url } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
+    const payload = { id_pers };
+    const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
 
+    await database.query(
+      "INSERT INTO validar_email (url_emal, token_val_email,id_pers) VALUES ($1, $2)",
+      [url, token,id_pers]
+    );
 
+    res.json({ success: true, token, message: "Token creado y guardado exitosamente." });
+  } catch (error) {
+    console.error("Error en /generar_token_email:", error);
+    res.status(500).json({ success: false, message: "Error del servidor" });
+  }
+});
 
+router.put("/actualizar_token_email", async (req, res) => {
+  try {
+    const { id_pers, url } = req.body;
+    console.log('-------------')
+    console.log(id_pers,url);
+
+    console.log('-------------')
+
+    const payload = { id_pers };
+    const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
+    const result = await database.query(
+      `UPDATE validar_email
+       SET url_emal = $1, token_val_email = $2
+       WHERE id_pers = $3`,
+      [url, token, id_pers]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ success: false, message: "No se encontró el registro para actualizar." });
+    }
+    res.json({ success: true, token, message: "Token actualizado exitosamente." });
+  } catch (error) {
+    console.error("Error en /actualizar_token_email:", error);
+    res.status(500).json({ success: false, message: "Error del servidor" });
+  }
+});
+
+router.put("/update-correo", async (req, res) => {
+  const formulario = req.body;
+  try {
+    const data = await database.query(`
+      UPDATE cliente SET
+        email_pers = $1
+      WHERE id_pers = $2
+    `, [
+      formulario.newEmail,
+      formulario.id_pers
+    ]);
+
+    res.status(200).json({ message: "Cliente actualizado correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al actualizar cliente" });
+  }
+});
 
 module.exports = router; 
 

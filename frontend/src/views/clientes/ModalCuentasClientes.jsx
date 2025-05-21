@@ -10,7 +10,6 @@ export function ModalCuentasClientes({ cerrarModal,datosCliente,mostrarSeccion})
 
  useEffect(()=>{
   const valores =()=>{
-    console.log(datosCliente)
     setFormulario({...formulario,user:datosCliente.email_pers})
   }
   valores();
@@ -21,23 +20,34 @@ export function ModalCuentasClientes({ cerrarModal,datosCliente,mostrarSeccion})
  }
  const crearCuenta=async(e)=>{
     e.preventDefault()
-    
     if (verificarDatos()) {
-     const res= await ClientesFun.guardarCliente(datosCliente,navigate);
-      const resCuent= await ClientesFun.crearCuenta(formulario,navigate)
-              if (resCuent) {
-    const urlRandom=crearCadenaRandom()
-    const f= ({id_pers:resCuent.id_pers,url:urlRandom});
-    const token = await ClientesFun.peticionValidacionEmail(f,navigate);
-    const email=({to:'ddcdalex@gmail.com',token:urlRandom});
-    const resEmail= await ClientesFun.enviarValidacionEmail(email,navigate)
-              swal.fire({
-                          title:"<label>Exito</label>",
-                          text:"Nuevo usuario creado",
-                          timer:3500,
-                      })
-              mostrarSeccion("clientes")
-          }
+      try {
+        const res= await ClientesFun.guardarCliente(datosCliente,navigate);
+        const cuenta={idpersona:res.id_pers,user:formulario.user,pass:formulario.pass}
+        const resCuent= await ClientesFun.crearCuenta(cuenta,navigate)
+        if (resCuent) {
+          const urlRandom=crearCadenaRandom()
+          const f= ({id_pers:res.id_pers,url:urlRandom});
+          await ClientesFun.generarTokenValidacion(f,navigate);
+          const email=({to:datosCliente.email_pers,token:urlRandom});
+          await ClientesFun.enviarCorreoEmail(email,navigate)
+          swal.fire({
+                      title:"<label>Exito</label>",
+                      text:"Nuevo usuario creado",
+                      timer:3500,
+                  })
+          mostrarSeccion("clientes")
+        }
+        
+      } catch (error) {
+        swal.fire({
+          title:"<label>Exito</label>",
+          text:"Ya existe un usuario con el mismo numero de identificacion",
+          timer:3500,
+      })
+        cerrarModal()
+      }
+        
     } 
   }
 
@@ -56,7 +66,6 @@ export function ModalCuentasClientes({ cerrarModal,datosCliente,mostrarSeccion})
   cerrarModal()
  }
  const verificarDatos=()=>{
-  console.log(formulario)
         if (Object.values(formulario).every(valor => valor !== '')) {
           if (formulario.pass===formulario.confirmPassword) {
             return true;

@@ -4,11 +4,11 @@ import DataTable from "react-data-table-component";
 import ModalDependientes from "./ModalDependientes";
 import styles from "../estilos/modalDependientes.module.css";
 import {Toaster,toast} from "sonner";
-import ClientesFun from "../clientes/ClientesFun";
 import swal from "sweetalert2";
 import Select from "react-select";
 import GestionContratacionFun from "./GestionContratacionFun";
 import SegurosAdminFun from "../segurosAdmin/SegurosAdminFun";
+import ClientesFun from "../clientes/ClientesFun";
 
 export function CrearContratacion({ mostrarSeccion }){
     const navigate= useNavigate();
@@ -34,7 +34,7 @@ export function CrearContratacion({ mostrarSeccion }){
     const cerrarModal = () => setIsModalOpen(false);
     
     const [nuevoSeguro,setNuevoSeguro]=useState({ ciud_seguro:'',dia_seguro:'',mes_seguro:'',
-          anio_seguro:'',monto_seguro:'',tiempo_seguro:'',id_pers:'',id_tip_seg:'',id_emple:'',id_pers_fac:'',email_pers:''})
+          anio_seguro:'',monto_seguro:'',tiempo_seguro:'',id_pers:'',id_tip_seg:'',id_emple:'',email_pers:''})
         
     const [personaFac,setPersonaFac]=useState({cedr_pers_fac:'',razon_pers_fac:'',tipo_pers_fac:'',
           nacion_pers_fac:'',nom_pers_fac:'',ape_pers_fac:'',tel_pers_fac:'',cel_pers_fac:'',
@@ -163,38 +163,60 @@ export function CrearContratacion({ mostrarSeccion }){
             setNuevoSeguro({...nuevoSeguro,monto_seguro:cuota,tiempo_seguro:e.label})
         }
     }
-    const guardarSeguro= async(e)=>{
+    const guardarSeguro = async (e) => {
       e.preventDefault();
-      console.log(listDependientes)
       if (verficarDatosCorrectos()) {
-       try {
-        const personFac= await GestionContratacionFun.guardarPersonaFact(personaFac,navigate)
-        const cuentaBan= await GestionContratacionFun.guardarCuentaBanco(cuentaBancaria,navigate)
-        const data ={ciud_seguro:nuevoSeguro.ciud_seguro,dia_seguro:nuevoSeguro.dia_seguro,
-          mes_seguro:nuevoSeguro.mes_seguro,anio_seguro:nuevoSeguro.anio_seguro,
-          id_pers:nuevoSeguro.id_pers,id_cuent_Ban: cuentaBan.id_cuent_Ban,
-          id_pers_fac:personFac.id_pers_fac,id_emple: empleado.id_emple,
-          monto_seguro:nuevoSeguro.monto_seguro,tiempo_seguro:nuevoSeguro.tiempo_seguro,
-          id_tip_seg:nuevoSeguro.id_tip_seg}
-        const idSeduro = await GestionContratacionFun.guardarSeguro(data,navigate)
-        const dependientesConSeguro = listDependientes.map(dep => ({
-          ...dep,
-          id_seguro: idSeduro.id_seguro
-        }));
-        const apiDepen= await GestionContratacionFun.guardarDependientes(dependientesConSeguro,navigate)
-         const email=({to:nuevoSeguro.email_pers,token:crearCadenaRandom()});
-        const resEmail= await GestionContratacionFun.enviarValidacionEmailGestCont(email,navigate);
+        try {
+          const [personFac, cuentaBan] = await Promise.all([
+            GestionContratacionFun.guardarPersonaFact(personaFac, navigate),
+            GestionContratacionFun.guardarCuentaBanco(cuentaBancaria, navigate)
+          ]);
+          const data = {
+            ciud_seguro: nuevoSeguro.ciud_seguro,
+            dia_seguro: nuevoSeguro.dia_seguro,
+            mes_seguro: nuevoSeguro.mes_seguro,
+            anio_seguro: nuevoSeguro.anio_seguro,
+            id_pers: nuevoSeguro.id_pers,
+            id_cuent_Ban: cuentaBan.id_cuent_Ban,
+            id_pers_fac: personFac.id_pers_fac,
+            id_emple: empleado.id_emple,
+            monto_seguro: nuevoSeguro.monto_seguro,
+            tiempo_seguro: nuevoSeguro.tiempo_seguro,
+            id_tip_seg: nuevoSeguro.id_tip_seg
+          };
+          const idSeduro = await GestionContratacionFun.guardarSeguro(data, navigate);
+          const dependientesConSeguro = listDependientes.map(dep => ({
+            ...dep,
+            id_seguro: idSeduro.id_seguro
+          }));
+          await GestionContratacionFun.guardarDependientes(dependientesConSeguro, navigate);
+          const url = crearCadenaRandom();
+          const email = { to: nuevoSeguro.email_pers, token: url };
+          const token = { id_seguro: idSeduro.id_seguro, url: url, id_pers: nuevoSeguro.id_pers };
+          await Promise.all([
+            GestionContratacionFun.enviarValidacionEmailGestCont(email, navigate),
+            GestionContratacionFun.generarTokenContratacion(token, navigate)
+          ]);
+          swal.fire({
+            title: "<label>Éxito</label>",
+            text: "Nueva contratación del seguro. Pendiente a validación de cliente",
+            timer: 3500,
+          });
 
-       } catch (error) {
-        
-       }
+          mostrarSeccion("GestionContratacion");
+
+        } catch (error) {
+          console.error(error); // Útil para debugging
+          swal.fire({
+            title: "<label>Advertencia</label>",
+            text: "Verifique los datos ingresados ",
+            timer: 3500,
+          });
+        }
       }
-
-
-
-    }
-     
+    };
     const buscarEmpleado= async(e)=>{
+
       e.preventDefault()
       const id = document.getElementById("ced_emple").value;
       if (id!=='') {
@@ -211,7 +233,6 @@ export function CrearContratacion({ mostrarSeccion }){
           toast.error("Ingrese el numero de decula del empleado ⚠️");
       }
     }
-
     const verficarDatosCorrectos=()=>{
         if (Object.values(nuevoSeguro).every(valor => valor !== '')) {
           if (Object.values(cuentaBancaria).every(valor => valor !== '')) {
@@ -223,7 +244,6 @@ export function CrearContratacion({ mostrarSeccion }){
                      toast.error("Empleado responsable de la contratacion no ha sigo asigando");
                      return false;
                   }
-                  toast.error("pk ⚠️");
                 }else{
                    toast.error("Debe de asignar minimo un dependiente⚠️");
                   return false;
