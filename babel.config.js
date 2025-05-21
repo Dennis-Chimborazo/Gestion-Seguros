@@ -1,9 +1,9 @@
+// babel.config.js
 module.exports = {
   presets: [
-    '@babel/preset-env',  // For compiling ES6+ to code Jest can understand
-    '@babel/preset-react', // For compiling JSX
+    '@babel/preset-env'  // ✅ Solo este es necesario
   ],
   plugins: [
-    '@babel/plugin-transform-modules-commonjs',  // For transforming ES modules to CommonJS
+    '@babel/plugin-transform-modules-commonjs'  // ✅ Si usas import/export
   ],
 };
