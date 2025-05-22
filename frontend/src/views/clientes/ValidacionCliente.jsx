@@ -42,7 +42,7 @@ export function ValidacionCliente({ mostrarSeccion }){
         {
             name: "Reenviar Correo", cell: (row) =>
             (<div>
-              <TfiEmail  size={25} onClick={()=>reenviarCorreo(row)}/>
+              <TfiEmail size={25} onClick={() => reenviarCorreo(row)} data-testid={`reenviar-${row.cedr_cli}`} />
             </div>
             ), ignoreRowClick: true
           },

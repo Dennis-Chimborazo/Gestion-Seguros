@@ -71,10 +71,10 @@ export function ModalCuentasClientes({ cerrarModal,datosCliente,mostrarSeccion})
  }
  const verificarDatos=()=>{
         if (Object.values(formulario).every(valor => valor !== '')) {
-          if (formulario.pass===formulario.confirmPassword) {
+          if (formulario.pass === formulario.confirmPassword) {
             return true;
-          }else{
-            toast.error("Las contraseña no coinciden ⚠️");
+          } else {
+            toast.error("Las contraseñas no coinciden ⚠️"); // ← corregido "contraseña" → "contraseñas"
             return false;
           }
         }else{
@@ -94,13 +94,13 @@ return (
     </p>
 
     <label htmlFor="usuario">Usuario</label>
-    <input type="text" id="user" name="user" value={formulario.user||''}/>
+    <input type="text"  placeholder="Usuario" id="user" name="user" value={formulario.user||''}/>
 
     <label htmlFor="password">Ingrese una contraseña</label>
-    <input type="text" id="pass"  name="pass" onChange={asignarValores}/>
+    <input type="text" placeholder="Ingrese una contraseña" id="pass"  name="pass" onChange={asignarValores}/>
 
     <label htmlFor="confirmPassword">Vuelva a escribir la contraseña</label>
-    <input type="text" id="confirmPassword" name="confirmPassword" onChange={asignarValores}/>
+    <input type="text" placeholder="Vuelva a escribir la contraseña" id="confirmPassword" name="confirmPassword" onChange={asignarValores}/>
     <div>
     <button onClick={cancelarCuenta}>cancelar</button>
     <button onClick={crearCuenta}>Crear</button>
