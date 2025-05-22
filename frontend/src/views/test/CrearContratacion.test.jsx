@@ -569,7 +569,7 @@ describe('CrearContratacion', () => {
         renderWithRouter(<CrearContratacion mostrarSeccion={mockMostrarSeccion} />);
       });
 
-      const botonGuardar = screen.getByText('Guardar');
+      const botonGuardar = screen.getByText('Nueva Contratacion');
 
       await act(async () => {
         fireEvent.click(botonGuardar);
@@ -615,14 +615,14 @@ describe('CrearContratacion', () => {
       });
 
       // Simular intento de guardado que falla
-      const botonGuardar = screen.getByText('Guardar');
+      const botonGuardar = screen.getByText('Nueva Contratacion');
       
       await act(async () => {
         fireEvent.click(botonGuardar);
       });
 
       // Verificar que el botón sigue presente (no crashea)
-      expect(screen.getByText('Guardar')).toBeInTheDocument();
+      expect(screen.getByText('Nueva Contratacion')).toBeInTheDocument();
       
       console.error = originalError;
     });
