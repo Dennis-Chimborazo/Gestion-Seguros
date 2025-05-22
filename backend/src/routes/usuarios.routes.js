@@ -70,7 +70,7 @@ router.post("/crearusuariocliente", async (req, res) => {
 
     const query = `
       INSERT INTO usuarios (users, pass,id_persona, id_rol)
-      VALUES ($1, $2, $3)
+      VALUES ($1, $2, $3, $4)
       RETURNING *;
     `;
     const values = [user, pass,idpersona, id_rol];

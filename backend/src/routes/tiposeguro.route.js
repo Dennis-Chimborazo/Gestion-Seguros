@@ -78,8 +78,6 @@ router.post("/savebeneficios", async (req, res) => {
   }
 });
 
-
-
 router.get("/categoria", async (req, res) => {
   try {
     const data = await database.query("SELECT * FROM categoria");

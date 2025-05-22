@@ -31,9 +31,10 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
     const comulasBeneficios = [
         {
           name: "Seleccionar",
-          cell: (row) => (
+          cell: (row,index) => (
             <input
               type="checkbox"
+              data-testid={`checkbox-${index}`}
               onChange={(e) => selecionBeneficio(e, row)}
             />
           ),

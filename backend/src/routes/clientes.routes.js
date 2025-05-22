@@ -173,7 +173,6 @@ router.put("/update", async (req, res) => {
   }
 });
 
-
 router.put("/desactivar", async (req, res) => {
   const formulario = req.body;
   const desac='2';
@@ -262,6 +261,7 @@ router.get("/buscarclienteID", async (req, res) => {
 router.put("/activar-cuenta", async (req, res) => {
   const { id, idvalid } = req.body;
   const estadoActivo = '1';
+  console.log('ID_PRES: ', id, ' URL: ',idvalid)
   
   if (!id || !idvalid) {
     return res.status(400).json({ error: "Faltan datos requeridos (id o idvalid)." });
@@ -297,7 +297,7 @@ router.post("/generar_token_email", async (req, res) => {
     const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
 
     await database.query(
-      "INSERT INTO validar_email (url_emal, token_val_email,id_pers) VALUES ($1, $2)",
+      "INSERT INTO validar_email (url_emal, token_val_email,id_pers) VALUES ($1, $2, $3)",
       [url, token,id_pers]
     );
 
@@ -311,11 +311,6 @@ router.post("/generar_token_email", async (req, res) => {
 router.put("/actualizar_token_email", async (req, res) => {
   try {
     const { id_pers, url } = req.body;
-    console.log('-------------')
-    console.log(id_pers,url);
-
-    console.log('-------------')
-
     const payload = { id_pers };
     const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
     const result = await database.query(

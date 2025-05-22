@@ -40,9 +40,12 @@ export function SegurosAdmin({ mostrarSeccion }){
         {name:"Descripcion",selector:row=>row.descrip_tip_seg},
         {name:"Pago mesual",selector:row=>row.pago_tip_seg},
          {
-                    name: "Opciones", cell: (row) =>
+                    name: "Opciones", cell: (row,index) =>
                     (<div>
-                      <FcFinePrint size={25} onClick={()=>editarSeguro(row)}/>
+                      <FcFinePrint size={25} 
+                        data-testid={`icono-seguro-${index}`}
+                      
+                      onClick={()=>editarSeguro(row)}/>
                     </div>
                     ), ignoreRowClick: true
                   },

@@ -41,9 +41,11 @@ export function Clientes({ mostrarSeccion }){
         {name:"Celular",selector:row=>row.cel_pers},
         {name:"Correo",selector:row=>row.email_pers},
         {
-            name: "Opciones", cell: (row) =>
+            name: "Opciones", cell: (row,index) =>
             (<div>
-              <FcFinePrint size={25} onClick={()=>EditarCliente(row)}/>
+              <FcFinePrint size={25} 
+               data-testid={`icono-cliente-${index}`}
+               onClick={()=>EditarCliente(row)}/>
             </div>
             ), ignoreRowClick: true
           },
