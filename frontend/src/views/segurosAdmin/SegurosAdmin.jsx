@@ -28,41 +28,40 @@ export function SegurosAdmin({ mostrarSeccion }) {
     traterTipoSeguros();
   }, []);
 
-  const columlistSeguro = [
-    { name: "Nombre ", selector: row => row.nom_tip_seg },
-    { name: "Descripcion", selector: row => row.descrip_tip_seg },
-    { name: "Pago mesual", selector: row => row.pago_tip_seg },
-    {
-      name: "Opciones", cell: (row) => (
-        <div>
-          <FcFinePrint
-            size={25}
-            onClick={() => editarSeguro(row)}
-            data-testid={`editar-icon-${row.nom_tip_seg}`}
-          />
-        </div>
-      ), ignoreRowClick: true
-    },
-  ];
 
-  const editarSeguro = (row) => {
-    localStorage.setItem("editSeguro", JSON.stringify({
-      edit: true,
-      seguro: row
-    }));
-
-    mostrarSeccion("EditarSeguroAdmin");
-  };
-
-  const filtrarClientes = (e) => {
-    if (e.target.value !== '' && listaSeguros && listaSeguros.length > 0) {
-      const filtro = listaSeguros.filter((a) =>
-        a.nom_tip_seg &&
-        a.nom_tip_seg.toLowerCase().includes(e.target.value.toLowerCase())
-      );
-      setFiltroSeguros(filtro);
-    } else {
-      setFiltroSeguros(listaSeguros);
+    const columlistSeguro=[
+        {name:"Nombre ",selector:row=>row.nom_tip_seg},
+        {name:"Descripcion",selector:row=>row.descrip_tip_seg},
+        {name:"Pago mesual",selector:row=>row.pago_tip_seg},
+         {
+                    name: "Opciones", cell: (row,index) =>
+                    (<div>
+                      <FcFinePrint size={25} 
+                        data-testid={`icono-seguro-${index}`}
+                      
+                      onClick={()=>editarSeguro(row)}/>
+                    </div>
+                    ), ignoreRowClick: true
+                  },
+    ];
+    const editarSeguro =(row)=>{
+          localStorage.setItem("editSeguro", JSON.stringify({
+            edit: true,
+            seguro: row
+          }));
+          
+        mostrarSeccion("EditarSeguroAdmin");
+    }
+    const filtrarClientes = (e) => {
+        if (e.target.value !== '') {
+            const filtro = listaSeguros.filter((a) => 
+                a.nom_tip_seg && a.nom_tip_seg.startsWith(e.target.value)
+            );
+            setFiltroSeguros(filtro);
+        }
+    };
+    const borrarFiltro=()=>{
+        setFiltroSeguros(listaSeguros);
     }
   };
 

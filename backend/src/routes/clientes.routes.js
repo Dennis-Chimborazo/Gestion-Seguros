@@ -368,11 +368,6 @@ router.post("/generar_token_email", async (req, res) => {
 router.put("/actualizar_token_email", async (req, res) => {
   try {
     const { id_pers, url } = req.body;
-    console.log('-------------')
-    console.log(id_pers,url);
-
-    console.log('-------------')
-
     const payload = { id_pers };
     const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
     const result = await database.query(
