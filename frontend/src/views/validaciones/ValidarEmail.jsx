@@ -95,7 +95,7 @@ export function ValidarEmail() {
           </>
         ) : (
           <>
-            <h2 className={styles.title}>⚠️ Enlace inválido o expirado</h2>
+            <h2 className={styles.title}>⚠ Enlace inválido o expirado</h2>
             <p className={styles.message}>{error}</p>
             <p className={styles.message}>
               Si crees que esto es un error o necesitas un nuevo enlace, contacta Seguros.SA soporte.

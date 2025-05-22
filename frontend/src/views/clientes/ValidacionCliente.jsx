@@ -39,14 +39,21 @@ export function ValidacionCliente({ mostrarSeccion }){
         {name:"Telefono",selector:row=>row.tel_pers},   
         {name:"Celular",selector:row=>row.cel_pers},
         {name:"Correo",selector:row=>row.email_pers},
-        {
-            name: "Reenviar Correo", cell: (row) =>
-            (<div>
-              <TfiEmail  size={25} onClick={()=>reenviarCorreo(row)}/>
-            </div>
-            ), ignoreRowClick: true
-          },
-    ];
+        { name: "Reenviar Correo", 
+  cell: (row, index) => (
+    <div>
+      <TfiEmail 
+        data-testid={`icono-correo-${index}`}
+        size={25} 
+        onClick={() => reenviarCorreo(row)}
+      />
+    </div>
+  ),
+  ignoreRowClick: true
+},
+
+
+    ]; 
 
     const filtrarClientes = (e) => {
         if (e.target.value !== '') {
@@ -60,6 +67,7 @@ export function ValidacionCliente({ mostrarSeccion }){
         setFiltroCli(clientes);
     }
     const reenviarCorreo= (row)=>{
+            console.log("Click en correo:", row); // 
         localStorage.setItem("editCorreo", JSON.stringify({
             edit: true,
             cliente: row
@@ -86,11 +94,10 @@ export function ValidacionCliente({ mostrarSeccion }){
                             columns={columasClientes} 
                             data={filtroCli}
                             noDataComponent="No ha selecionado ninguna actividad"
-                            persistTableHead >
-                            </DataTable>}
-            </form>
-
-            {isModalOpen && (
+                            persistTableHead
+                            />}
+                        </form>
+                        {isModalOpen && (
                             <div className={stylesmod.overlay}>
                                 <div className={stylesmod.modal}>
                                 <button className={stylesmod.closeBtn} onClick={cerrarModal}>X</button>

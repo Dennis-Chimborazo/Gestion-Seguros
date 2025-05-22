@@ -136,7 +136,7 @@ const verificarCondiciones = () => {
           </div>
       <div>
         <button type="button" onClick={cerrarModal}>Cerrar</button>
-        <button type="button" onClick={guardarDependiente}>Guardar</button>
+        <button type="button" onClick={guardarDependiente}>Nuevo dependiente</button>
       </div>
     </form>
   );
