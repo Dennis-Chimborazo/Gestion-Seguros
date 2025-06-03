@@ -32,9 +32,10 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
     const comulasBeneficios = [
         {
           name: "Seleccionar",
-          cell: (row) => (
+          cell: (row,index) => (
             <input
               type="checkbox"
+              data-testid={`checkbox-${index}`}
               onChange={(e) => selecionBeneficio(e, row)}
             />
           ),
@@ -122,28 +123,6 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
 
       }
     }
-
-
-  
-  const cancelar = () => {
-    const algunCampoLleno = Object.values(formulario).some(valor => valor.trim() !== '');
-    if (algunCampoLleno) {
-        swal.fire({
-            title: "⚠️ <label>Advertencia</label>",
-            text: "Desea descartar los datos ingresados",
-            showDenyButton: true,
-            denyButtonText: "No",
-            confirmButtonText: "Si"
-        }).then(respuesta => {
-            if (respuesta.isConfirmed) {
-                mostrarSeccion("segurosAdmin")
-            }
-        });
-
-    } else {
-        mostrarSeccion("segurosAdmin")
-    }
-};
   
   const customStyles = {
     header: {
@@ -272,7 +251,7 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
           <button
             type="button"
             className={styles.btnCancelar}
-            onClick={cancelar}
+            onClick={cancelarOperacion}
           >
             Cancelar
           </button>

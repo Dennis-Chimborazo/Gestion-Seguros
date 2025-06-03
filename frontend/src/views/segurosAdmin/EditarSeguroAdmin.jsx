@@ -63,27 +63,25 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
 
     }, []);
     const comulasBeneficios = [
-        {
-            name: "Seleccionar",
-            cell: (row) => (
-                <input
-                    type="checkbox"
-                    checked={listbeneficios.includes(row.id_beneficios)}
-                    onChange={(e) => selecionBeneficio(e, row)}
-                />
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-        },
-        {
-            name: "Descripción",
-            selector: (row) => row.nom_beneficios,
-            sortable: true,
-        },
+    {
+        name: "Seleccionar",
+        cell: (row,index) => (
+        <input
+            type="checkbox"
+            data-testid={`checkbox-${index}`}
+            checked={listbeneficios.includes(row.id_beneficios)}
+            onChange={(e) => selecionBeneficio(e, row)}/>),
+        ignoreRowClick: true,
+        allowOverflow: true,
+        button: true,
+    },
+    {
+        name: "Descripción",
+        selector: (row) => row.nom_beneficios,
+        sortable: true,
+    },
     ];
-
-
+    
     const selecionBeneficio = (e, row) => {
         setListBeneficios((prev) => {
             const exists = prev.includes(row.id_beneficios);

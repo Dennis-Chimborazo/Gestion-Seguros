@@ -452,7 +452,7 @@ export function CrearContratacion({ mostrarSeccion }){
                     <div>
                     <label htmlFor="">buscar empleado </label>
                     <input type="text" name="ced_emple" id="ced_emple"/> 
-                    <button onClick={buscarEmpleado}>Buscar</button>
+                    <button onClick={buscarEmpleado}>Buscar empleado </button>
                     </div>
                      <label htmlFor="">Nombre del Agente</label>
                     <input type="text" name="nom_emple" id="nom_emple" value={empleado?.nom_emple||''} />

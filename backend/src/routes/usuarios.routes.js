@@ -63,14 +63,14 @@ router.post("/crearusuariocliente", async (req, res) => {
   try {
     const id_rol='3';
     const { user, pass,idpersona } = req.body;
-
+  
     if (!user || !pass || !id_rol) {
       return res.status(400).json({ success: false, message: "Faltan campos obligatorios" });
     }
 
     const query = `
       INSERT INTO usuarios (users, pass,id_persona, id_rol)
-      VALUES ($1, $2, $3)
+      VALUES ($1, $2, $3, $4)
       RETURNING *;
     `;
     const values = [user, pass,idpersona, id_rol];

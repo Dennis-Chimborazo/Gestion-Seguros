@@ -42,7 +42,7 @@ router.post("/save", async (req, res) => {
   ];
 
   const camposFaltantes = camposObligatorios.filter(campo => !formulario[campo]);
-
+  const est=3
   if (camposFaltantes.length > 0) {
     return res.status(400).json({
       success: false,
@@ -83,22 +83,14 @@ router.post("/save", async (req, res) => {
       formulario.calle_princ_pers,
       formulario.calle_secun_pers,
       formulario.id_ciud,
-      ESTADO_ACTIVO
+      est
     ]);
 
     const idInsertado = data.rows[0].id_pers;
     res.json({ message: "Cliente guardado exitosamente", id_pers: idInsertado });
 
   } catch (error) {
-    console.error(error);
-    if (error.code === '23505') {
-      return res.status(409).json({
-        success: false,
-        message: "Ya existe un cliente con esa cédula",
-        error: error.message
-      });
-    }
-
+    
     res.status(500).json({
       success: false,
       message: "Error al guardar cliente",
@@ -362,7 +354,7 @@ router.post("/generar_token_email", async (req, res) => {
     const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
 
     await database.query(
-      "INSERT INTO validar_email (url_emal, token_val_email,id_pers) VALUES ($1, $2)",
+      "INSERT INTO validar_email (url_emal, token_val_email,id_pers) VALUES ($1, $2, $3)",
       [url, token,id_pers]
     );
 
@@ -376,11 +368,6 @@ router.post("/generar_token_email", async (req, res) => {
 router.put("/actualizar_token_email", async (req, res) => {
   try {
     const { id_pers, url } = req.body;
-    console.log('-------------')
-    console.log(id_pers,url);
-
-    console.log('-------------')
-
     const payload = { id_pers };
     const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
     const result = await database.query(
