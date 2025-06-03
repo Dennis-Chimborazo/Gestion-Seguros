@@ -4,7 +4,7 @@ import Login from "./views/Login.jsx";
 import VentanaAdmin from "./views/usuarios/VentanaAdmin.jsx";
 import VentanaAgente from "./views/usuarios/VentanaAgente.jsx";
 import VentanaCliente from "./views/usuarios/ventanaCliente.jsx";
-import Buscador from "./views/Prueba/Prueba";
+//import Buscador from "./views/Prueba/Prueba";
 import ValidarContratacionSeguro from "./views/validaciones/ValidarContratacionSeguro";
 import ValidarEmail from "./views/validaciones/ValidarEmail";
 

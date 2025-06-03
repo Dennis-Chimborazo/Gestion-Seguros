@@ -4,6 +4,10 @@ import DataTable from "react-data-table-component";
 import SegurosAdminFun from "./SegurosAdminFun";
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
 import CargarTablas from "../cargando/CargarTablas";
+import { FaSearch } from "react-icons/fa";
+import "../estilos/SegurosAdmin.css"; // Importar el archivo CSS
+
+
 
 
 export function SegurosAdmin({ mostrarSeccion }){
@@ -65,27 +69,66 @@ export function SegurosAdmin({ mostrarSeccion }){
         setFiltroSeguros(listaSeguros);
     }
     return(
-        <div>
-            <form action="" method="">
-               <h2>Tipos de Seguros </h2>
-                    <div>
-                        <label htmlFor=""> Buscar</label>
-                        <input type="text" id="buscar" name="buscar" placeholder="Ingrese Codigo del seguro" onChange={filtrarClientes} />
-                         <FcClearFilters size={25} onClick={borrarFiltro} />
-                        <label htmlFor=""> nuevo tipo de seguro </label>
-                        <button onClick={() => mostrarSeccion("CrearSeguroAdmin")}>Crear</button>
-                         </div>
-                         {loading?(<CargarTablas />):
-                         <DataTable 
-                            pagination
-                            paginationPerPage={20}
-                            columns={columlistSeguro} 
-                            data={filtroSeguros}
-                            noDataComponent="No ha selecionado ningun Seguro"
-                            persistTableHead >
-                            </DataTable> }
+        <div className="seguros-admin-container">
+            <form className="seguros-admin-form" action="" method="">
+                <h2 className="seguros-admin-title">Tipos de Seguros</h2>
+                
+                <div className="search-controls">
+                    <div className="search-group">
+                        <label htmlFor="buscar" className="search-label">Buscar</label>
+                        <div className="search-input-container">
+                            <input 
+                                type="text" 
+                                id="buscar" 
+                                name="buscar" 
+                                className="search-input"
+                                placeholder="Ingrese el nombre del seguro" 
+                                onChange={filtrarClientes}
+                            />
+                            <FaSearch className="search-icon" size={18} />
+                        </div>
+                    </div>
+                    
+                    <div className="control-buttons">
+                        <button 
+                            type="button"
+                            className="clear-filter-btn" 
+                            onClick={borrarFiltro}
+                            title="Limpiar filtros"
+                        >
+                            <FcClearFilters size={25} />
+                        </button>
+                    </div>
+                    
+                    <div className="create-group">
+                        <label className="search-label">Nuevo tipo de seguro</label>
+                        <button 
+                            type="button"
+                            className="create-btn"
+                            onClick={() => mostrarSeccion("CrearSeguroAdmin")}
+                        >
+                            Crear
+                        </button>
+                    </div>
+                </div>
+                
+                {loading ? (
+                    <CargarTablas />
+                ) : (
+                    <DataTable 
+                        pagination
+                        paginationPerPage={20}
+                        columns={columlistSeguro} 
+                        data={filtroSeguros}
+                        noDataComponent="No se encontraron seguros"
+                        persistTableHead
+                        highlightOnHover
+                        striped
+                        responsive
+                    />
+                )}
             </form>
-            </div>
+        </div>
     );
 }
 export default SegurosAdmin;
