@@ -68,6 +68,7 @@ export function SegurosAdmin({ mostrarSeccion }){
     const borrarFiltro=()=>{
         setFiltroSeguros(listaSeguros);
     }
+
     return(
         <div className="seguros-admin-container">
             <form className="seguros-admin-form" action="" method="">
@@ -77,16 +78,17 @@ export function SegurosAdmin({ mostrarSeccion }){
                     <div className="search-group">
                         <label htmlFor="buscar" className="search-label">Buscar</label>
                         <div className="search-input-container">
-                            <input 
-                                type="text" 
-                                id="buscar" 
-                                name="buscar" 
+                            <FaSearch className="search-icon" size={18} />
+                            <input
+                                type="text"
+                                id="buscar"
+                                name="buscar"
                                 className="search-input"
-                                placeholder="Ingrese el nombre del seguro" 
+                                placeholder="Ingrese el nombre del seguro"
                                 onChange={filtrarClientes}
                             />
-                            <FaSearch className="search-icon" size={18} />
                         </div>
+
                     </div>
                     
                     <div className="control-buttons">
