@@ -6,6 +6,7 @@ import styles from '../estilos/cliente.module.css';
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
 import CargarTablas from "../cargando/CargarTablas";
 import InfoCard from "../cargando/InfoCards";
+import "../estilos/Cliente.css"; // Importar el archivo CSS
 
 
 export function Clientes({ mostrarSeccion }){
@@ -130,41 +131,67 @@ export function Clientes({ mostrarSeccion }){
         },
       };
 
-   return(
-        <div>
-            <form action="" method="get">
-                <div>
-                     <h2>Clientes </h2>
-                    <div>
-                        <label htmlFor=""> Buscar</label>
-                        <input type="text" id="buscar" name="buscar" placeholder="Ingrese numero de cedula" onChange={filtrarClientes} />
-                        <FcClearFilters size={25}  onClick={borrarFiltro}/>
-                        <div style={{ display: 'flex', justifyContent: 'flex-start', margin: '20px 0' }}>
-                            <InfoCard
-                            text="Nuevo Cliente"
-                            color="#00AEEF" // Color azul de la imagen
-                            onClick={() => mostrarSeccion('crearClientes')}
-                            />
-                            <InfoCard
-                            text="Validaciones pendientes"
-                            color="#4CAF50" // Color verde de la imagen
-                            onClick={() => mostrarSeccion('clientePendiente')}
-                            />
-                        </div>
-                        </div>
+   return (
+  <div className="cliente-container">
+    <form className="cliente-form" action="" method="get">
+      <h2 className="cliente-title">Clientes</h2>
 
-                         </div>
-                         {loading?(<CargarTablas />):
-                            <DataTable 
-                            pagination
-                            paginationPerPage={20}
-                            columns={columasClientes} 
-                            data={filtroCli}
-                            noDataComponent="No ha selecionado ninguna actividad"
-                            persistTableHead >
-                            </DataTable>}
-            </form>
-            </div>
-    );
+      <div className="search-controls">
+        <div className="search-group">
+          <label htmlFor="buscar" className="search-label">Buscar</label>
+          <div className="search-input-container">
+            <input
+              type="text"
+              id="buscar"
+              name="buscar"
+              placeholder="Ingrese número de cédula"
+              onChange={filtrarClientes}
+              className="search-input"
+            />
+            <FcClearFilters
+              size={25}
+              className="search-icon"
+              onClick={borrarFiltro}
+            />
+          </div>
+        </div>
+
+        <div className="create-group">
+          <button
+            type="button"
+            className="create-btn"
+            onClick={() => mostrarSeccion('crearClientes')}
+          >
+            Nuevo Cliente
+          </button>
+          <button
+            type="button"
+            className="create-btn"
+            onClick={() => mostrarSeccion('clientePendiente')}
+          >
+            Validaciones pendientes
+          </button>
+        </div>
+      </div>
+
+      {loading ? (
+        <CargarTablas />
+      ) : (
+        <DataTable
+          className="cliente-table"
+          pagination
+          paginationPerPage={20}
+          columns={columasClientes}
+          data={filtroCli}
+          noDataComponent="No ha seleccionado ninguna actividad"
+          persistTableHead
+        />
+      )}
+    </form>
+  </div>
+);
+
+
+
     }
 export default Clientes;
