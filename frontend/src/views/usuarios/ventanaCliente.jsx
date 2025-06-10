@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../estilos/VentanaCliente.module.css";
 import ClientesFun from "../clientes/ClientesFun";
+import ClientesArchivos from "../clientes/ClientesArchivos";
+import CargarArchivos from "../cargando/cargarArchivos";
 
 export function VentanaCliente() {
   const navigate = useNavigate();
@@ -10,45 +12,35 @@ export function VentanaCliente() {
   const [cliente, setcliente] = useState();
   const [estado, setEstado] = useState(0);
   const [nombres, setNombres] = useState('');
+  const [seccionActiva, setSeccionActiva] = useState("inicio");
   const [fotoPerfil, setFotoPerfil] = useState(null);
-  const [cedulaPdf, setCedulaPdf] = useState(null);
+  const [loadingFoto, setLoadingFoto] = useState(false); // NUEVO
 
   useEffect(() => {
-    console.log("Ventana principal: " + user?.rol);
     const cargarDatos = async () => {
       const login = JSON.parse(localStorage.getItem("login"));
       const res = await ClientesFun.buscarcliente(login.user, navigate);
       setcliente(res);
       setEstado(res[0].id_estado);
-      const nom =res[0].nom_cli+' '+res[0].ape_cli;
-      setNombres(nom);
-      console.log(nom)
+      setNombres(res[0].nom_cli + ' ' + res[0].ape_cli);
 
+      if (res[0].id_estado === 1) {
+        setLoadingFoto(true); // empieza carga
+        try {
+          const rutaImagen = await ClientesFun.buscarArchivos('imagen', res[0].id_pers, navigate);
+          setFotoPerfil(rutaImagen);
+        } catch (error) {
+          console.error('Error al cargar la imagen de perfil:', error);
+        } finally {
+          setLoadingFoto(false); // termina carga
+        }
+      }
     };
     cargarDatos();
   }, []);
 
- const handleFotoChange = (e) => {
-  const file = e.target.files[0];
-  const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
-
-  if (file && allowedTypes.includes(file.type)) {
-    setFotoPerfil(file);
-  } else {
-    alert('Por favor, sube una imagen válida (PNG, JPG, JPEG, WEBP).');
-    e.target.value = '';
-  }
-};
-
-
-  const handleCedulaChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type === 'application/pdf') {
-      setCedulaPdf(file);
-    } else {
-      alert('Por favor, sube un archivo PDF válido.');
-      e.target.value = '';
-    }
+  const mostrarSeccion = (nombre) => {
+    setSeccionActiva(nombre);
   };
 
   const cerrarSesion = () => {
@@ -60,67 +52,38 @@ export function VentanaCliente() {
     <div className={styles.container}>
       <div className={styles.sidebar}>
         <h2>Bienvenido {user?.rol}</h2>
-        <label htmlFor="">{nombres||''}</label>
 
-        {/* <img src={logo} alt="Logo" /> */}
-        {estado === 4 ? (<>
-          <ul>
-            <li><a href="#" onClick={cerrarSesion}>Cerrar sesión</a></li>
-          </ul>
-        </>) : (<>
-
-          <ul>
-            <li><a href="#">Contratación de seguro</a></li>
-            <li><a href="#">Historial de pagos</a></li>
-            <li><a href="#">Reembolsos</a></li>
-            <li><a href="#">Facturas</a></li>
-            <li><a href="#" onClick={cerrarSesion}>Cerrar sesión</a></li>
-          </ul>
-
-        </>)}
-
-      </div>
-      <div className={styles.main2}>
-        <p>👋 ¡Bienvenido! Por favor, sube los siguientes documentos para completar tu registro:</p>
+        {estado !== 4 ? (<>
+          {loadingFoto ? (
+            <CargarArchivos />
+          ) : (
+            fotoPerfil && <img src={fotoPerfil} alt="Imagen perfil" />
+          )} </>
+        ) : ( <></>)}
+        <label>{nombres || ''}</label>
         <ul>
-          <li>📷 Foto de perfil en formato <strong>PNG</strong></li>
-          <li>🆔 Cédula escaneada en formato <strong>PDF</strong></li>
+          {estado === 4 ? (
+            <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
+          ) : (<>
+              <li><a onClick={() => mostrarSeccion("Reembolsos")}>Reembolsos</a></li>
+              <li><a onClick={() => mostrarSeccion("Historial")}>Historial de pagos</a></li>
+              <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
+            </>)}
         </ul>
+      </div>
 
-        {/* Subir foto */}
-        <div className={styles.uploadSection}>
-          <label>Subir Foto de Perfil (.png):</label>
-          <input type="file" accept="image/png, image/jpeg, image/jpg, image/webp" onChange={handleFotoChange} />
+      <div className={styles.mainContent}>
+        {estado === 4 ? (
+          seccionActiva === "inicio" && <ClientesArchivos mostrarSeccion={mostrarSeccion} />
+        ) : (
+          <>
+            <div className={styles.bienvenida}>
+  <h1>Bienvenido a <span className={styles.nombreEmpresa}>seguros.sa</span></h1>
+  <p>Gracias por confiar en nosotros. Desde tu panel podrás gestionar tus reembolsos, revisar tu historial de pagos y actualizar tu información.</p>
+</div>
 
-          {fotoPerfil && (
-            <div className={styles.preview}>
-              <p>Vista previa de la imagen:</p>
-              <img
-                src={URL.createObjectURL(fotoPerfil)}
-                alt="Foto de perfil"
-                style={{ width: '150px', borderRadius: '8px', marginTop: '10px' }}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Subir cédula */}
-        <div className={styles.uploadSection}>
-          <label>Subir Cédula Escaneada (.pdf):</label>
-          <input type="file" accept="application/pdf" onChange={handleCedulaChange} />
-          {cedulaPdf && (
-            <div className={styles.preview}>
-              <p>PDF cargado: <strong>{cedulaPdf.name}</strong></p>
-              <embed
-                src={URL.createObjectURL(cedulaPdf)}
-                type="application/pdf"
-                width="100%"
-                height="300px"
-                style={{ border: '1px solid #ccc', marginTop: '10px' }}
-              />
-            </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

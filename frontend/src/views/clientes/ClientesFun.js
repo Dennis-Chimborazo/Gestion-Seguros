@@ -36,6 +36,10 @@ class ClientesFun {
       const response =  await ApiService.put("client/desactivar",formulario,navigate);
       return response;
    }
+    static async actualizarEstadoActivo(formulario,navigate){
+      const response =  await ApiService.put("client/activar",formulario,navigate);
+      return response;
+   }
     static async comprobarCredenciales(formulario,navigate){
       const response =  await ApiService.post("client/comprobCredenciales",formulario,navigate);
       return response;
@@ -78,5 +82,19 @@ class ClientesFun {
       const response =  await ApiService.put("client/update-correo",id,navigate);
       return response;
    }
+
+   static async guardarArhivoImagen(formulario,id,navigate){
+      const response =  await ApiService.postArchive(`archivo/foto-perfil/${id}`,formulario,navigate);
+      return response;
+   }
+   static async guardarArhivoCedula(formulario,id,navigate){
+      const response =  await ApiService.postArchive(`archivo/cedula-pdf/${id}`,formulario,navigate);
+      return response;
+   }
+    static async buscarArchivos(tipo, id, navigate) {
+  const response = await ApiService.getArchivo('archivo/buscar', id, tipo, navigate);
+  return response;
+}
+
 }
     export default ClientesFun;

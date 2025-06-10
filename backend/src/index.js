@@ -10,6 +10,8 @@ const tipoSeguroeguroRoute = require("./routes/tiposeguro.route.js");
 const empleadosRoute = require("./routes/empleados.routes.js");
 const emailRoute = require("./routes/email.routes.js");
 const agenteRoute = require("./routes/agente.routes.js");
+const archivosRoute = require("./routes/archivos.routes.js");
+const path = require('path');
 
 const app = express();
 app.use(cors());
@@ -24,6 +26,8 @@ app.use("/tiposeguro", tipoSeguroeguroRoute);
 app.use("/empleado", empleadosRoute);
 app.use("/email", emailRoute);
 app.use("/agente", agenteRoute);
+app.use("/archivo", archivosRoute);
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 
 app.listen(puerto, () => {

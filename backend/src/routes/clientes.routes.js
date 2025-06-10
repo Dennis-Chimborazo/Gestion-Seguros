@@ -192,7 +192,25 @@ router.put("/desactivar", async (req, res) => {
     res.status(500).json({ error: "Error al actualizar cliente" });
   }
 });
+router.put("/activar", async (req, res) => {
+  const {id_pers} = req.body;
+  const desac='1';
+  try {
+    const data = await database.query(`
+      UPDATE cliente SET
+        id_estado = $1
+      WHERE id_pers = $2
+    `, [
+      desac,
+      id_pers
+    ]);
 
+    res.status(200).json({ message: "Cliente actualizado correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al actualizar cliente" });
+  }
+});
 router.get("/buscar", async (req, res) => {
   const idCli = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
   try {

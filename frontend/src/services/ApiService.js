@@ -96,6 +96,33 @@ class ApiService {
     );
     return response.data;
   }
+
+  static async postArchive(postApi, form, navigate) {
+    const response = await axios.post(
+      apiUrl + `${postApi}`,
+      form,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+
+    return response.data;
+  }
+static async getArchivo(getApi, id, tipo, navigate) {
+  const tokenInfo = JSON.parse(localStorage.getItem("login"));
+  const token = tokenInfo ? tokenInfo.token : "";
+
+  const url = `${apiUrl}${getApi}/${id}?tipo=${tipo}`;
+
+  const response = await axios.get(url, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data.url;
+}
+
 }
 
 export default ApiService;
