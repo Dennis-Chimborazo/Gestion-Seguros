@@ -1,57 +1,279 @@
+/* Contenedor principal */
 .container {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 2rem auto;
-  max-width: 1100px;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Título de bienvenida */
-.title {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 1.5rem;
-  color: #333;
-}
-
-/* Menú principal en una sola línea */
-.menu {
-  list-style: none;
-  padding: 0;
+  min-height: 100vh;
   display: flex;
-  flex-direction: row; /* horizontal */
-  flex-wrap: wrap; /* para que se ajuste en pantallas pequeñas */
-  gap: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar.expanded {
+  width: 280px;
+}
+
+/* Header del sidebar */
+.sidebarHeader {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(103, 126, 234, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
-/* Estilo de cada ítem de menú */
-.menu li {
-  background-color: #f8f9fa;
-  padding: 10px 16px;
-  border-radius: 8px;
-  transition: background-color 0.3s;
-  white-space: nowrap; /* evita que el texto se corte en varias líneas */
+.toggleButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
 }
 
-/* Enlaces dentro del menú */
-.menu li a {
+.title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .title {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+/* Menú del sidebar */
+.menu {
+  list-style: none;
+  padding: 1rem 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.menuItem {
+  margin: 0.2rem 0;
+  position: relative;
+}
+
+.menuLink {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
   text-decoration: none;
-  color: #007bff;
+  color: #4a5568;
   font-weight: 500;
-  font-size: 16px;
-  display: block;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  border-radius: 0 25px 25px 0;
+  margin-right: 1rem;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Hover en ítems del menú */
-.menu li:hover {
-  background-color: #e2e6ea;
+.menuLink:hover {
+  background: linear-gradient(45deg, rgba(103, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  color: #667eea;
+  transform: translateX(5px);
 }
 
-/* Estilo del botón de cerrar sesión */
+.menuLink:hover::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+}
+
+.menuIcon {
+  font-size: 1.3rem;
+  margin-right: 1rem;
+  width: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menuText {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .menuText {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar.collapsed .menuLink {
+  justify-content: center;
+  margin-right: 0;
+  border-radius: 12px;
+  margin: 0.2rem 0.5rem;
+}
+
+.sidebar.collapsed .menuIcon {
+  margin-right: 0;
+}
+
+/* Logout especial */
 .logout {
   color: #dc3545 !important;
-  font-weight: bold;
+  margin-top: auto;
+  border-top: 1px solid rgba(103, 126, 234, 0.2);
+  padding-top: 1rem !important;
+}
+
+.logout:hover {
+  background: rgba(220, 53, 69, 0.1) !important;
+  color: #dc3545 !important;
+}
+
+/* Contenido principal */
+.mainContent {
+  margin-left: 280px;
+  transition: margin-left 0.3s ease;
+  flex: 1;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.sidebar.collapsed + .mainContent {
+  margin-left: 70px;
+}
+
+.welcomeSection {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+}
+
+.welcomeTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcomeSubtitle {
+  font-size: 1.2rem;
+  color: #4a5568;
+  margin-bottom: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.expanded {
+    transform: translateX(0);
+    width: 100%;
+  }
+  
+  .mainContent {
+    margin-left: 0;
+  }
+  
+  .sidebar.collapsed + .mainContent {
+    margin-left: 0;
+  }
+  
+  .toggleButton {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(103, 126, 234, 0.9);
+    backdrop-filter: blur(10px);
+    z-index: 1001;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* Animaciones adicionales */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.menuText {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Overlay para móviles */
+.overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  .sidebar.expanded ~ .overlay {
+    opacity: 1;
+    pointer-events: all;
+  }
 }

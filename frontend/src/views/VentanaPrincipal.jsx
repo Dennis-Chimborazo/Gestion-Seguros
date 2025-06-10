@@ -1,12 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ApiService from "../services/ApiService";
-import styles from "./VentanaAdmin.module.css"; // importar estilos
+import styles from "./estilos/VentanaAdmin.module.css";
+import { 
+  FiCreditCard, 
+  FiShield, 
+  FiUsers, 
+  FiFileText, 
+  FiDollarSign, 
+  FiBarChart3, 
+  FiLogOut, 
+  FiMenu, 
+  FiX,
+  FiHome 
+} from "react-icons/fi";
 
 export function VentanaPrincipal() {
   const navigate = useNavigate();
   const location = useLocation();
   const user = location.state?.user;
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
   useEffect(() => {
     console.log("Ventana principal: " + user?.rol);
@@ -22,41 +35,142 @@ export function VentanaPrincipal() {
     const val = await ApiService.traerDatos("client/clientes", navigate);
   };
 
+  const toggleSidebar = () => {
+    setSidebarExpanded(!sidebarExpanded);
+  };
+
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Bienvenido, {user?.rol}</h2>
-      <ul className={styles.menu}>
-        {user?.rol === "admin" && (
-          <>
-            <li><a href="#" onClick={valores}>Cuentas</a></li>
-            <li><a href="#">Seguros</a></li>
-            <li><a href="#">Clientes</a></li>
-            <li><a href="#">Gestión de contratación</a></li>
-            <li><a href="#">Reembolso</a></li>
-            <li><a href="#">Reportes</a></li>
-          </>
-        )}
+      {/* Sidebar */}
+      <div className={`${styles.sidebar} ${sidebarExpanded ? styles.expanded : styles.collapsed}`}>
+        {/* Header del sidebar */}
+        <div className={styles.sidebarHeader}>
+          <h2 className={styles.title}>
+            {sidebarExpanded ? "Panel de Control" : ""}
+          </h2>          <button className={styles.toggleButton} onClick={toggleSidebar}>
+            {sidebarExpanded ? <FiX /> : <FiMenu />}
+          </button>
+        </div>
 
-        {user?.rol === "trabajador" && (
-          <>
-            <li><a href="#">Clientes</a></li>
-            <li><a href="#">Gestión de contratación</a></li>
-            <li><a href="#">Reembolso</a></li>
-            <li><a href="#">Reportes</a></li>
-          </>
-        )}
+        {/* Menú del sidebar */}
+        <ul className={styles.menu}>          {user?.rol === "admin" && (
+            <>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink} onClick={valores}>
+                  <FiCreditCard className={styles.menuIcon} />
+                  <span className={styles.menuText}>Cuentas</span>
+                </a>
+              </li>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiShield className={styles.menuIcon} />
+                  <span className={styles.menuText}>Seguros</span>
+                </a>
+              </li>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiUsers className={styles.menuIcon} />
+                  <span className={styles.menuText}>Clientes</span>
+                </a>
+              </li>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiFileText className={styles.menuIcon} />
+                  <span className={styles.menuText}>Gestión de contratación</span>
+                </a>
+              </li>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiDollarSign className={styles.menuIcon} />
+                  <span className={styles.menuText}>Reembolso</span>
+                </a>
+              </li>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiBarChart3 className={styles.menuIcon} />
+                  <span className={styles.menuText}>Reportes</span>
+                </a>
+              </li>
+            </>
+          )}
 
-        {user?.rol === "cliente" && (
-          <>
-            <li><a href="#">Contratación de seguro</a></li>
-            <li><a href="#">Historial de pagos</a></li>
-            <li><a href="#">Reembolsos</a></li>
-            <li><a href="#">Facturas</a></li>
-          </>
-        )}
+          {user?.rol === "trabajador" && (
+            <>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiUsers className={styles.menuIcon} />
+                  <span className={styles.menuText}>Clientes</span>
+                </a>
+              </li>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiFileText className={styles.menuIcon} />
+                  <span className={styles.menuText}>Gestión de contratación</span>
+                </a>
+              </li>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiDollarSign className={styles.menuIcon} />
+                  <span className={styles.menuText}>Reembolso</span>
+                </a>
+              </li>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiBarChart3 className={styles.menuIcon} />
+                  <span className={styles.menuText}>Reportes</span>
+                </a>
+              </li>
+            </>
+          )}
 
-        <li><a className={styles.logout} href="#" onClick={cerrarSesion}>Cerrar sesión</a></li>
-      </ul>
+          {user?.rol === "cliente" && (
+            <>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiShield className={styles.menuIcon} />
+                  <span className={styles.menuText}>Contratación de seguro</span>
+                </a>
+              </li>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiCreditCard className={styles.menuIcon} />
+                  <span className={styles.menuText}>Historial de pagos</span>
+                </a>
+              </li>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiDollarSign className={styles.menuIcon} />
+                  <span className={styles.menuText}>Reembolsos</span>
+                </a>
+              </li>
+              <li className={styles.menuItem}>
+                <a href="#" className={styles.menuLink}>
+                  <FiFileText className={styles.menuIcon} />
+                  <span className={styles.menuText}>Facturas</span>
+                </a>
+              </li>
+            </>
+          )}
+
+          <li className={styles.menuItem}>
+            <a className={`${styles.menuLink} ${styles.logout}`} href="#" onClick={cerrarSesion}>
+              <FiLogOut className={styles.menuIcon} />
+              <span className={styles.menuText}>Cerrar sesión</span>
+            </a>
+          </li>
+        </ul>
+      </div>      {/* Contenido principal */}
+      <div className={styles.mainContent}>
+        <div className={styles.welcomeSection}>
+          <h1 className={styles.welcomeTitle}>Bienvenido, {user?.rol}</h1>
+          <p className={styles.welcomeSubtitle}>
+            Selecciona una opción del menú lateral para comenzar
+          </p>
+        </div>
+      </div>
+
+      {/* Overlay para móviles */}
+      {sidebarExpanded && <div className={styles.overlay} onClick={toggleSidebar}></div>}
     </div>
   );
 }
