@@ -52,22 +52,17 @@ router.get('/buscar/:subfolder', (req, res) => {
             console.error('Error leyendo archivos:', err);
             return res.status(500).json({ error: 'Error leyendo archivos' });
         }
-
         let archivosFiltrados = files;
-
         if (tipo === 'imagen') {
             archivosFiltrados = files.filter(f => /\.(jpg|jpeg|png|gif)$/i.test(f));
         } else if (tipo === 'pdf') {
             archivosFiltrados = files.filter(f => /\.pdf$/i.test(f));
         }
-
         if (archivosFiltrados.length === 0) {
             console.log('No se encontraron archivos del tipo especificado');
             return res.status(404).json({ error: 'No se encontró archivo del tipo especificado' });
         }
-
         const url = `http://localhost:4000/uploads/cliente/${subfolder}/${archivosFiltrados[0]}`;
-        console.log(`URL de la imagen: ${url}`);
         res.json({ url });
     });
 });

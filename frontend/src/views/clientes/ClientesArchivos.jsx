@@ -40,8 +40,10 @@ export function ClientesArchivos({ mostrarSeccion }) {
                 text: "vaidación de cuenta completada",
                 timer: 3500
             })
-            navigate('/cliente', { replace: true });
-            window.location.reload();
+            setTimeout(() => {
+                navigate('/cliente', { replace: true });
+                window.location.reload();
+            }, 2000);
         } catch (error) {
             console.log(error)
         }
