@@ -33,7 +33,7 @@ export function ModalReenvioValidacion({ cerrarModal,mostrarSeccion}) {
         await ClientesFun.actualizarEmailCliente(formulario,navigate)
         const f= ({id_pers:formulario.id_pers,url:urlRandom});
         await ClientesFun.actualizarTokenValidacion(f,navigate);
-        const email=({to:formulario.email,token:urlRandom});
+        const email=({to:formulario.newEmail,token:urlRandom});
         await ClientesFun.enviarCorreoEmail(email,navigate);
          swal.fire({
                   title:"<label>Exito</label>",

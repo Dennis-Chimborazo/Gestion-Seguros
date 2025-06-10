@@ -1,33 +1,63 @@
 import React, { useState } from "react";
 import ApiService from "../services/ApiService.js";
 import { useNavigate } from "react-router-dom";
-import {Toaster,toast} from "sonner";
-import styles from "./estilos/login.module.css"; 
+import { Toaster, toast } from "sonner";
+import styles from "./estilos/login.module.css";
+import AgenteFun from "./agentes/AgenteFun.js";
 
 export function Login() {
-  const navigate= useNavigate();
-  const [formulario, setFormulario] = useState({user:"",pass:""});
+  const navigate = useNavigate();
+  const [formulario, setFormulario] = useState({ user: "", pass: "" });
 
   const ingresar = async () => {
-    if (formulario.pass==""||formulario.user=="") {
+    if (formulario.pass === "" || formulario.user === "") {
       toast.error("Complete todos los campos");
-    }else{
-    const res= await ApiService.login(formulario);
-    if (res.success) {
-     localStorage.setItem("login",JSON.stringify({
-        login: true,
-        token: res.token
-      }));
-      navigate("/"+res.user.nom_rol, { state: { user: res.user } }); 
-    }else{
-       toast.error(res.user || "Error desconocido");
+    } else {
+      const res = await ApiService.login(formulario);
+      if (res.success) {
+          localStorage.setItem("login", JSON.stringify({
+            login: true,
+            token: res.token,
+            user: res.user.id_persona
+          }));
+         navigate("/" + res.user.nom_rol, { state: { user: res.user } });
+
+      } else {
+        if (res.estado === 3) {
+          try {
+            const resAgente = await AgenteFun.BuscarRutaValidacion({ id: res.id }, navigate);
+
+            if (resAgente.success) {
+              navigate(`/validacionAgente/${resAgente.url}`);
+            }
+
+          } catch (error) {
+            if (error.response) {
+              const status = error.response.status;
+
+              if (status === 401) {
+                toast.error("Tu contraseña ha expirado o es inválida. Solicita una nueva..");
+              } else if (status === 404) {
+                toast.error("No se encontró una URL asociada. Verifica el ID.");
+              } else {
+                toast.error("Error al validar el enlace. Intenta más tarde.");
+              }
+            } else {
+              toast.error("Error de red o del cliente. Verifica tu conexión.");
+            }
+          }
+
+
+        } else {
+          toast.error(res.user || "Error desconocido");
+        }
       }
     }
   };
-  
-  const darValores =(e)=>{
+
+  const darValores = (e) => {
     setFormulario({
-        ...formulario,[e.target.name]:[e.target.value],
+      ...formulario, [e.target.name]: [e.target.value],
     });
   }
   return (

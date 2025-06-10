@@ -260,9 +260,7 @@ router.get("/buscarclienteID", async (req, res) => {
 
 router.put("/activar-cuenta", async (req, res) => {
   const { id, idvalid } = req.body;
-  const estadoActivo = '1';
-  console.log('ID_PRES: ', id, ' URL: ',idvalid)
-  
+  const estadoActivo = '4';
   if (!id || !idvalid) {
     return res.status(400).json({ error: "Faltan datos requeridos (id o idvalid)." });
   }
@@ -289,6 +287,7 @@ router.put("/activar-cuenta", async (req, res) => {
     res.status(500).json({ error: "Error interno al actualizar cliente." });
   }
 });
+
 router.post("/generar_token_email", async (req, res) => {
   
   try {
