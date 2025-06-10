@@ -3,6 +3,7 @@ import { useNavigate,useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import ModalDependientes from "./ModalDependientes";
 import styles from "../estilos/modalDependientes.module.css";
+import "../estilos/GestionContratacion.css";
 import {Toaster,toast} from "sonner";
 import swal from "sweetalert2";
 import Select from "react-select";
@@ -269,25 +270,29 @@ export function CrearContratacion({ mostrarSeccion }){
       cadenaAleatoria += caracteres.charAt(indiceAleatorio);
     }
     return cadenaAleatoria;
-  };
-
-    return(
-        <div>
-            <form action="" method="">
+  };    return(
+        <div className="gestion-container">
+            <form className="gestion-form" action="" method="">
                       <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-               <h2> Gestion Contratacion Crear </h2>
-                    <div>
-                    <h2>Titular</h2>
-                    <label htmlFor="titular">Titular</label>
-                    <input
-                        type="text"
-                        name="titular"
-                        id="titular"
-                        placeholder="Ingrese cédula del cliente"
-                    />
-                    <button onClick={buscarCliente}>Buscar</button>
+               <h1 className="gestion-title">Gestión Contratación - Crear</h1>                    <div className="form-section">
+                    <h2 className="section-title">Titular</h2>
+                    <div className="search-controls">
+                        <div className="search-group">
+                            <label className="search-label" htmlFor="titular">Titular</label>
+                            <div className="search-input-container">
+                                <input
+                                    className="search-input"
+                                    type="text"
+                                    name="titular"
+                                    id="titular"
+                                    placeholder="Ingrese cédula del cliente"
+                                />
+                            </div>
+                        </div>
+                        <button className="btn-search" onClick={buscarCliente}>Buscar</button>
+                    </div>
 
-                    <table border="1" style={{ marginTop: '10px', borderCollapse: 'collapse' }}>
+                    <table className="custom-table">
                         <thead>
                         <tr>
                             <th>Cédula</th>
@@ -307,32 +312,36 @@ export function CrearContratacion({ mostrarSeccion }){
                         </tr>
                         </tbody>
                     </table>
-                    </div>
-
-                    <div>
-                        <h2>Elija tipo de Seguro</h2>
-                        <div>
-                            <div>
-                            <input type="text" name="nom_tip_seg" id="nom_tip_seg"/>
-                            <button  onClick={buscarTipoSeguro}> buscar</button>
+                    </div>                    <div className="form-section">
+                        <h2 className="section-title">Elija tipo de Seguro</h2>
+                        <div className="search-controls">
+                            <div className="search-group">
+                                <label className="search-label" htmlFor="nom_tip_seg">Nombre del Seguro</label>
+                                <div className="search-input-container">
+                                    <input className="search-input" type="text" name="nom_tip_seg" id="nom_tip_seg" placeholder="Ingrese el nombre del seguro"/>
+                                </div>
                             </div>
-                            <div>
-                            <label htmlFor="">Forma de pago </label>
-                             <Select
-                                options={formaPago} // Si `pais` no es un array, pasaré un array vacío
-                                placeholder="Seleccione la forma de pago"
-                                onChange={calcularValorAPagar}
-                                value={tiempoPago}/>
+                            <button className="btn-search" onClick={buscarTipoSeguro}> Buscar</button>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">Forma de pago</label>
+                                <Select
+                                    options={formaPago}
+                                    placeholder="Seleccione la forma de pago"
+                                    onChange={calcularValorAPagar}
+                                    value={tiempoPago}
+                                />
                             </div>
                         </div>
                          <div>
-                    <table border="1" style={{ marginTop: '10px', borderCollapse: 'collapse' }}>
+                    <table className="custom-table">
                         <thead>
                         <tr>
                             <th>Seguro</th>
-                            <th>Descripcion</th>
-                            <th>valor Anual</th>
-                            <th>valor a pagar</th>
+                            <th>Descripción</th>
+                            <th>Valor Anual</th>
+                            <th>Valor a pagar</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -345,124 +354,195 @@ export function CrearContratacion({ mostrarSeccion }){
                         </tbody>
                     </table>
                     </div>
-                    </div>
-
-                    <div>
-                        <h2>dependientes</h2>
-                        <button type="button" onClick={abrirModal}>Agregar</button>
+                    </div>                    <div className="form-section">
+                        <h2 className="section-title">Dependientes</h2>
+                        <div style={{ marginBottom: '1rem' }}>
+                            <button type="button" className="btn-primary" onClick={abrirModal}>Agregar Dependiente</button>
+                        </div>
                             <DataTable 
                             pagination
                             paginationPerPage={6}
                             columns={columnasDepencientes} 
                             data={listDependientes}
-                            noDataComponent="No ha selecionado ningun dependiente"
+                            noDataComponent="No ha seleccionado ningún dependiente"
                             persistTableHead >
                             </DataTable>
-                   </div>
-                   <div>
-                        <h2>Datos Facturacion</h2>
-                        <div>
-                        <label>Tipo de identificación:</label><br />
-                        <input type="checkbox" id="cedula" onChange={checkTipoIdentificaicon} />
-                        <label htmlFor="cedula">Cédula</label>
-                        <input type="checkbox" id="ruc" onChange={checkTipoIdentificaicon}/>
-                        <label htmlFor="pasaporte">Ruc</label>
-                        <input type="checkbox" id="otro" onChange={checkTipoIdentificaicon}/>
-                        <label htmlFor="pasaporte">Otro</label>
-
-                        <label>Número de identificación</label>
-                        <input type="text" name="cedr_pers_fac" id="cedr_pers_fac" onChange={asignarValoresPersonaFact}/>
-                        <label>Nacionalidad</label>
-                        <input type="text"  name="nacion_pers_fac" id="nacion_pers_fac" onChange={asignarValoresPersonaFact}/>
-
-                      </div>
-                      <label>Razon social</label>
-                        <input type="text"  name="razon_pers_fac" id="razon_pers_fac" onChange={asignarValoresPersonaFact}/>
-                      <div>
-                        <label>Nombres</label>
-                        <input type="text"  name="nom_pers_fac" id="nom_pers_fac" onChange={asignarValoresPersonaFact}/>
-
-                        <label>Apellidos</label>
-                        <input type="text"  name="ape_pers_fac" id="ape_pers_fac" onChange={asignarValoresPersonaFact}/>
-
-                        <label>Correo electronico</label>
-                        <input type="text"  name="email_pers_fac" id="email_pers_fac" onChange={asignarValoresPersonaFact}/>
-
-                        <label>Direccion domicilio</label>
-                        <input type="text"  name="direc_pers_fac" id="direc_pers_fac" onChange={asignarValoresPersonaFact}/>
-
-                        <label>Telefono del domicilio</label>
-                        <input type="text"  name="tel_pers_fac" id="tel_pers_fac" onChange={asignarValoresPersonaFact}/>
-
-                        <label>Celular</label>
-                        <input type="text"  name="cel_pers_fac" id="cel_pers_fac" onChange={asignarValoresPersonaFact}/>
-                        <div>
-                          <h4>Parentesco</h4>
-                        <label htmlFor="">Padre</label>
-                        <input type="checkbox" name="padre" id="padre" onChange={checkParentescoTitular} />
-                        <label htmlFor="">Madre</label>
-                        <input type="checkbox" name="madre" id="madre" onChange={checkParentescoTitular}/>
-                        <label htmlFor="">Hijo</label>
-                        <input type="checkbox" name="hijo" id="hijo" onChange={checkParentescoTitular} />
-                        <label htmlFor="">Cónyuge</label>
-                        <input type="checkbox" name="conyuge" id="conyuge" onChange={checkParentescoTitular}/>
-                        <label htmlFor="">Empleador</label>
-                        <input type="checkbox" name="empleador" id="empleador" onChange={checkParentescoTitular}/>
-                        <label htmlFor="">Otro</label>
-                        <input type="checkbox" name="otroParen" id="otroParen" onChange={checkParentescoTitular} />
-                        <input type="text" name="otroparentesco" id="otroparentesco" onChange={textParentesco} />
-                        </div>
-                        <div>
-                          <div>
-                            <h4>Datos de Tarjeta de Crédito</h4>
-                            <label>
-                         Esta tarjeta será utilizada para debitar el pago del valor del seguro. Por favor, asegúrese de ingresar la información correctamente.
-                             </label> <br />
-                            <label htmlFor="">tipo de cuenta</label>
-                            <div>
-                                <input type="checkbox" name="ahorros" id="ahorros" onChange={checktipoBanco} />
-                                <label htmlFor="">Ahorros</label>
-                                <input type="checkbox" name="corriente" id="corriente"  onChange={checktipoBanco}/>
-                                <label htmlFor="">Corriente</label>
-                            </div>
-                            <label htmlFor="">Banco</label>
-                            <input type="text" name="nom_cuent_Ban" id="nom_cuent_Ban" onChange={asignarValoresCuentaBanco}/>
-                            <label htmlFor="">Cuenta No.</label>
-                            <input type="text" name="mun_cuent_Ban" id="mun_cuent_Ban" onChange={asignarValoresCuentaBanco} />
-                          </div>
+                   </div>                   <div className="form-section">
+                        <h2 className="section-title">Datos Facturación</h2>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">Tipo de identificación:</label>
+                                <div className="checkbox-group">
+                                    <div className="checkbox-item">
+                                        <input type="checkbox" id="cedula" onChange={checkTipoIdentificaicon} />
+                                        <label htmlFor="cedula">Cédula</label>
+                                    </div>
+                                    <div className="checkbox-item">
+                                        <input type="checkbox" id="ruc" onChange={checkTipoIdentificaicon}/>
+                                        <label htmlFor="ruc">RUC</label>
+                                    </div>
+                                    <div className="checkbox-item">
+                                        <input type="checkbox" id="otro" onChange={checkTipoIdentificaicon}/>
+                                        <label htmlFor="otro">Otro</label>
+                                    </div>
                                 </div>
-                      </div>
-                   </div>
-                   <div>
-                    <h2>Datos complenentarios</h2>
-                    <div> 
-                      <label htmlFor="">Como constancia de haber leído y entendido, acepto el contenido de la presente solicitud y declaro que la información que he
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">Número de identificación</label>
+                                <input className="form-input" type="text" name="cedr_pers_fac" id="cedr_pers_fac" onChange={asignarValoresPersonaFact}/>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Nacionalidad</label>
+                                <input className="form-input" type="text"  name="nacion_pers_fac" id="nacion_pers_fac" onChange={asignarValoresPersonaFact}/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">Razón social</label>
+                                <input className="form-input" type="text"  name="razon_pers_fac" id="razon_pers_fac" onChange={asignarValoresPersonaFact}/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">Nombres</label>
+                                <input className="form-input" type="text"  name="nom_pers_fac" id="nom_pers_fac" onChange={asignarValoresPersonaFact}/>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Apellidos</label>
+                                <input className="form-input" type="text"  name="ape_pers_fac" id="ape_pers_fac" onChange={asignarValoresPersonaFact}/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">Correo electrónico</label>
+                                <input className="form-input" type="email"  name="email_pers_fac" id="email_pers_fac" onChange={asignarValoresPersonaFact}/>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Dirección domicilio</label>
+                                <input className="form-input" type="text"  name="direc_pers_fac" id="direc_pers_fac" onChange={asignarValoresPersonaFact}/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">Teléfono del domicilio</label>
+                                <input className="form-input" type="text"  name="tel_pers_fac" id="tel_pers_fac" onChange={asignarValoresPersonaFact}/>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Celular</label>
+                                <input className="form-input" type="text"  name="cel_pers_fac" id="cel_pers_fac" onChange={asignarValoresPersonaFact}/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">Parentesco</label>
+                                <div className="checkbox-group">
+                                    <div className="checkbox-item">
+                                        <input type="checkbox" name="padre" id="padre" onChange={checkParentescoTitular} />
+                                        <label htmlFor="padre">Padre</label>
+                                    </div>
+                                    <div className="checkbox-item">
+                                        <input type="checkbox" name="madre" id="madre" onChange={checkParentescoTitular}/>
+                                        <label htmlFor="madre">Madre</label>
+                                    </div>
+                                    <div className="checkbox-item">
+                                        <input type="checkbox" name="hijo" id="hijo" onChange={checkParentescoTitular} />
+                                        <label htmlFor="hijo">Hijo</label>
+                                    </div>
+                                    <div className="checkbox-item">
+                                        <input type="checkbox" name="conyuge" id="conyuge" onChange={checkParentescoTitular}/>
+                                        <label htmlFor="conyuge">Cónyuge</label>
+                                    </div>
+                                    <div className="checkbox-item">
+                                        <input type="checkbox" name="empleador" id="empleador" onChange={checkParentescoTitular}/>
+                                        <label htmlFor="empleador">Empleador</label>
+                                    </div>
+                                    <div className="checkbox-item">
+                                        <input type="checkbox" name="otroParen" id="otroParen" onChange={checkParentescoTitular} />
+                                        <label htmlFor="otroParen">Otro</label>
+                                    </div>
+                                </div>
+                                <input className="form-input" type="text" name="otroparentesco" id="otroparentesco" onChange={textParentesco} placeholder="Especifique otro parentesco"/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <h4 className="section-title">Datos de Tarjeta de Crédito</h4>
+                                <div className="info-text">
+                                    Esta tarjeta será utilizada para debitar el pago del valor del seguro. Por favor, asegúrese de ingresar la información correctamente.
+                                </div>
+                                <label className="form-label">Tipo de cuenta</label>
+                                <div className="checkbox-group">
+                                    <div className="checkbox-item">
+                                        <input type="checkbox" name="ahorros" id="ahorros" onChange={checktipoBanco} />
+                                        <label htmlFor="ahorros">Ahorros</label>
+                                    </div>
+                                    <div className="checkbox-item">
+                                        <input type="checkbox" name="corriente" id="corriente"  onChange={checktipoBanco}/>
+                                        <label htmlFor="corriente">Corriente</label>
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">Banco</label>
+                                        <input className="form-input" type="text" name="nom_cuent_Ban" id="nom_cuent_Ban" onChange={asignarValoresCuentaBanco}/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Cuenta No.</label>
+                                        <input className="form-input" type="text" name="mun_cuent_Ban" id="mun_cuent_Ban" onChange={asignarValoresCuentaBanco} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>                   <div className="form-section">
+                    <h2 className="section-title">Datos Complementarios</h2>
+                    <div className="info-text"> 
+                      Como constancia de haber leído y entendido, acepto el contenido de la presente solicitud y declaro que la información que he
                         suministrado es exacta en todas sus partes, por lo que me obligo a presentar toda la documentación que demuestre mis
                         declaraciones y firmo el presente documento en señal de comprensión, aceptación y conformidad de su contenido. La información
-                        proporcionada en este documento será de estricta confidencialidad</label>
+                        proporcionada en este documento será de estricta confidencialidad
                     </div>
-                    <label htmlFor="">Ciudad</label>
-                    <input type="text" name="ciud_seguro" id="ciud_seguro" onChange={asignarValoresNuevoSeguro}/>
-                    <label htmlFor="" >Dia</label>
-                    <input type="text" name="dia_seguro" id="dia_seguro" onChange={asignarValoresNuevoSeguro} />
-                    <label htmlFor="">Mes</label>
-                    <input type="text" name="mes_seguro" id="mes_seguro" onChange={asignarValoresNuevoSeguro} />
-                    <label htmlFor="">Anio</label>
-                    <input type="text" name="anio_seguro" id="anio_seguro"onChange={asignarValoresNuevoSeguro} />
-                    <div>
-                    <label htmlFor="">buscar empleado </label>
-                    <input type="text" name="ced_emple" id="ced_emple"/> 
-                    <button onClick={buscarEmpleado}>Buscar empleado </button>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label">Ciudad</label>
+                            <input className="form-input" type="text" name="ciud_seguro" id="ciud_seguro" onChange={asignarValoresNuevoSeguro}/>
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">Día</label>
+                            <input className="form-input" type="text" name="dia_seguro" id="dia_seguro" onChange={asignarValoresNuevoSeguro} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">Mes</label>
+                            <input className="form-input" type="text" name="mes_seguro" id="mes_seguro" onChange={asignarValoresNuevoSeguro} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">Año</label>
+                            <input className="form-input" type="text" name="anio_seguro" id="anio_seguro"onChange={asignarValoresNuevoSeguro} />
+                        </div>
                     </div>
-                     <label htmlFor="">Nombre del Agente</label>
-                    <input type="text" name="nom_emple" id="nom_emple" value={empleado?.nom_emple||''} />
-                    <label htmlFor="">Correo del Ejecutivo/Agente</label>
-                    <input type="text" name="email_emple" id="email_emple" value={empleado?.email_emple||''} />
-                   </div>
-                  <div>
-                    <button className="btn-cancelar">Cancelar</button>
+                    <div className="search-controls">
+                        <div className="search-group">
+                            <label className="search-label" htmlFor="ced_emple">Buscar empleado</label>
+                            <div className="search-input-container">
+                                <input className="search-input" type="text" name="ced_emple" id="ced_emple" placeholder="Cédula del empleado"/> 
+                            </div>
+                        </div>
+                        <button className="btn-search" onClick={buscarEmpleado}>Buscar empleado</button>
+                    </div>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label">Nombre del Agente</label>
+                            <input className="form-input" type="text" name="nom_emple" id="nom_emple" value={empleado?.nom_emple||''} readOnly />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">Correo del Ejecutivo/Agente</label>
+                            <input className="form-input" type="text" name="email_emple" id="email_emple" value={empleado?.email_emple||''} readOnly />
+                        </div>
+                    </div>                   </div>
+                  <div className="action-buttons">
+                    <button className="btn-cancelar" onClick={() => mostrarSeccion("GestionContratacion")}>Cancelar</button>
                     <button className="btn-guardar" onClick={guardarSeguro}>Guardar</button>
-
                   </div>
                    {isModalOpen && (
                     <div className={styles.overlay}>

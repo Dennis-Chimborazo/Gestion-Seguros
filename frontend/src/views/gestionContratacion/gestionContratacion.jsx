@@ -4,6 +4,7 @@ import DataTable from "react-data-table-component";
 import GestionContratacionFun from "./GestionContratacionFun";
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
 import CargarTablas from "../cargando/CargarTablas";
+import "../estilos/GestionContratacion.css";
 
 
 export function GestionContratacion({ mostrarSeccion }){
@@ -37,26 +38,32 @@ export function GestionContratacion({ mostrarSeccion }){
         {name:"Valor anual",selector:row=>row.pago_tip_seg},   
         {name:"Tipo de pago",selector:row=>row.tiempo_seguro},   
         {name:"Valor a pagar",selector:row=>row.monto_seguro},   
-    ];
-
-    return(
-        <div>
-            <form action="" method="">
-               <h2>Gestion Contratacion </h2>
-                    <div>
-                        <label htmlFor=""> Buscar</label>
-                        <input type="text" id="buscar" name="buscar" placeholder="Ingrese Codigo del seguro"  />
-                         <FcClearFilters size={25} />
-                        <label htmlFor=""> Nuevo seguro </label>
-                        <button onClick={() => mostrarSeccion("CrearContratacion")}>Crear</button>
-                         </div>
+    ];    return(
+        <div className="gestion-container">
+            <form className="gestion-form" action="" method="">
+               <h1 className="gestion-title">Gestión Contratación</h1>
+                    <div className="search-controls">
+                        <div className="search-group">
+                            <label className="search-label" htmlFor="buscar">Buscar</label>
+                            <div className="search-input-container">
+                                <input className="search-input" type="text" id="buscar" name="buscar" placeholder="Ingrese código del seguro" />
+                            </div>
+                        </div>
+                        <button className="btn-search" type="button">
+                            <FcClearFilters size={20} />
+                            Limpiar
+                        </button>
+                        <button className="btn-primary" onClick={() => mostrarSeccion("CrearContratacion")}>
+                            Nuevo seguro
+                        </button>
+                    </div>
                          {loading? (<CargarTablas />):
                          <DataTable 
                             pagination
                             paginationPerPage={20}
                             columns={columlistSeguro} 
                             data={listaSeguros}
-                            noDataComponent="No ha selecionado ningun Seguro"
+                            noDataComponent="No ha seleccionado ningún Seguro"
                             persistTableHead >
                             </DataTable> }
             </form>
