@@ -1,8 +1,5 @@
-
-
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import ApiService from "../../services/ApiService";
 import styles from "../estilos/VentanaAdmin.module.css";
 import CrearClientes from "../clientes/CrearClientes";
 import Clientes from "../clientes/Clientes";
@@ -29,7 +26,6 @@ export function VentanaAgente() {
   const mostrarSeccion = (nombre) => {
     setSeccionActiva(nombre);
   };
-
 
   return (
     <div className={styles.container}>

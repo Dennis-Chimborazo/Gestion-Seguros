@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import styles from "./estilos/login.module.css";
 import AgenteFun from "./agentes/AgenteFun.js";
+import ClientesFun from "./clientes/ClientesFun.js";
 
 export function Login() {
   const navigate = useNavigate();
@@ -18,31 +19,54 @@ export function Login() {
         localStorage.setItem("login", JSON.stringify({
           login: true,
           token: res.token,
-          user: res.user.id_persona
+          user: res.user.id
         }));
         navigate("/" + res.user.nom_rol, { state: { user: res.user } });
 
       } else {
-        if (res.estado === 3) {
-          try {
-            const resAgente = await AgenteFun.BuscarRutaValidacion({ id: res.id }, navigate);
-            if (resAgente.success) {
-              navigate(`/validacionAgente/${resAgente.url}`);
-            }
-          } catch (error) {
-            if (error.response) {
-              const status = error.response.status;
-
-              if (status === 401) {
-                toast.error("Tu contraseña ha expirado o es inválida. Solicita una nueva..");
-              } else if (status === 404) {
-                toast.error("No se encontró una URL asociada. Verifica el ID.");
-              } else {
-                toast.error("Error al validar el enlace. Intenta más tarde.");
+        if (res.user.estado === 3) {
+          if (res.user.nom_rol === 'agente') {
+            try {
+              const resAgente = await AgenteFun.BuscarRutaValidacion({ id: res.user.id }, navigate);
+              if (resAgente.success) {
+                navigate(`/validacionAgente/${resAgente.url}`);
               }
-            } else {
-              toast.error("Error de red o del cliente. Verifica tu conexión.");
+            } catch (error) {
+              if (error.response) {
+                const status = error.response.status;
+
+                if (status === 401) {
+                  toast.error("Tu contraseña ha expirado o es inválida. Solicita una nueva..");
+                } else if (status === 404) {
+                  toast.error("No se encontró una URL asociada. Verifica el ID.");
+                } else {
+                  toast.error("Error al validar el enlace. Intenta más tarde.");
+                }
+              } else {
+                toast.error("Error de red o del cliente. Verifica tu conexión.");
+              }
             }
+          } else {
+             try {
+              const resCliente = await ClientesFun.BuscarRutaValidacion({ id: res.user.id }, navigate);
+              if (resCliente.success) {
+                navigate(`/validacionEmail/${resCliente.url}`);
+              }
+            } catch (error) {
+              if (error.response) {
+                const status = error.response.status;
+                if (status === 401) {
+                  toast.error("Tu contraseña ha expirado o es inválida. Solicita una nueva..");
+                } else if (status === 404) {
+                  toast.error("No se encontró una URL asociada. Verifica el ID.");
+                } else {
+                  toast.error("Error al validar el enlace. Intenta más tarde.");
+                }
+              } else {
+                toast.error("Error de red o del cliente. Verifica tu conexión.");
+              }
+            }
+
           }
         } else {
           toast.error(res.user || "Error desconocido");

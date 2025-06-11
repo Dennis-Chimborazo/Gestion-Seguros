@@ -51,7 +51,7 @@ export function ModalReenvioValidacion({ cerrarModal, mostrarSeccion }) {
     } else {
       await ClientesFun.actualizarTokenValidacion({ id_pers: formulario.id_pers, url: urlRandom, pass: passRandom }, navigate);
       await ClientesFun.enviarCorreoEmail({ to: formulario.email, token: urlRandom, pass: passRandom }, navigate);
-      await UsuariosFun.actualizarUserPass({ id_pers: formulario.id_pers, pass: passRandom, user: formulario.newEmail }, navigate);
+      await UsuariosFun.actualizarPass({ id_pers: formulario.id_pers, pass: passRandom, user: formulario.newEmail }, navigate);
       swal.fire({
         title: "<label>Exito</label>",
         text: "Se ha reembiado un nuevo enlace de validacion",

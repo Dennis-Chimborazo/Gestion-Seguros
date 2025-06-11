@@ -28,9 +28,9 @@ export function ValidarEmail() {
             apellido: resCli[0].ape_cli,
             email_pers: resCli[0].email_pers,
             idvalid: res.idvalid,
-            passtemp: res.data.pass
+            passTemp: res.data.pass
           });
-          setFormulario({ ...formulario, id_pers: resCli[0].id_pers })
+          setFormulario({ ...formulario, id_pers: resCli[0].id_pers, user: resCli[0].email_pers })
           setSuccess(true);
         } else {
           setError("Token inválido o expirado.");
@@ -64,12 +64,11 @@ export function ValidarEmail() {
             return false;
           }
         } else {
-          toast.error("Faltan campos por llenar modal");
+          toast.error("Faltan campos por llenar");
           return false;
         }
       }
     }
-
   }
 
   const asignarValores = (e) => {
@@ -85,7 +84,7 @@ export function ValidarEmail() {
           await UsuariosFun.actualizarPass(formulario, navigate)
           swal.fire({
             title: "<label>Muchas Felicidades</label>",
-            text: "se ha completado con exito la pre-validacion de tu cuenta en Seguros.SA \npuedes finalizar tu registro desde tu ceunta",
+            text: "se ha completado con exito la pre-validacion de tu cuenta en Seguros.SA \npuedes finalizar tu registro desde tu cuenta",
             timer: 4500,
           })
           navigate('/');
@@ -103,6 +102,15 @@ export function ValidarEmail() {
 
   const cancelarCuenta = (e) => {
     e.preventDefault()
+    swal.fire({
+      title: "⚠️ <label>Advertencia</label>",
+      text: "Desea salir de la validanción de cuenta",
+      showDenyButton: true,
+      denyButtonText: "No",
+      confirmButtonText: "Si"
+    }).then(respuesta => {
+      if (respuesta.isConfirmed) {navigate('/');}
+    });
   }
 
   return (
@@ -131,7 +139,7 @@ export function ValidarEmail() {
             <input type="text" id="confirmPassword" name="confirmPassword" onChange={asignarValores} />
             <div className={styles.message}>
               <button className={styles.button} onClick={cancelarCuenta}>cancelar</button>
-              <button className={styles.button} onClick={preValidarCuenta}>Crear</button>
+              <button className={styles.button} onClick={preValidarCuenta}>Validar Cuenta</button>
             </div >
           </>
         ) : (

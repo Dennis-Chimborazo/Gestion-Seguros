@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert2";
-import Utilidades from "../../services/Utilidades";
 import AgenteFun from "./AgenteFun";
 import UsuariosFun from "../usuarios/UsuariosFun";
 import { toast, Toaster } from "sonner";
@@ -20,11 +19,8 @@ export function EditarAgente({ mostrarSeccion }) {
                 localStorage.removeItem("editAgente");
             }
         };
-
         cargarDatos();
     }, []);
-
-
 
     const asignarValores = (e) => {
         setFormularioEdit({ ...formularioEdit, [e.target.name]: e.target.value })
@@ -89,14 +85,11 @@ export function EditarAgente({ mostrarSeccion }) {
         } else {
             toast.error("Faltan campos por llenar ");
         }
-
-
     }
 
     const verificacionCambios = () => {
         const keysActual = Object.keys(formulario);
         let huboCambios = false;
-
         for (let key of keysActual) {
             const actual = String(formulario[key] ?? '');
             const original = String(formularioEdit[key] ?? '');
@@ -104,7 +97,6 @@ export function EditarAgente({ mostrarSeccion }) {
                 huboCambios = true;
             }
         }
-
         return huboCambios;
     };
 
@@ -128,9 +120,7 @@ export function EditarAgente({ mostrarSeccion }) {
 
     return (
         <div>
-
             <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-
             <div>
                 <label htmlFor=""> cedula</label>
                 <input type="text" name="ced_agente" id="ced_agente" onChange={asignarValores} value={formularioEdit?.ced_agente || ''} />

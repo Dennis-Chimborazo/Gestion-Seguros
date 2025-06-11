@@ -26,22 +26,26 @@ router.post("/ingreso", async (req, res) => {
     if (result.rowCount === 0) {
       return res.json({ success: false, user: "Credenciales no encontradas" });
     }
-    const usuarioData = result.rows[0];
-    if (usuarioData.nom_rol === 'cliente') {
+    let usuarioData = result.rows[0];
+    if (usuarioData.nom_rol === 'admin') {
+      usuarioData = { success: true, nom_rol: "admin", estado: 1, id: usuarioData.id_persona }
+    } else if (usuarioData.nom_rol === 'cliente') {
       const estado = await database.query(
         `SELECT id_estado FROM cliente WHERE id_pers = $1`,
         [usuarioData.id_persona]
       );
       const idEstado = estado.rows[0]?.id_estado;
-
-
-      if (idEstado === 2) {
+      if (idEstado === 1) {
+        usuarioData = { success: true, nom_rol: "cliente", estado: 1, id: usuarioData.id_persona }
+      } else if (idEstado === 2) {
         return res.json({ success: false, user: "El cliente está desactivado." });
       } else if (idEstado === 3) {
-        return res.json({ success: false, user: "El cliente tiene una activación pendiente.", estado: 4, id: 1 });
+        return res.json({ success: false, user: { nom_rol: "cliente", estado: 3, id: usuarioData.id_persona } });
+      } else if (idEstado === 4) {
+        usuarioData = { success: true, nom_rol: "cliente", estado: 4, id: usuarioData.id_persona }
       }
-    }
-    if (usuarioData.nom_rol === 'agente') {
+
+    } else if (usuarioData.nom_rol === 'agente') {
       const estado = await database.query(
         `SELECT id_estado FROM agente WHERE id_agente = $1`,
         [usuarioData.id_persona]
@@ -50,11 +54,12 @@ router.post("/ingreso", async (req, res) => {
       if (idEstado === 2) {
         return res.json({ success: false, user: "El agente está desactivado." });
       } else if (idEstado === 3) {
-        return res.json({ success: false, user: "El agente tiene una activación pendiente.", estado: 3, id: usuarioData.id_persona });
+        return res.json({ success: false, user: { nom_rol: "agente", estado: 3, id: usuarioData.id_persona } });
       }
+      usuarioData = { success: true, nom_rol: "agente", estado: 1, id: usuarioData.id_persona }
     }
 
-    const payload = { id: usuarioData.users };
+    const payload = { id: usuarioData.id };
     jwt.sign(payload, 'gestionPruebas', { expiresIn: "1h" }, (err, token) => {
       if (err) {
         console.error("Error generando token:", err);
@@ -62,6 +67,7 @@ router.post("/ingreso", async (req, res) => {
       }
       res.json({ success: true, user: usuarioData, token });
     });
+
   } catch (error) {
     console.error("Error en /ingreso:", error);
     res.status(500).json({ success: false, message: "Error interno del servidor" });
