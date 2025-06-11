@@ -12,18 +12,17 @@ function App() {
   return (
     <React.Fragment>
       <BrowserRouter>
-    <Routes>
-    <Route path="/" element={<Login />} />
-    <Route path="/admin" element={<VentanaAdmin />} />
-    <Route path="/agente" element={<VentanaAgente />} />
-    <Route path="/cliente" element={<VentanaCliente />} />
-    <Route path="/validacionContratacion/:id" element={<ValidarContratacionSeguro />} />
-    <Route path="/validacionEmail/:id" element={<ValidarEmail />} />
-    <Route path="/validacionAgente/:id" element={<ValidarAgente />} />
-
-  </Routes>
-  </BrowserRouter>
-  </React.Fragment>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/admin" element={<VentanaAdmin />} />
+          <Route path="/agente" element={<VentanaAgente />} />
+          <Route path="/cliente" element={<VentanaCliente />} />
+          <Route path="/validacionContratacion/:id" element={<ValidarContratacionSeguro />} />
+          <Route path="/validacionEmail/:id" element={<ValidarEmail />} />
+          <Route path="/validacionAgente/:id" element={<ValidarAgente />} />
+        </Routes>
+      </BrowserRouter>
+    </React.Fragment>
   );
 }
 

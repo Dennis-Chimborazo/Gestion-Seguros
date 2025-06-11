@@ -15,22 +15,20 @@ export function Login() {
     } else {
       const res = await ApiService.login(formulario);
       if (res.success) {
-          localStorage.setItem("login", JSON.stringify({
-            login: true,
-            token: res.token,
-            user: res.user.id_persona
-          }));
-         navigate("/" + res.user.nom_rol, { state: { user: res.user } });
+        localStorage.setItem("login", JSON.stringify({
+          login: true,
+          token: res.token,
+          user: res.user.id_persona
+        }));
+        navigate("/" + res.user.nom_rol, { state: { user: res.user } });
 
       } else {
         if (res.estado === 3) {
           try {
             const resAgente = await AgenteFun.BuscarRutaValidacion({ id: res.id }, navigate);
-
             if (resAgente.success) {
               navigate(`/validacionAgente/${resAgente.url}`);
             }
-
           } catch (error) {
             if (error.response) {
               const status = error.response.status;
@@ -46,8 +44,6 @@ export function Login() {
               toast.error("Error de red o del cliente. Verifica tu conexión.");
             }
           }
-
-
         } else {
           toast.error(res.user || "Error desconocido");
         }
@@ -57,34 +53,36 @@ export function Login() {
 
   const darValores = (e) => {
     setFormulario({
-      ...formulario, [e.target.name]: [e.target.value],
+      ...formulario, [e.target.name]: e.target.value,
     });
   }
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Login</h1>
-      <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
-        <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-        <input
-          className={styles.input}
-          type="text"
-          placeholder="Usuario"
-          id="user"
-          name="user"
-          required
-          onChange={darValores}
-        />
-        <input
-          className={styles.input}
-          type="password"
-          placeholder="Contraseña"
-          id="pass"
-          name="pass"
-          required
-          onChange={darValores}
-        />
-        <button className={styles.button} onClick={ingresar}>Ingresar</button>
-      </form>
+      <div className={styles.card}>
+        <h1 className={styles.title}>Login</h1>
+        <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
+          <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Usuario"
+            id="user"
+            name="user"
+            required
+            onChange={darValores}
+          />
+          <input
+            className={styles.input}
+            type="password"
+            placeholder="Contraseña"
+            id="pass"
+            name="pass"
+            required
+            onChange={darValores}
+          />
+          <button className={styles.button} onClick={ingresar}>Ingresar</button>
+        </form>
+      </div>
     </div>
   );
 }

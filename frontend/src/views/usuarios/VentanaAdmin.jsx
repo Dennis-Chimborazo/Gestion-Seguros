@@ -16,6 +16,7 @@ import CrearAgentes from "../agentes/CrearAgentes";
 import AgentesPendientes from "../agentes/AgentesPendientes";
 import EditarAgente from "../agentes/EditarAgente";
 
+
 export function VentanaAdmin() {
   const navigate = useNavigate();
   const location = useLocation();

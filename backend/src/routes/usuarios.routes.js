@@ -162,7 +162,6 @@ router.post("/verificar-datos", async (req, res) => {
     if (resultCliente.rows.length > 0) {
       return res.json({ existe: true, message: "El número de cédula ya existe en clientes." });
     }
-
     return res.json({ existe: false, message: "El nombre de usuario y la cédula están disponibles." });
 
   } catch (error) {
@@ -217,14 +216,9 @@ router.put("/users-password", async (req, res) => {
 
 router.put("/update-usuario-password", async (req, res) => {
   const { id_pers, pass, user } = req.body;
-  console.log('update-usuario-password')
-  console.log(id_pers, pass, user)
-
-
   if (!id_pers || !pass) {
     return res.status(400).json({ error: "Faltan datos requeridos" });
   }
-
   try {
     const result = await database.query(
       "UPDATE usuarios SET users=$1, pass = $2 WHERE id_persona = $3 RETURNING *",

@@ -23,6 +23,10 @@ export function ModalCuentasClientes({ cerrarModal,datosCliente,mostrarSeccion})
     if (verificarDatos()) {
       try {
         const res= await ClientesFun.guardarCliente(datosCliente,navigate);
+        console.log("----- res.id_pers")
+        console.log(res.id_pers)
+        console.log("-----------")
+
         const cuenta={idpersona:res.id_pers,user:formulario.user,pass:formulario.pass}
         const resCuent= await ClientesFun.crearCuenta(cuenta,navigate)
         if (resCuent) {
