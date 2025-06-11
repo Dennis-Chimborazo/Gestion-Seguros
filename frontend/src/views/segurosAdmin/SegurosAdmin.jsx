@@ -73,7 +73,6 @@ export function SegurosAdmin({ mostrarSeccion }){
         <div className="seguros-admin-container">
             <form className="seguros-admin-form" action="" method="">
                 <h2 className="seguros-admin-title">Tipos de Seguros</h2>
-                
                 <div className="search-controls">
                     <div className="search-group">
                         <label htmlFor="buscar" className="search-label">Buscar</label>

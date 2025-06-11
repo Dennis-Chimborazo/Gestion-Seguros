@@ -152,6 +152,39 @@
   margin-right: 0;
 }
 
+/* Estilos para los nuevos botones del menú */
+.menuButton {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  color: #4a5568;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 0 25px 25px 0;
+  margin-right: 1rem;
+}
+
+.menuButton:hover {
+  background: linear-gradient(45deg, rgba(103, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  color: #667eea;
+  transform: translateX(5px);
+}
+
+.menuButton:hover::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+}
+
 /* Logout especial */
 .logout {
   color: #dc3545 !important;
@@ -161,6 +194,15 @@
 }
 
 .logout:hover {
+  background: rgba(220, 53, 69, 0.1) !important;
+  color: #dc3545 !important;
+}
+
+.logoutButton {
+  color: #dc3545 !important;
+}
+
+.logoutButton:hover {
   background: rgba(220, 53, 69, 0.1) !important;
   color: #dc3545 !important;
 }
@@ -202,6 +244,15 @@
   font-size: 1.2rem;
   color: #4a5568;
   margin-bottom: 2rem;
+}
+
+.welcomeHeader {
+  padding: 1rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid rgba(103, 126, 234, 0.2);
+  margin-bottom: 0.5rem;
 }
 
 /* Responsive */
