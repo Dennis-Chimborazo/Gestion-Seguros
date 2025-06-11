@@ -66,7 +66,7 @@ class ClientesFun {
       const response =  await ApiService.get("client/buscarclienteID",id,navigate);
       return response;
    }
-   static async activarCuentaUsuario(id,navigate){
+   static async preActivarCuentaUsuario(id,navigate){
       const response =  await ApiService.put("client/activar-cuenta",id,navigate);
       return response;
    }

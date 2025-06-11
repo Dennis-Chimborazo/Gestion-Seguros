@@ -38,11 +38,11 @@ export function ValidacionCliente({ mostrarSeccion }) {
         { name: "Nombre", selector: row => row.nom_cli },
         { name: "Apellido", selector: row => row.ape_cli },
         {
-            name: "Estado", selector: row => {
+            name: "Pendiente", selector: row => {
                 if (row.id_estado === 4) {
                     return 'Cargar Archivos';
                 } else if (row.id_estado === 3) {
-                    return 'Validacion Completa';
+                    return 'Cambiar contraseña';
                 }
                 return row.id_estado;
             }

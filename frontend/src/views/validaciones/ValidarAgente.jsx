@@ -73,7 +73,6 @@ export function ValidarAgente() {
         e.preventDefault()
         if (verificarDatos()) {
             try {
-                console.log(formulario)
                 const api = await AgenteFun.activarCuentaAgente(({ id: agente.id_pers, idvalid: agente.idvalid }), navigate)
                 if (api) {
                     await UsuariosFun.actualizarPass(formulario, navigate);
@@ -97,6 +96,8 @@ export function ValidarAgente() {
 
     const cancelarCuenta = (e) => {
         e.preventDefault()
+                    navigate('/');
+
     }
 
     return (
