@@ -20,7 +20,7 @@ router.get("/listar", async (req, res) => {
 });
 
 router.get("/listarPendientes", async (req, res) => {
-  const idEstado=3
+  const idEstado = 3
   try {
     const query = `SELECT * FROM cliente WHERE id_estado = $1`;
     const data = await database.query(query, [idEstado]);
@@ -33,7 +33,6 @@ router.get("/listarPendientes", async (req, res) => {
 
 router.post("/save", async (req, res) => {
   const formulario = req.body;
-
   const camposObligatorios = [
     'cedr_cli', 'tipo_cedr_cli', 'nacion_cli', 'nom_cli', 'ape_cli',
     'fecha_naci_cli', 'lugar_naci_cli', 'tel_pers', 'cel_pers', 'email_pers',
@@ -42,16 +41,14 @@ router.post("/save", async (req, res) => {
   ];
 
   const camposFaltantes = camposObligatorios.filter(campo => !formulario[campo]);
-  const est=3
+  const est = 3
   if (camposFaltantes.length > 0) {
     return res.status(400).json({
       success: false,
       message: `Faltan campos obligatorios: ${camposFaltantes.join(", ")}`
     });
   }
-
   try {
-
     const data = await database.query(`
       INSERT INTO cliente (
         cedr_cli, tipo_cedr_cli, nacion_cli, nom_cli, ape_cli, fecha_naci_cli,
@@ -90,7 +87,7 @@ router.post("/save", async (req, res) => {
     res.json({ message: "Cliente guardado exitosamente", id_pers: idInsertado });
 
   } catch (error) {
-    
+
     res.status(500).json({
       success: false,
       message: "Error al guardar cliente",
@@ -101,7 +98,6 @@ router.post("/save", async (req, res) => {
 
 router.post("/comprobCredenciales", async (req, res) => {
   const { cedr_cli, email_pers } = req.body;
-
   try {
     const resultado = await database.query(
       ` SELECT 
@@ -252,7 +248,25 @@ router.put("/desactivar", async (req, res) => {
     });
   }
 });
+router.put("/activar", async (req, res) => {
+  const { id_pers } = req.body;
+  const desac = '1';
+  try {
+    const data = await database.query(`
+      UPDATE cliente SET
+        id_estado = $1
+      WHERE id_pers = $2
+    `, [
+      desac,
+      id_pers
+    ]);
 
+    res.status(200).json({ message: "Cliente actualizado correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al actualizar cliente" });
+  }
+});
 router.get("/buscar", async (req, res) => {
   const idCli = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
   try {
@@ -318,8 +332,7 @@ router.get("/buscarclienteID", async (req, res) => {
 
 router.put("/activar-cuenta", async (req, res) => {
   const { id, idvalid } = req.body;
-  const estadoActivo = '1';
-
+  const estadoActivo = '4';
   if (!id || !idvalid) {
     return res.status(400).json({ error: "Faltan datos requeridos (id o idvalid)." });
   }
@@ -346,8 +359,9 @@ router.put("/activar-cuenta", async (req, res) => {
     res.status(500).json({ error: "Error interno al actualizar cliente." });
   }
 });
+
 router.post("/generar_token_email", async (req, res) => {
-  
+
   try {
     const { id_pers, url } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
     const payload = { id_pers };
@@ -355,7 +369,7 @@ router.post("/generar_token_email", async (req, res) => {
 
     await database.query(
       "INSERT INTO validar_email (url_emal, token_val_email,id_pers) VALUES ($1, $2, $3)",
-      [url, token,id_pers]
+      [url, token, id_pers]
     );
 
     res.json({ success: true, token, message: "Token creado y guardado exitosamente." });
@@ -405,5 +419,5 @@ router.put("/update-correo", async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;
 

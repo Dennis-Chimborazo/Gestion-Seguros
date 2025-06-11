@@ -11,6 +11,10 @@ import EditarSeguroAdmin from "../segurosAdmin/EditarSeguroAdmin";
 import GestionContratacion from "../gestionContratacion/gestionContratacion";
 import CrearContratacion from "../gestionContratacion/CrearContratacion";
 import ValidacionCliente from "../clientes/ValidacionCliente";
+import Agentes from "../agentes/Agentes";
+import CrearAgentes from "../agentes/CrearAgentes";
+import AgentesPendientes from "../agentes/AgentesPendientes";
+import EditarAgente from "../agentes/EditarAgente";
 
 
 export function VentanaAdmin() {
@@ -34,7 +38,7 @@ export function VentanaAdmin() {
 
   const valores = async (e) => {
     e.preventDefault();
-    const val = await ApiService.traerDatos("client/clientes", navigate);
+    const val = await ApiService.getAll("client/clientes", navigate);
     console.log(val);
   };
 
@@ -42,7 +46,8 @@ export function VentanaAdmin() {
     <div className={styles.container}>
       <h2>Bienvenido {user?.nom_rol}</h2>
       <ul className={styles.menu}>
-      <li><a onClick={() => mostrarSeccion("clientes")}>Clientes</a></li>
+        <li><a onClick={() => mostrarSeccion("agente")}>Agentes</a></li>
+        <li><a onClick={() => mostrarSeccion("clientes")}>Clientes</a></li>
         <li><a onClick={() => mostrarSeccion("segurosAdmin")}>Seguros</a></li>
         <li><a onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</a></li>
         <li><a onClick={() => mostrarSeccion("seguros")}>Reembolso</a></li>
@@ -60,6 +65,11 @@ export function VentanaAdmin() {
         {seccionActiva === "GestionContratacion" && <GestionContratacion mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "CrearContratacion" && <CrearContratacion mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "clientePendiente" && <ValidacionCliente mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "agente" && <Agentes mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "crearAgentes" && <CrearAgentes mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "AgentePendiente" && <AgentesPendientes mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "EditarAgente" && <EditarAgente mostrarSeccion={mostrarSeccion} />}
+
         {seccionActiva === "reportes" && <p>Sección de reportes</p>}
         {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
       </section>

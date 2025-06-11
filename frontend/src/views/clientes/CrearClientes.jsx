@@ -5,8 +5,7 @@ import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import swal from "sweetalert2";
-import ModalCuentasClientes from "./ModalCuentasClientes";
-import stylesmod from "../estilos/modalDependientes.module.css";
+import Utilidades from "../../services/Utilidades";
 
 export function CrearClientes({ mostrarSeccion }) {
     const [pais, setPais] = useState([]);
@@ -15,12 +14,13 @@ export function CrearClientes({ mostrarSeccion }) {
     const [selectedProvincia, setSelectedProvincia] = useState(null);
     const [selectedCiudad, setSelectedCiudad] = useState(null);
     const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [formulario,setFormulario]=useState({cedr_cli:'',tipo_cedr_cli:'',nacion_cli:'',
-        nom_cli:'',ape_cli:'',fecha_naci_cli:'',lugar_naci_cli:'',tel_pers:'',
-        cel_pers:'',email_pers:'',edad_pers:'',sexo_cli:'',estado_civil_pers:'',
-        estatura_cli:'',peso_cli:'',parroq_cli:'',calle_princ_pers:'',
-        calle_secun_pers:'', id_ciud:''})
+    const [formulario, setFormulario] = useState({
+        cedr_cli: '', tipo_cedr_cli: '', nacion_cli: '',
+        nom_cli: '', ape_cli: '', fecha_naci_cli: '', lugar_naci_cli: '', tel_pers: '',
+        cel_pers: '', email_pers: '', edad_pers: '', sexo_cli: '', estado_civil_pers: '',
+        estatura_cli: '', peso_cli: '', parroq_cli: '', calle_princ_pers: '',
+        calle_secun_pers: '', id_ciud: ''
+    })
 
     useEffect(() => {
         const cargarPais = async () => {
@@ -28,18 +28,14 @@ export function CrearClientes({ mostrarSeccion }) {
             setPais(apiPais.rows)
         }
         cargarPais();
-
     }, []);
 
-    const cerrarModal = () => setIsModalOpen(false);
-    const abrirModal = () => setIsModalOpen(true);
-    const cargarProvincia = async (val)=>{
-        setSelectedProvincia(null); 
-        setSelectedCiudad(null);    
-        setProvincia([]);           
-        setCiudad([]);              
-        const apiProvincia= await ClientesFun.traerProvincias(val.value,navigate);
-
+    const cargarProvincia = async (val) => {
+        setSelectedProvincia(null);
+        setSelectedCiudad(null);
+        setProvincia([]);
+        setCiudad([]);
+        const apiProvincia = await ClientesFun.traerProvincias(val.value, navigate);
         setProvincia(apiProvincia);
     }
 
@@ -80,8 +76,6 @@ export function CrearClientes({ mostrarSeccion }) {
         document.getElementById("unionLibre").checked = false;
         document.getElementById(id).checked = true;
         setFormulario({ ...formulario, estado_civil_pers: document.getElementById(id).id })
-
-
     };
 
     const chechkTipoPeso = (event) => {
@@ -113,18 +107,29 @@ export function CrearClientes({ mostrarSeccion }) {
     const guardarCliente = async () => {
         if (Object.values(formulario).every(valor => valor !== '')) {
             try {
-                const res= await ClientesFun.comprobarCredenciales(formulario,navigate);
+                const res = await ClientesFun.comprobarCredenciales(formulario, navigate);
                 if (res) {
-                  abrirModal()
+                    const res = await ClientesFun.guardarCliente(formulario, navigate);
+                    const resCuent = await ClientesFun.crearCuenta({ idpersona: res.id_pers, user: formulario.email_pers, pass: await Utilidades.crearPassAleatoria() }, navigate)
+                    if (resCuent) {
+                        const urlRandom = await Utilidades.crearRutaAleatoria()
+                        await ClientesFun.generarTokenValidacion(({ id_pers: res.id_pers, url: urlRandom }), navigate);
+                        await ClientesFun.enviarCorreoEmail(({ to: formulario.email_pers, token: urlRandom }), navigate)
+                        swal.fire({
+                            title: "<label>Exito</label>",
+                            text: "E; usuario ha sido creado con éxito",
+                            timer: 3500,
+                        })
+                        mostrarSeccion("clientes")
+                    }
                 }
-
             } catch (error) {
                 console.log(error)
-                 swal.fire({
-                        title:"<label>Advertencia</label>",
-                        text:"Ya existe un usuario con el mismo numero \nde identificacion o correo electronico",
-                        timer:3500,
-                    })
+                swal.fire({
+                    title: "<label>Advertencia</label>",
+                    text: "Ya existe un usuario con el mismo numero \nde identificacion o correo electronico",
+                    timer: 3500,
+                })
             }
         } else {
             toast.error("Faltan campos por llenar ⚠️");
@@ -141,14 +146,9 @@ export function CrearClientes({ mostrarSeccion }) {
                 denyButtonText: "No",
                 confirmButtonText: "Si"
             }).then(respuesta => {
-                if (respuesta.isConfirmed) {
-                    mostrarSeccion("clientes")
-                }
+                if (respuesta.isConfirmed) { mostrarSeccion("clientes")}
             });
-
-        } else {
-            mostrarSeccion("clientes")
-        }
+        } else {mostrarSeccion("clientes")}
     };
 
 
@@ -174,25 +174,24 @@ export function CrearClientes({ mostrarSeccion }) {
                     <input type="text" name="nacion_cli" id="nacion_cli" placeholder="Ingrese la nacionalidad" onChange={agregarClaveFormulario} />
                 </div>
 
-            </div>
+            </div >
             <div className={styles.identificationGroup}>
                 <div className={styles.formGroupType}>
                     <label htmlFor="idType">Tipo de identificación</label>
                     <div className={styles.identificationType}>
-                        <input type="checkbox" id="cedula" name="cedula" onChange={chechkTipoIdentificacion}  />
+                        <input type="checkbox" id="cedula" name="cedula" onChange={chechkTipoIdentificacion} />
                         <label htmlFor="cedula">Cédula</label>
-                        <input type="checkbox" id="pasaporte" name="pasaporte" onChange={chechkTipoIdentificacion}  />
+                        <input type="checkbox" id="pasaporte" name="pasaporte" onChange={chechkTipoIdentificacion} />
                         <label htmlFor="pasaporte">Pasaporte</label>
                     </div>
                 </div>
                 <div className={styles.formGroup}>
                     <label htmlFor="cedr_cli">Número de Identificación</label>
+
                     <input type="text" name="cedr_cli" id="cedr_cli" placeholder="Ingrese ID" onChange={agregarClaveFormulario} />
                 </div>
             </div>
-
             <div className={styles.formRow}>
-
                 <div className={styles.formGroup}>
                     <label htmlFor="">Fecha de Nacimiento </label>
                     <div className={styles.dateGroup}>
@@ -208,8 +207,9 @@ export function CrearClientes({ mostrarSeccion }) {
             <div className={styles.formRow}>
                 <div className={styles.formGroup}>
                     <label htmlFor="">Teléfono fijo </label>
+
                     <input type="text" name="tel_pers" id="tel_pers" placeholder="Ingrese telefono convencional/fijo" onChange={agregarClaveFormulario} />
-                </div>
+                </div >
                 <div className={styles.formGroup}>
                     <label htmlFor="">Celular </label>
                     <div className={styles.dateGroup}>
@@ -222,15 +222,15 @@ export function CrearClientes({ mostrarSeccion }) {
                         <input type="text" name="email_pers" id="email_pers" placeholder="Ingrese correo electronico" onChange={agregarClaveFormulario} />
                     </div>
                 </div>
-            </div>
+            </div >
 
             <div className={styles.formRow}>
                 <div className={styles.formGroup}>
                     <label htmlFor="">Edad</label>
                     <div className={styles.inputEdad}>
-                    <input type="text" name="edad_pers" id="edad_pers" placeholder="Ingrese la edad" onChange={agregarClaveFormulario} />
-                    </div>  
-                </div>
+                        <input type="text" name="edad_pers" id="edad_pers" placeholder="Ingrese la edad" onChange={agregarClaveFormulario} />
+                    </div>
+                </div >
                 <div className={styles.miscGroup}>
                     <div className={styles.sexGroup}>
                         <label htmlFor="">Sexo:</label>
@@ -258,10 +258,11 @@ export function CrearClientes({ mostrarSeccion }) {
                         <input type="checkbox" id="kg" onChange={chechkTipoPeso} /> <label htmlFor="kilogramos">kg </label>
                     </div>
                 </div>
-            </div>
+            </div >
             <div className={styles.formRow}> {/* Filas para agrupar elementos */}
                 <div className={styles["locationGroup"]}>
                     <label htmlFor="">País</label>
+
                     <Select
                         options={Array.isArray(pais) ? pais.map((r) => ({
                             value: r.id_pais,
@@ -300,8 +301,7 @@ export function CrearClientes({ mostrarSeccion }) {
                         }}
                         value={selectedCiudad}
                     />
-
-                </div>
+                </div >
                 <div className={styles.formRow}>
                     <div className={styles.formGroup}>
                         <label htmlFor="">Parroquia </label>
@@ -316,24 +316,14 @@ export function CrearClientes({ mostrarSeccion }) {
                         <input type="text" name="calle_secun_pers" id="calle_secun_pers" placeholder="Ingrese la calle Secundaria" onChange={agregarClaveFormulario} />
                     </div>
                 </div>
-            </div>
+            </div >
             <div>
                 <div className={styles.buttonGroup}>
                     <button className={styles.btnGuardar} onClick={guardarCliente}>Guardar</button>
                     <button className={styles.btnCancelar} onClick={cancelar}>Cancelar</button>
                 </div>
-
             </div>
-             {isModalOpen && (
-                <div className={stylesmod.overlay}>
-                    <div className={stylesmod.modal}>
-                    <button className={stylesmod.closeBtn} onClick={cerrarModal}>X</button>
-                    <ModalCuentasClientes cerrarModal={cerrarModal} datosCliente={formulario} mostrarSeccion={mostrarSeccion} />
-                    </div>
-                </div>
-                )}
-
-        </div>
+        </div >
     );
 }
 
