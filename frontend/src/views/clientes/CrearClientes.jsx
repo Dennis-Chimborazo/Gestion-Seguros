@@ -8,6 +8,7 @@ import swal from "sweetalert2";
 import ModalCuentasClientes from "./ModalCuentasClientes";
 import stylesmod from "../estilos/modalDependientes.module.css";
 import Utilidades from "../../services/Utilidades";
+import UsuariosFun from "../usuarios/UsuariosFun";
 
 
 export function CrearClientes({ mostrarSeccion }) {
@@ -116,15 +117,17 @@ export function CrearClientes({ mostrarSeccion }) {
 
     const guardarCliente = async () => {
         if (Object.values(formulario).every(valor => valor !== '')) {
+            let resVerif = null;
             try {
-                const res = await ClientesFun.comprobarCredenciales(formulario, navigate);
-                if (res) {
+                resVerif = await UsuariosFun.verificarDatosUsuario({ users: formulario.email_pers, cedula: formulario.cedr_cli }, navigate);
+                if (!resVerif.existe) {
+                    const pass = await Utilidades.crearPassAleatoria()
                     const res = await ClientesFun.guardarCliente(formulario, navigate);
-                    const resCuent = await ClientesFun.crearCuenta({ idpersona: res.id_pers, user: formulario.email_pers, pass: await Utilidades.crearPassAleatoria() }, navigate)
+                    const resCuent = await ClientesFun.crearCuenta({ idpersona: res.id_pers, user: formulario.email_pers, pass: pass }, navigate)
                     if (resCuent) {
                         const urlRandom = await Utilidades.crearRutaAleatoria()
-                        await ClientesFun.generarTokenValidacion(({ id_pers: res.id_pers, url: urlRandom }), navigate);
-                        await ClientesFun.enviarCorreoEmail(({ to: formulario.email_pers, token: urlRandom }), navigate)
+                        await ClientesFun.generarTokenValidacion(({ id_pers: res.id_pers, url: urlRandom, pass: pass }), navigate);
+                        await ClientesFun.enviarCorreoEmail(({ to: formulario.email_pers, token: urlRandom, pass: pass }), navigate)
                         swal.fire({
                             title: "<label>Exito</label>",
                             text: "E; usuario ha sido creado con éxito",
@@ -132,14 +135,11 @@ export function CrearClientes({ mostrarSeccion }) {
                         })
                         mostrarSeccion("clientes")
                     }
+                } else {
+                    toast.error(resVerif.message);
                 }
             } catch (error) {
-                console.log(error)
-                swal.fire({
-                    title: "<label>Advertencia</label>",
-                    text: "Ya existe un usuario con el mismo numero \nde identificacion o correo electronico",
-                    timer: 3500,
-                })
+                toast.error(resVerif.message);
             }
         } else {
             toast.error("Faltan campos por llenar ⚠️");

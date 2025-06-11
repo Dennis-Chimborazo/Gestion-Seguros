@@ -128,7 +128,7 @@ router.post("/crear-usuario-agente", async (req, res) => {
 
 });
 
-router.post("/usuario-existe", async (req, res) => {
+router.post("/verificar-datos", async (req, res) => {
   const { users, cedula } = req.body;
 
   if (!users) {
@@ -142,7 +142,7 @@ router.post("/usuario-existe", async (req, res) => {
     );
 
     if (result.rows.length > 0) {
-      return res.json({ existe: true, message: "El nombre de usuario o correo electronico ya está en uso." });
+      return res.json({ existe: true, message: "El correo electronico ya está en uso." });
     }
 
     const resultAgente = await database.query(
@@ -165,6 +165,27 @@ router.post("/usuario-existe", async (req, res) => {
 
     return res.json({ existe: false, message: "El nombre de usuario y la cédula están disponibles." });
 
+  } catch (error) {
+    res.status(500).json({ message: "Error al verificar si el usuario existe", error });
+  }
+});
+
+router.post("/usuario-existe", async (req, res) => {
+  const { users } = req.body;
+
+  if (!users) {
+    return res.status(400).json({ message: "Debe proporcionar el nombre de usuario (users)" });
+  }
+
+  try {
+    const result = await database.query(
+      `SELECT 1 FROM usuarios WHERE users = $1 LIMIT 1`,
+      [users]
+    );
+
+    if (result.rows.length > 0) {
+      return res.json({ existe: true, message: "El correo electronico ya está en uso." });
+    }
   } catch (error) {
     res.status(500).json({ message: "Error al verificar si el usuario existe", error });
   }

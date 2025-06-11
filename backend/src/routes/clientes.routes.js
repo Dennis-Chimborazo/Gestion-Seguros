@@ -20,10 +20,12 @@ router.get("/listar", async (req, res) => {
 });
 
 router.get("/listarPendientes", async (req, res) => {
-  const idEstado=3
+  const pendiente = 3;
+  const preactivo = 4;
+
   try {
-    const query = `SELECT * FROM cliente WHERE id_estado = $1`;
-    const data = await database.query(query, [idEstado]);
+    const query = `SELECT * FROM cliente WHERE id_estado = $1 OR id_estado = $2`;
+    const data = await database.query(query, [pendiente, preactivo]); 
     res.json(data);
   } catch (error) {
     console.error("Error en consulta:", error);
@@ -309,8 +311,8 @@ router.put("/activar-cuenta", async (req, res) => {
 router.post("/generar_token_email", async (req, res) => {
   
   try {
-    const { id_pers, url } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
-    const payload = { id_pers };
+    const { id_pers, url,pass } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
+    const payload = { id_pers,pass };
     const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
 
     await database.query(
@@ -327,8 +329,8 @@ router.post("/generar_token_email", async (req, res) => {
 
 router.put("/actualizar_token_email", async (req, res) => {
   try {
-    const { id_pers, url } = req.body;
-    const payload = { id_pers };
+    const { id_pers, url,pass } = req.body;
+    const payload = { id_pers,pass };
     const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
     const result = await database.query(
       `UPDATE validar_email
