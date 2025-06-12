@@ -362,3 +362,21 @@ describe('PUT /agente/update-agente', () => {
         });
     });
 });
+
+describe('PUT /agente/update-correo', () => {
+    it('debería actualizar correo exitosamente', async () => {
+        mockDatabase.query.mockResolvedValue({ rowCount: 1 });
+
+        const response = await request(app)
+            .put('/agente/update-correo')
+            .send({
+                newEmail: 'nuevo@email.com',
+                id_agente: 1
+            })
+            .expect(200);
+
+        expect(response.body).toEqual({
+            message: 'Cliente actualizado correctamente'
+        });
+    });
+});
