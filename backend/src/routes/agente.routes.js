@@ -94,8 +94,6 @@ router.post("/generar-token", async (req, res) => {
 
 router.post("/validar-token-email", async (req, res) => {
   const { url } = req.body; // Espera: { url: "URLgenerada" }
-  console.log('validar-token-email')
-
   try {
     const result = await database.query(
       "SELECT token_val,id_val FROM token_agente WHERE url_emal = $1",

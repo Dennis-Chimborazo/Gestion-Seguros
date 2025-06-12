@@ -51,7 +51,6 @@ router.post("/enviar-correo", async (req, res) => {
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("Correo enviado:", info.response);
     res.status(200).json({ message: "Correo enviado con éxito", info });
   } catch (error) {
     console.error("Error al enviar el correo:", error);
@@ -149,7 +148,6 @@ router.post("/correo-agente", async (req, res) => {
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("Correo enviado:", info.response);
     res.status(200).json({ message: "Correo enviado con éxito", info });
   } catch (error) {
     console.error("Error al enviar el correo:", error);

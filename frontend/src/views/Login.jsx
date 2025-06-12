@@ -22,7 +22,6 @@ export function Login() {
           user: res.user.id
         }));
         navigate("/" + res.user.nom_rol, { state: { user: res.user } });
-
       } else {
         if (res.user.estado === 3) {
           if (res.user.nom_rol === 'agente') {
@@ -66,7 +65,6 @@ export function Login() {
                 toast.error("Error de red o del cliente. Verifica tu conexión.");
               }
             }
-
           }
         } else {
           toast.error(res.user || "Error desconocido");
