@@ -20,10 +20,11 @@ router.get("/listar", async (req, res) => {
 });
 
 router.get("/listarPendientes", async (req, res) => {
-  const idEstado=3
+  const pendiente = 3;
+  const preactivo = 4;
   try {
-    const query = `SELECT * FROM cliente WHERE id_estado = $1`;
-    const data = await database.query(query, [idEstado]);
+    const query = `SELECT * FROM cliente WHERE id_estado = $1 OR id_estado = $2`;
+    const data = await database.query(query, [pendiente, preactivo]); 
     res.json(data);
   } catch (error) {
     console.error("Error en consulta:", error);
@@ -33,7 +34,6 @@ router.get("/listarPendientes", async (req, res) => {
 
 router.post("/save", async (req, res) => {
   const formulario = req.body;
-
   const camposObligatorios = [
     'cedr_cli', 'tipo_cedr_cli', 'nacion_cli', 'nom_cli', 'ape_cli',
     'fecha_naci_cli', 'lugar_naci_cli', 'tel_pers', 'cel_pers', 'email_pers',
@@ -42,16 +42,14 @@ router.post("/save", async (req, res) => {
   ];
 
   const camposFaltantes = camposObligatorios.filter(campo => !formulario[campo]);
-  const est=3
+  const est = 3
   if (camposFaltantes.length > 0) {
     return res.status(400).json({
       success: false,
       message: `Faltan campos obligatorios: ${camposFaltantes.join(", ")}`
     });
   }
-
   try {
-
     const data = await database.query(`
       INSERT INTO cliente (
         cedr_cli, tipo_cedr_cli, nacion_cli, nom_cli, ape_cli, fecha_naci_cli,
@@ -90,7 +88,7 @@ router.post("/save", async (req, res) => {
     res.json({ message: "Cliente guardado exitosamente", id_pers: idInsertado });
 
   } catch (error) {
-    
+
     res.status(500).json({
       success: false,
       message: "Error al guardar cliente",
@@ -101,7 +99,6 @@ router.post("/save", async (req, res) => {
 
 router.post("/comprobCredenciales", async (req, res) => {
   const { cedr_cli, email_pers } = req.body;
-
   try {
     const resultado = await database.query(
       ` SELECT 
@@ -252,7 +249,25 @@ router.put("/desactivar", async (req, res) => {
     });
   }
 });
+router.put("/activar", async (req, res) => {
+  const { id_pers } = req.body;
+  const desac = '1';
+  try {
+    const data = await database.query(`
+      UPDATE cliente SET
+        id_estado = $1
+      WHERE id_pers = $2
+    `, [
+      desac,
+      id_pers
+    ]);
 
+    res.status(200).json({ message: "Cliente actualizado correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al actualizar cliente" });
+  }
+});
 router.get("/buscar", async (req, res) => {
   const idCli = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
   try {
@@ -318,8 +333,7 @@ router.get("/buscarclienteID", async (req, res) => {
 
 router.put("/activar-cuenta", async (req, res) => {
   const { id, idvalid } = req.body;
-  const estadoActivo = '1';
-
+  const estadoActivo = '4';
   if (!id || !idvalid) {
     return res.status(400).json({ error: "Faltan datos requeridos (id o idvalid)." });
   }
@@ -346,16 +360,17 @@ router.put("/activar-cuenta", async (req, res) => {
     res.status(500).json({ error: "Error interno al actualizar cliente." });
   }
 });
+
 router.post("/generar_token_email", async (req, res) => {
-  
+
   try {
-    const { id_pers, url } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
-    const payload = { id_pers };
+    const { id_pers, url,pass } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
+    const payload = { id_pers,pass };
     const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
 
     await database.query(
       "INSERT INTO validar_email (url_emal, token_val_email,id_pers) VALUES ($1, $2, $3)",
-      [url, token,id_pers]
+      [url, token, id_pers]
     );
 
     res.json({ success: true, token, message: "Token creado y guardado exitosamente." });
@@ -367,8 +382,8 @@ router.post("/generar_token_email", async (req, res) => {
 
 router.put("/actualizar_token_email", async (req, res) => {
   try {
-    const { id_pers, url } = req.body;
-    const payload = { id_pers };
+    const { id_pers, url,pass } = req.body;
+    const payload = { id_pers,pass };
     const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
     const result = await database.query(
       `UPDATE validar_email
@@ -405,5 +420,41 @@ router.put("/update-correo", async (req, res) => {
   }
 });
 
-module.exports = router; 
+router.post("/buscar-ruta-token", async (req, res) => {
+  const { id } = req.body;
+
+  console.log('id de llegada')
+  console.log(id)
+
+  try {
+    const result = await database.query(
+      "SELECT token_val_email, url_emal FROM validar_email WHERE id_pers = $1",
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ success: false, message: "No se encontró una URL asociada al agente." });
+    }
+
+    const token = result.rows[0].token_val_email;
+
+    try {
+      jwt.verify(token, "emailCliente");
+    } catch (err) {
+      return res.status(401).json({ success: false, message: "Tu contraseña ha expirado o es inválida. Solicita una nueva." });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Token válido.",
+      url: result.rows[0].url_emal
+    });
+
+  } catch (error) {
+    console.error("Error en el servidor:", error);
+    res.status(500).json({ success: false, message: "Error del servidor. Intenta más tarde." });
+  }
+});
+
+module.exports = router;
 
