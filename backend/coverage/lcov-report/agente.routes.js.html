@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">21.36% </span>
+                <span class="strong">30.76% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>25/117</span>
+                <span class='fraction'>36/117</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">12.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/16</span>
+                <span class='fraction'>2/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">9.09% </span>
+                <span class="strong">18.18% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/11</span>
+                <span class='fraction'>2/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">21.36% </span>
+                <span class="strong">30.76% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/117</span>
+                <span class='fraction'>36/117</span>
             </div>
         
             
@@ -367,22 +367,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -397,16 +395,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -637,21 +637,21 @@ router.get("/listarPendientes", <span class="fstat-no" title="function not cover
   }
 });
 &nbsp;
-router.post("/save-agente", <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
-  const agente = <span class="cstat-no" title="statement not covered" >req.body;</span>
+router.post("/save-agente", async (req, res) =&gt; {
+  const agente = req.body;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  try {</span>
-    const existe = <span class="cstat-no" title="statement not covered" >await database.query(</span>
+  try {
+    const existe = await database.query(
       `SELECT 1 FROM agente WHERE ced_agente = $1 LIMIT 1`,
       [agente.ced_agente]
     );
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (existe.rows.length &gt; 0) {</span>
-<span class="cstat-no" title="statement not covered" >      return res.status(400).json({ message: "El agente con esa cédula ya existe." });</span>
+    if (existe.rows.length &gt; 0) {
+      return res.status(400).json({ message: "El agente con esa cédula ya existe." });
     }
-    const estado = <span class="cstat-no" title="statement not covered" >'3';</span>
+    const estado = '3';
 &nbsp;
-    const result = <span class="cstat-no" title="statement not covered" >await database.query(`</span>
+    const result = await database.query(`
       INSERT INTO agente (
         ced_agente, nom_agente, ape_agente, 
         email_agente, dire_agente, tel_agente,id_estado
@@ -668,16 +668,16 @@ router.post("/save-agente", <span class="fstat-no" title="function not covered" 
       estado
     ]);
 &nbsp;
-    const idInsertado = <span class="cstat-no" title="statement not covered" >result.rows[0].id_agente;</span>
+    const idInsertado = result.rows[0].id_agente;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    res.json({</span>
+    res.json({
       message: "Agente guardado exitosamente",
       id_agente: idInsertado
     });
 &nbsp;
   } catch (error) {
-<span class="cstat-no" title="statement not covered" >    console.error(error);</span>
-<span class="cstat-no" title="statement not covered" >    res.status(500).json({ message: "Error al guardar agente", error });</span>
+    console.error(error);
+    res.status(500).json({ message: "Error al guardar agente", error });
   }
 });
 &nbsp;
@@ -883,7 +883,7 @@ module.exports = router;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-12T16:49:39.834Z
+                at 2025-06-12T16:56:11.194Z
             </div>
         <script src="prettify.js"></script>
         <script>
