@@ -380,3 +380,40 @@ describe('PUT /agente/update-correo', () => {
         });
     });
 });
+
+describe('PUT /agente/actualizar-token-email', () => {
+    it('debería actualizar token exitosamente', async () => {
+        mockDatabase.query.mockResolvedValue({ rowCount: 1 });
+
+        const response = await request(app)
+            .put('/agente/actualizar-token-email')
+            .send({
+                id_agente: 1,
+                url: 'nueva-url',
+                pass: 'nueva-password'
+            })
+            .expect(200);
+
+        expect(response.body.success).toBe(true);
+        expect(response.body.token).toBeDefined();
+        expect(response.body.message).toBe('Token actualizado exitosamente.');
+    });
+
+    it('debería manejar registro no encontrado', async () => {
+        mockDatabase.query.mockResolvedValue({ rowCount: 0 });
+
+        const response = await request(app)
+            .put('/agente/actualizar-token-email')
+            .send({
+                id_agente: 999,
+                url: 'nueva-url',
+                pass: 'nueva-password'
+            })
+            .expect(404);
+
+        expect(response.body).toEqual({
+            success: false,
+            message: 'No se encontró el registro para actualizar.'
+        });
+    });
+});
