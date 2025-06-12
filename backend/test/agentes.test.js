@@ -182,90 +182,132 @@ describe('POST /agente/generar-token', () => {
 
 describe('POST /agente/validar-token-email', () => {
     it('debería validar token correctamente', async () => {
-      const validToken = jwt.sign({ id_pers: 1, pass: 'test' }, 'emailAgente', { expiresIn: '1h' });
-      
-      mockDatabase.query.mockResolvedValue({
-        rowCount: 1,
-        rows: [{ token_val: validToken, id_val: 1 }]
-      });
+        const validToken = jwt.sign({ id_pers: 1, pass: 'test' }, 'emailAgente', { expiresIn: '1h' });
 
-      const response = await request(app)
-        .post('/agente/validar-token-email')
-        .send({ url: 'test-url' })
-        .expect(200);
+        mockDatabase.query.mockResolvedValue({
+            rowCount: 1,
+            rows: [{ token_val: validToken, id_val: 1 }]
+        });
 
-      expect(response.body.success).toBe(true);
-      expect(response.body.message).toBe('Token válido.');
-      expect(response.body.data.id_pers).toBe(1);
-      expect(response.body.idvalid).toBe(1);
+        const response = await request(app)
+            .post('/agente/validar-token-email')
+            .send({ url: 'test-url' })
+            .expect(200);
+
+        expect(response.body.success).toBe(true);
+        expect(response.body.message).toBe('Token válido.');
+        expect(response.body.data.id_pers).toBe(1);
+        expect(response.body.idvalid).toBe(1);
     });
 
     it('debería rechazar URL no encontrada', async () => {
-      mockDatabase.query.mockResolvedValue({ rowCount: 0 });
+        mockDatabase.query.mockResolvedValue({ rowCount: 0 });
 
-      const response = await request(app)
-        .post('/agente/validar-token-email')
-        .send({ url: 'url-inexistente' })
-        .expect(404);
+        const response = await request(app)
+            .post('/agente/validar-token-email')
+            .send({ url: 'url-inexistente' })
+            .expect(404);
 
-      expect(response.body).toEqual({
-        success: false,
-        message: 'URL no encontrada.'
-      });
+        expect(response.body).toEqual({
+            success: false,
+            message: 'URL no encontrada.'
+        });
     });
 
     it('debería rechazar token inválido', async () => {
-      mockDatabase.query.mockResolvedValue({
-        rowCount: 1,
-        rows: [{ token_val: 'token-invalido', id_val: 1 }]
-      });
+        mockDatabase.query.mockResolvedValue({
+            rowCount: 1,
+            rows: [{ token_val: 'token-invalido', id_val: 1 }]
+        });
 
-      const response = await request(app)
-        .post('/agente/validar-token-email')
-        .send({ url: 'test-url' })
-        .expect(401);
+        const response = await request(app)
+            .post('/agente/validar-token-email')
+            .send({ url: 'test-url' })
+            .expect(401);
 
-      expect(response.body).toEqual({
-        success: false,
-        message: 'Token inválido o expirado.'
-      });
+        expect(response.body).toEqual({
+            success: false,
+            message: 'Token inválido o expirado.'
+        });
     });
-  });
- describe('GET /agente/buscar-agente', () => {
+});
+describe('GET /agente/buscar-agente', () => {
     it('debería buscar agente por ID exitosamente', async () => {
-      const mockAgente = {
-        rows: [{
-          id_agente: 1,
-          ced_agente: '1234567890',
-          nom_agente: 'Juan',
-          ape_agente: 'Pérez'
-        }]
-      };
+        const mockAgente = {
+            rows: [{
+                id_agente: 1,
+                ced_agente: '1234567890',
+                nom_agente: 'Juan',
+                ape_agente: 'Pérez'
+            }]
+        };
 
-      mockDatabase.query.mockResolvedValue(mockAgente);
+        mockDatabase.query.mockResolvedValue(mockAgente);
 
-      const response = await request(app)
-        .get('/agente/buscar-agente?id=1')
-        .expect(200);
+        const response = await request(app)
+            .get('/agente/buscar-agente?id=1')
+            .expect(200);
 
-      expect(response.body).toEqual(mockAgente.rows);
-      expect(mockDatabase.query).toHaveBeenCalledWith(
-        'SELECT * FROM agente WHERE id_agente = $1',
-        ['1']
-      );
+        expect(response.body).toEqual(mockAgente.rows);
+        expect(mockDatabase.query).toHaveBeenCalledWith(
+            'SELECT * FROM agente WHERE id_agente = $1',
+            ['1']
+        );
     });
 
     it('debería manejar arrays en el parámetro ID', async () => {
-      const mockAgente = { rows: [{ id_agente: 1 }] };
-      mockDatabase.query.mockResolvedValue(mockAgente);
+        const mockAgente = { rows: [{ id_agente: 1 }] };
+        mockDatabase.query.mockResolvedValue(mockAgente);
 
-      const response = await request(app)
-        .get('/agente/buscar-agente?id=1&id=2')
-        .expect(200);
+        const response = await request(app)
+            .get('/agente/buscar-agente?id=1&id=2')
+            .expect(200);
 
-      expect(mockDatabase.query).toHaveBeenCalledWith(
-        'SELECT * FROM agente WHERE id_agente = $1',
-        ['1']
-      );
+        expect(mockDatabase.query).toHaveBeenCalledWith(
+            'SELECT * FROM agente WHERE id_agente = $1',
+            ['1']
+        );
     });
-  });
+});
+
+describe('PUT /agente/activar-cuenta', () => {
+    it('debería activar cuenta exitosamente', async () => {
+        mockDatabase.query.mockResolvedValueOnce({ rowCount: 1 });
+        mockDatabase.query.mockResolvedValueOnce({ rowCount: 1 });
+
+        const response = await request(app)
+            .put('/agente/activar-cuenta')
+            .send({ id: 1, idvalid: 1 })
+            .expect(200);
+
+        expect(response.body).toEqual({
+            message: 'Cuenta activada con éxito.'
+        });
+
+        expect(mockDatabase.query).toHaveBeenCalledTimes(2);
+    });
+
+    it('debería rechazar datos faltantes', async () => {
+        const response = await request(app)
+            .put('/agente/activar-cuenta')
+            .send({ id: 1 })
+            .expect(400);
+
+        expect(response.body).toEqual({
+            error: 'Faltan datos requeridos (id o idvalid).'
+        });
+    });
+
+    it('debería manejar agente no encontrado', async () => {
+        mockDatabase.query.mockResolvedValue({ rowCount: 0 });
+
+        const response = await request(app)
+            .put('/agente/activar-cuenta')
+            .send({ id: 999, idvalid: 1 })
+            .expect(404);
+
+        expect(response.body).toEqual({
+            error: 'Agente no encontrado.'
+        });
+    });
+});
