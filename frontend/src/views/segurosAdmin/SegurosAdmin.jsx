@@ -60,10 +60,7 @@ export function SegurosAdmin({ mostrarSeccion }) {
             setFiltroSeguros(filtro);
         }
     };
-    const borrarFiltro=()=>{
-        setFiltroSeguros(listaSeguros);
-    }
-  };
+  
 
   const borrarFiltro = () => {
     setFiltroSeguros(listaSeguros);
