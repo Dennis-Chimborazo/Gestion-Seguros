@@ -11,7 +11,7 @@
 .seguros-admin-form {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-radius: 0; /* Sin bordes redondeados */
+  border-radius: 20px; /* Sin bordes redondeados */
   padding: 2.5rem;
   box-shadow: none; /* Sin sombra */
   border: none; /* Sin borde */
