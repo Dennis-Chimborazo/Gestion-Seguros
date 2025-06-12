@@ -311,3 +311,54 @@ describe('PUT /agente/activar-cuenta', () => {
         });
     });
 });
+
+describe('PUT /agente/update-agente', () => {
+    const agenteActualizado = {
+        id_agente: 1,
+        nom_agente: 'Juan Carlos',
+        ape_agente: 'Pérez López',
+        email_agente: 'juan.carlos@email.com',
+        dire_agente: 'Nueva Dirección 456',
+        tel_agente: '0987654321',
+        ced_agente: '1234567890'
+    };
+
+    it('debería actualizar agente exitosamente', async () => {
+        mockDatabase.query.mockResolvedValue({ rowCount: 1 });
+
+        const response = await request(app)
+            .put('/agente/update-agente')
+            .send(agenteActualizado)
+            .expect(200);
+
+        expect(response.body).toEqual({
+            message: 'Agente actualizado correctamente'
+        });
+
+        expect(mockDatabase.query).toHaveBeenCalledWith(
+            expect.stringContaining('UPDATE agente SET'),
+            [
+                agenteActualizado.nom_agente,
+                agenteActualizado.ape_agente,
+                agenteActualizado.email_agente,
+                agenteActualizado.dire_agente,
+                agenteActualizado.tel_agente,
+                agenteActualizado.ced_agente,
+                agenteActualizado.id_agente
+            ]
+        );
+    });
+
+    it('debería manejar errores en la actualización', async () => {
+        mockDatabase.query.mockRejectedValue(new Error('Database error'));
+
+        const response = await request(app)
+            .put('/agente/update-agente')
+            .send(agenteActualizado)
+            .expect(500);
+
+        expect(response.body).toEqual({
+            error: 'Error al actualizar agente'
+        });
+    });
+});
