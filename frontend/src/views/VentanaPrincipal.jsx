@@ -38,7 +38,6 @@ export function VentanaPrincipal() {
   const toggleSidebar = () => {
     setSidebarExpanded(!sidebarExpanded);
   };
-
   return (
     <div className={styles.container}>
       {/* Sidebar */}
@@ -47,7 +46,8 @@ export function VentanaPrincipal() {
         <div className={styles.sidebarHeader}>
           <h2 className={styles.title}>
             {sidebarExpanded ? "Panel de Control" : ""}
-          </h2>          <button className={styles.toggleButton} onClick={toggleSidebar}>
+          </h2>
+          <button className={styles.toggleButton} onClick={toggleSidebar}>
             {sidebarExpanded ? <FiX /> : <FiMenu />}
           </button>
         </div>

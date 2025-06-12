@@ -4,9 +4,9 @@
   min-height: 100vh;
   display: flex;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  width: 100%;
+  overflow: hidden;
 }
-
-/* Estilos eliminados - Ya no son necesarios para el nuevo diseño */
 
 /* Menú del sidebar */
 .menu {
@@ -19,11 +19,24 @@
   backdrop-filter: blur(10px);
   min-height: 100vh;
   width: 280px;
-  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: none;
+  border-right: none;
 }
 
-/* Estilos eliminados - Ya no son necesarios para el nuevo diseño */
+/* Estilo del sidebar */
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
 
 /* Estilos para el header de bienvenida */
 .welcomeHeader {
@@ -120,39 +133,42 @@
 
 /* Contenido principal */
 .section {
-  margin-left: 28px;
-  padding: 2rem;
+  flex: 1;
+  padding: 0;
   min-height: 100vh;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 20px 0 0 0;
-  box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .mainContent {
-  margin-left: 28px;
-  transition: margin-left 0.3s ease;
+  margin-left: 0; /* Sin margen */
   flex: 1;
-  padding: 2rem;
+  padding: 0; /* Sin padding */
   min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: none;
+  width: 100%; /* Ocupa todo el ancho disponible */
+  overflow: hidden; /* Evita desbordamiento */
 }
 
 .sidebar.collapsed + .mainContent {
-  margin-left: 70px;
+  margin-left: 0;
+  width: calc(100% - 70px);
 }
 
 .sidebar.collapsed + .section {
-  margin-left: 70px;
+  margin-left: 0;
+  width: calc(100% - 70px);
 }
 
 .welcomeSection {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
+  background: transparent; /* Fondo transparente */
   padding: 2.5rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  text-align: center;
+  margin: 0; /* Sin márgenes */
+  width: 100%; /* Ancho completo */
+  border: none;
+  box-shadow: none;
 }
 
 .welcomeTitle {
@@ -196,10 +212,12 @@
   .section {
     margin-left: 0;
     border-radius: 0;
+    width: 100%;
   }
   
   .mainContent {
     margin-left: 0;
+    width: 100%;
   }
 }
 
