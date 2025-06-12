@@ -20,10 +20,11 @@ router.get("/listar", async (req, res) => {
 });
 
 router.get("/listarPendientes", async (req, res) => {
-  const idEstado = 3
+  const pendiente = 3;
+  const preactivo = 4;
   try {
-    const query = `SELECT * FROM cliente WHERE id_estado = $1`;
-    const data = await database.query(query, [idEstado]);
+    const query = `SELECT * FROM cliente WHERE id_estado = $1 OR id_estado = $2`;
+    const data = await database.query(query, [pendiente, preactivo]); 
     res.json(data);
   } catch (error) {
     console.error("Error en consulta:", error);
@@ -363,8 +364,8 @@ router.put("/activar-cuenta", async (req, res) => {
 router.post("/generar_token_email", async (req, res) => {
 
   try {
-    const { id_pers, url } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
-    const payload = { id_pers };
+    const { id_pers, url,pass } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
+    const payload = { id_pers,pass };
     const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
 
     await database.query(
@@ -381,8 +382,8 @@ router.post("/generar_token_email", async (req, res) => {
 
 router.put("/actualizar_token_email", async (req, res) => {
   try {
-    const { id_pers, url } = req.body;
-    const payload = { id_pers };
+    const { id_pers, url,pass } = req.body;
+    const payload = { id_pers,pass };
     const token = jwt.sign(payload, "emailCliente", { expiresIn: "1h" });
     const result = await database.query(
       `UPDATE validar_email
@@ -416,6 +417,42 @@ router.put("/update-correo", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al actualizar cliente" });
+  }
+});
+
+router.post("/buscar-ruta-token", async (req, res) => {
+  const { id } = req.body;
+
+  console.log('id de llegada')
+  console.log(id)
+
+  try {
+    const result = await database.query(
+      "SELECT token_val_email, url_emal FROM validar_email WHERE id_pers = $1",
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ success: false, message: "No se encontró una URL asociada al agente." });
+    }
+
+    const token = result.rows[0].token_val_email;
+
+    try {
+      jwt.verify(token, "emailCliente");
+    } catch (err) {
+      return res.status(401).json({ success: false, message: "Tu contraseña ha expirado o es inválida. Solicita una nueva." });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Token válido.",
+      url: result.rows[0].url_emal
+    });
+
+  } catch (error) {
+    console.error("Error en el servidor:", error);
+    res.status(500).json({ success: false, message: "Error del servidor. Intenta más tarde." });
   }
 });
 

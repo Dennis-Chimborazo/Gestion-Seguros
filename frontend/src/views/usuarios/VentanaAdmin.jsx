@@ -36,12 +36,6 @@ export function VentanaAdmin() {
     setSeccionActiva(nombre);
   };
 
-  const valores = async (e) => {
-    e.preventDefault();
-    const val = await ApiService.getAll("client/clientes", navigate);
-    console.log(val);
-  };
-
   return (
     <div className={styles.container}>
       <h2>Bienvenido {user?.nom_rol}</h2>

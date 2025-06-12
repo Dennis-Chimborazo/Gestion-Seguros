@@ -49,22 +49,27 @@ export function ValidarAgente() {
         return <CargarInf />;
     }
     const verificarDatos = () => {
-        if (formulario.passtemp === agente.passtemp) {
-            if (Object.values(formulario).every(valor => valor !== '')) {
-                if (formulario.pass === formulario.confirmPassword) {
-                    return true;
+        if (formulario.passTemp === '') {
+            toast.error("Falta ingresar la contraseña temporal");
+        } else {
+            if (formulario.passtemp === agente.passtemp) {
+                if (Object.values(formulario).every(valor => valor !== '')) {
+                    if (formulario.pass === formulario.confirmPassword) {
+                        return true;
+                    } else {
+                        toast.error("Las contraseña no coinciden");
+                        return false;
+                    }
                 } else {
-                    toast.error("Las contraseña no coinciden");
+                    toast.error("Faltan campos por llenar los campos");
                     return false;
                 }
             } else {
-                toast.error("Faltan campos por llenar los campos");
+                toast.error("Clave Temporal no coincide");
                 return false;
             }
-        } else {
-            toast.error("Clave Temporal no coincide");
-            return false;
         }
+
     }
     const asignarValores = (e) => {
         setFormulario({ ...formulario, [e.target.name]: e.target.value })
@@ -73,7 +78,6 @@ export function ValidarAgente() {
         e.preventDefault()
         if (verificarDatos()) {
             try {
-                console.log(formulario)
                 const api = await AgenteFun.activarCuentaAgente(({ id: agente.id_pers, idvalid: agente.idvalid }), navigate)
                 if (api) {
                     await UsuariosFun.actualizarPass(formulario, navigate);
@@ -97,6 +101,15 @@ export function ValidarAgente() {
 
     const cancelarCuenta = (e) => {
         e.preventDefault()
+        swal.fire({
+            title: "⚠️ <label>Advertencia</label>",
+            text: "Desea salir de la validanción de cuenta",
+            showDenyButton: true,
+            denyButtonText: "No",
+            confirmButtonText: "Si"
+        }).then(respuesta => {
+            if (respuesta.isConfirmed) {navigate('/');}
+        });
     }
 
     return (
@@ -143,7 +156,6 @@ export function ValidarAgente() {
             </div>
         </div>
     );
-
 }
 
 export default ValidarAgente;

@@ -11,7 +11,6 @@ export function ModalCorreoAgente({ cerrarModal, mostrarSeccion }) {
     const [formulario, setFormulario] = useState({ email: '', newEmail: '', id_agente: '' })
     const [actualizarCorreo, setActualizarCorreo] = useState(false);
 
-
     useEffect(() => {
         const valores = () => {
             const editData = JSON.parse(localStorage.getItem("editCorreo"));
@@ -32,20 +31,25 @@ export function ModalCorreoAgente({ cerrarModal, mostrarSeccion }) {
         const passRandom = await Utilidades.crearPassAleatoria()
         if (actualizarCorreo) {
             if (formulario.newEmail === '') {
-                toast.error("Ingrese el nuevo CorreoElectronico⚠️");
+                toast.error("Ingrese el nuevo Correo Electronico");
             } else {
-                await AgenteFun.actualizarEmailAgente(formulario, navigate)
-                await AgenteFun.actualizarTokenValidacion({ id_agente: formulario.id_agente, url: urlRandom, pass: passRandom }, navigate);
-                await AgenteFun.enviarCorreoEmail({ to: formulario.newEmail, token: urlRandom, pass: passRandom }, navigate);
-                console.log({id_pers: formulario.id_agente, pass: passRandom,user:formulario.newEmail})
-                await UsuariosFun.actualizarUserPass({ id_pers: formulario.id_agente, pass: passRandom,user:formulario.newEmail }, navigate);
-                swal.fire({
-                    title: "<label>Exito</label>",
-                    text: "Se ha actualizado el correo y enviado un nuevo enlace de validacion",
-                    timer: 3500,
-                })
-                cerrarModal();
+                const res = await UsuariosFun.verificarUsuario({ users: formulario.newEmail }, navigate);
+                if (res.existe) {
+                    toast.error(res.message);
+                } else {
+                    await AgenteFun.actualizarEmailAgente(formulario, navigate)
+                    await AgenteFun.actualizarTokenValidacion({ id_agente: formulario.id_agente, url: urlRandom, pass: passRandom }, navigate);
+                    await AgenteFun.enviarCorreoEmail({ to: formulario.newEmail, token: urlRandom, pass: passRandom }, navigate);
+                    await UsuariosFun.actualizarUserPass({ id_pers: formulario.id_agente, pass: passRandom, user: formulario.newEmail }, navigate);
+                    swal.fire({
+                        title: "<label>Exito</label>",
+                        text: "Se ha actualizado el correo y enviado un nuevo enlace de validacion",
+                        timer: 3500,
+                    })
+                    cerrarModal();
+                }
             }
+
         } else {
             await AgenteFun.actualizarTokenValidacion({ id_agente: formulario.id_agente, url: urlRandom, pass: passRandom }, navigate);
             await AgenteFun.enviarCorreoEmail({ to: formulario.email, token: urlRandom, pass: passRandom }, navigate);

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../estilos/VentanaCliente.module.css";
+import styles2 from "../estilos/VentanaAdmin.module.css";
 import ClientesFun from "../clientes/ClientesFun";
 import ClientesArchivos from "../clientes/ClientesArchivos";
 import CargarArchivos from "../cargando/cargarArchivos";
+import ReembolsoCliente from "../reembolsos/ReembolsoCliente";
 
 export function VentanaCliente() {
   const navigate = useNavigate();
@@ -59,16 +61,16 @@ export function VentanaCliente() {
           ) : (
             fotoPerfil && <img src={fotoPerfil} alt="Imagen perfil" />
           )} </>
-        ) : ( <></>)}
+        ) : (<></>)}
         <label>{nombres || ''}</label>
         <ul>
           {estado === 4 ? (
             <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
           ) : (<>
-              <li><a onClick={() => mostrarSeccion("Reembolsos")}>Reembolsos</a></li>
-              <li><a onClick={() => mostrarSeccion("Historial")}>Historial de pagos</a></li>
-              <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
-            </>)}
+            <li><a onClick={() => mostrarSeccion("Reembolso")}>Reembolsos</a></li>
+            <li><a onClick={() => mostrarSeccion("Historial")}>Historial de pagos</a></li>
+            <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
+          </>)}
         </ul>
       </div>
 
@@ -77,10 +79,15 @@ export function VentanaCliente() {
           seccionActiva === "inicio" && <ClientesArchivos mostrarSeccion={mostrarSeccion} />
         ) : (
           <>
-            <div className={styles.bienvenida}>
-  <h1>Bienvenido a <span className={styles.nombreEmpresa}>seguros.sa</span></h1>
-  <p>Gracias por confiar en nosotros. Desde tu panel podrás gestionar tus reembolsos, revisar tu historial de pagos y actualizar tu información.</p>
-</div>
+            <section >
+              {seccionActiva === "Reembolso" && <ReembolsoCliente mostrarSeccion={mostrarSeccion} />}
+              {seccionActiva === "inicio" && <>
+                <div className={styles2.bienvenida}>
+                  <h1>Bienvenido a <span className={styles.nombreEmpresa}>Seguros.SA</span></h1>
+                  <p>Gracias por confiar en nosotros. Desde tu panel podrás gestionar tus reembolsos, revisar tu historial de pagos y actualizar tu información.</p>
+                </div></>}
+            </section>
+
 
           </>
         )}

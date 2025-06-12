@@ -15,14 +15,14 @@ class UsuariosFun {
       return response;
    }
 
-   static async verificarUsuario(formulario, navigate) {
-      const response = await ApiService.post("user/usuario-existe", formulario, navigate);
+   static async verificarDatosUsuario(formulario, navigate) {
+      const response = await ApiService.post("user/verificar-datos", formulario, navigate);
       return response;
    }
    static async verificarUsuario(formulario, navigate) {
       const response = await ApiService.post("user/usuario-existe", formulario, navigate);
       return response;
    }
-
+  
 }
 export default UsuariosFun;
