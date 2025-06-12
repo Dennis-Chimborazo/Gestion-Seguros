@@ -143,7 +143,7 @@ describe('Pruebas para las rutas de email', () => {
       const mailOptions = mockSendMail.mock.calls[0][0];
       expect(mailOptions.to).toBe(payload.to);
       expect(mailOptions.subject).toBe('Validación de contratación de seguro en Seguros.SA');
-      expect(mailOptions.text).toContain('Validar Contrato');
+      expect(mailOptions.text).toContain('Validación de Contratación de Seguro');
       expect(mailOptions.text).toContain(payload.token);
     });
 
