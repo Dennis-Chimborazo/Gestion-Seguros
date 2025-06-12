@@ -4,8 +4,9 @@ const express = require('express');
 // MOCKS
 jest.mock('multer', () => {
   const m = () => ({
-    single: jest.fn(() => (req, res, next) => {
-      // Este middleware será reemplazado por test según se necesite
+    single: jest.fn(field => (req, res, next) => {
+      // Para los tests de éxito, siempre hay archivo
+      req.file = { filename: field === 'profilePhoto' ? 'foto.jpg' : 'cedula.pdf' };
       next();
     })
   });
@@ -29,25 +30,15 @@ app.use(express.json());
 app.use(router);
 
 describe('Rutas de archivos', () => {
-  let originalSingle;
   beforeEach(() => {
     jest.clearAllMocks();
-    // Permite sobrescribir el comportamiento de single en cada test
-    const multer = require('multer');
-    originalSingle = multer().single;
   });
 
   describe('POST /foto-perfil/:subfolder', () => {
     it('debería subir una foto de perfil correctamente', async () => {
-      // Sobrescribe single para este test
-      require('multer')().single.mockImplementationOnce(field => (req, res, next) => {
-        req.file = { filename: 'foto.jpg' };
-        next();
-      });
-
       const res = await request(app)
         .post('/foto-perfil/pruebasub')
-        .attach('profilePhoto', Buffer.from('fake'), 'foto.jpg'); // El archivo no importa
+        .attach('profilePhoto', Buffer.from('fake'), 'foto.jpg');
 
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
@@ -73,11 +64,6 @@ describe('Rutas de archivos', () => {
 
   describe('POST /cedula-pdf/:subfolder', () => {
     it('debería subir un PDF de cédula correctamente', async () => {
-      require('multer')().single.mockImplementationOnce(field => (req, res, next) => {
-        req.file = { filename: 'cedula.pdf' };
-        next();
-      });
-
       const res = await request(app)
         .post('/cedula-pdf/subpdf')
         .attach('cedulaPdf', Buffer.from('fake'), 'cedula.pdf');
