@@ -11,16 +11,12 @@ class ApiService {
 
     const response = await axios.get(apiUrl + getApi, {
       headers: {
-        "Content-Type": "application/json", // CORRECCIÓN 1: Quitar espacios extra
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
- 
 
     const data = response.data;
- 
-    // CORRECCIÓN 2: Verificar que data existe antes de acceder a sus propiedades
-    if (data && (data.message === "Token no proporcionado" || data.message === "Token inválido o expirado")) {
 
     if (data.message === "Token no proporcionado" || data.message === "Token inválido o expirado") {
       swal({
@@ -36,7 +32,8 @@ class ApiService {
     return data;
   }
 
-  static async post(postApi, form,  navigate) {
+  static async post(postApi, form, navigate) {
+
     console.log(apiUrl + `${postApi}`);
     const response = await axios.post(
       apiUrl + `${postApi}`,
@@ -62,18 +59,6 @@ class ApiService {
 
     return Array.isArray(response.data) ? response.data : [];
   }
- 
-  static async actualizarDatos(putApi, form, navigate) {
-    const response = await axios.put(
-      apiUrl + `${putApi}`,
-      form,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data;
 
   static async put(putApi, form, navigate) {
     const response = await axios.put(
