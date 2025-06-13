@@ -17,7 +17,7 @@ export function CrearAgentes({ mostrarSeccion }) {
         e.preventDefault()
         try {
             if (Object.values(formulario).every(valor => valor !== '')) {
-                let resVerif = await UsuariosFun.verificarUsuario({ users: formulario.email_agente, cedula: formulario.ced_agente }, navigate);
+                let resVerif = await UsuariosFun.verificarDatosUsuario({ users: formulario.email_agente, cedula: formulario.ced_agente }, navigate);
                 if (resVerif.existe) {
                     toast.error(resVerif.message);
                 } else {
