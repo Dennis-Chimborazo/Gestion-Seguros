@@ -7,7 +7,7 @@ const db = new DataBase();
 const database = db.getConexion();
 
 router.get("/listar", async (req, res) => {
-  const idestado=1
+  const idestado = 1
   try {
     const query = `SELECT s.id_seguro,s.monto_seguro, s.tiempo_seguro,c.nom_cli,c.ape_cli,c.cedr_cli,ts.nom_tip_seg,ts.pago_tip_seg FROM seguros s
 	INNER JOIN cliente  c ON c.id_pers= s.id_pers
@@ -21,36 +21,36 @@ router.get("/listar", async (req, res) => {
 });
 
 router.post("/save", async (req, res) => {
-    const formulario = req.body;
-  
-    try {
-      const data = await database.query(`
+  const formulario = req.body;
+
+  try {
+    const data = await database.query(`
         INSERT INTO seguros (
           ciud_seguro, dia_seguro, mes_seguro, anio_seguro, firma_seguro, id_pers
         ) VALUES (
           $1, $2, $3, $4, $5, $6
         )
       `, [
-        formulario.ciud_seguro,
-        formulario.dia_seguro,
-        formulario.mes_seguro,
-        formulario.anio_seguro,
-        formulario.firma_seguro,
-        formulario.id_pers
-      ]);
-  
-      res.json({ message: "Seguro guardado exitosamente", data });
-    } catch (error) {
-      console.error("Error al guardar seguro:", error);
-      res.status(500).json({ message: "Error al guardar seguro", error });
-    }
-  });
-  
-  router.post("/personafac/save", async (req, res) => {
-    const formulario = req.body;
-  
-    try {
-      const data = await database.query(`
+      formulario.ciud_seguro,
+      formulario.dia_seguro,
+      formulario.mes_seguro,
+      formulario.anio_seguro,
+      formulario.firma_seguro,
+      formulario.id_pers
+    ]);
+
+    res.json({ message: "Seguro guardado exitosamente", data });
+  } catch (error) {
+    console.error("Error al guardar seguro:", error);
+    res.status(500).json({ message: "Error al guardar seguro", error });
+  }
+});
+
+router.post("/personafac/save", async (req, res) => {
+  const formulario = req.body;
+
+  try {
+    const data = await database.query(`
         INSERT INTO persona_fac (
           cedr_pers_fac,
           razon_pers_fac,
@@ -67,34 +67,34 @@ router.post("/save", async (req, res) => {
           $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
         ) RETURNING id_pers_fac
       `, [
-        formulario.cedr_pers_fac,
-        formulario.razon_pers_fac,
-        formulario.tipo_pers_fac,
-        formulario.nacion_pers_fac,
-        formulario.nom_pers_fac,
-        formulario.ape_pers_fac,
-        formulario.tel_pers_fac,
-        formulario.cel_pers_fac,
-        formulario.email_pers_fac,
-        formulario.direc_pers_fac,
-        formulario.parent_pers_fac
-      ]);
-  
-      res.json({
-        message: "Persona factura guardada exitosamente",
-        id_pers_fac: data.rows[0].id_pers_fac
-      });
-    } catch (error) {
-      console.error("Error al guardar persona_factura:", error);
-      res.status(500).json({ message: "Error al guardar persona_factura", error });
-    }
-  });
-  
-  router.post("/cuentabanco/save", async (req, res) => {
-    const formulario = req.body;
-  
-    try {
-      const data = await database.query(`
+      formulario.cedr_pers_fac,
+      formulario.razon_pers_fac,
+      formulario.tipo_pers_fac,
+      formulario.nacion_pers_fac,
+      formulario.nom_pers_fac,
+      formulario.ape_pers_fac,
+      formulario.tel_pers_fac,
+      formulario.cel_pers_fac,
+      formulario.email_pers_fac,
+      formulario.direc_pers_fac,
+      formulario.parent_pers_fac
+    ]);
+
+    res.json({
+      message: "Persona factura guardada exitosamente",
+      id_pers_fac: data.rows[0].id_pers_fac
+    });
+  } catch (error) {
+    console.error("Error al guardar persona_factura:", error);
+    res.status(500).json({ message: "Error al guardar persona_factura", error });
+  }
+});
+
+router.post("/cuentabanco/save", async (req, res) => {
+  const formulario = req.body;
+
+  try {
+    const data = await database.query(`
         INSERT INTO cuenta_banco (
           tipo_cuent_Ban,
           nom_cuent_Ban,
@@ -103,27 +103,27 @@ router.post("/save", async (req, res) => {
           $1, $2, $3
         ) RETURNING id_cuent_Ban
       `, [
-        formulario.tipo_cuent_Ban,
-        formulario.nom_cuent_Ban,
-        formulario.mun_cuent_Ban
-      ]);
-  
-      res.json({
-        message: "Cuenta bancaria guardada exitosamente",
-        id_cuent_Ban: data.rows[0].id_cuent_ban
-      });
-    } catch (error) {
-      console.error("Error al guardar cuenta bancaria:", error);
-      res.status(500).json({ message: "Error al guardar cuenta bancaria", error });
-    }
-  });
+      formulario.tipo_cuent_Ban,
+      formulario.nom_cuent_Ban,
+      formulario.mun_cuent_Ban
+    ]);
 
-  router.post("/saveSeguro", async (req, res) => {
-    const formulario = req.body;
-    console.log(formulario);
-    const idEstado =3
-    try {
-     const data = await database.query(`
+    res.json({
+      message: "Cuenta bancaria guardada exitosamente",
+      id_cuent_Ban: data.rows[0].id_cuent_ban
+    });
+  } catch (error) {
+    console.error("Error al guardar cuenta bancaria:", error);
+    res.status(500).json({ message: "Error al guardar cuenta bancaria", error });
+  }
+});
+
+router.post("/saveSeguro", async (req, res) => {
+  const formulario = req.body;
+  console.log(formulario);
+  const idEstado = 3
+  try {
+    const data = await database.query(`
             INSERT INTO seguros (
               ciud_seguro,
               dia_seguro,
@@ -141,31 +141,31 @@ router.post("/save", async (req, res) => {
               $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
             ) RETURNING id_seguro
           `, [
-            formulario.ciud_seguro,
-            formulario.dia_seguro,
-            formulario.mes_seguro,
-            formulario.anio_seguro,
-            formulario.monto_seguro,
-            formulario.tiempo_seguro,
-            formulario.id_pers,
-            formulario.id_emple,
-            formulario.id_tip_seg,
-            formulario.id_pers_fac,
-            formulario.id_cuent_Ban,
-            idEstado
-          ]);
+      formulario.ciud_seguro,
+      formulario.dia_seguro,
+      formulario.mes_seguro,
+      formulario.anio_seguro,
+      formulario.monto_seguro,
+      formulario.tiempo_seguro,
+      formulario.id_pers,
+      formulario.id_emple,
+      formulario.id_tip_seg,
+      formulario.id_pers_fac,
+      formulario.id_cuent_Ban,
+      idEstado
+    ]);
 
-      res.json({
-        message: "Seguro guardado exitosamente",
-        id_seguro: data.rows[0].id_seguro
-      });
-    } catch (error) {
-      console.error("Error al guardar seguro:", error);
-      res.status(500).json({ message: "Error al guardar seguro", error });
-    }
-  });
+    res.json({
+      message: "Seguro guardado exitosamente",
+      id_seguro: data.rows[0].id_seguro
+    });
+  } catch (error) {
+    console.error("Error al guardar seguro:", error);
+    res.status(500).json({ message: "Error al guardar seguro", error });
+  }
+});
 
-  router.post("/saveDependientes", async (req, res) => {
+router.post("/saveDependientes", async (req, res) => {
   const dependientes = req.body; // Se espera un array de objetos
 
   if (!Array.isArray(dependientes) || dependientes.length === 0) {
@@ -217,10 +217,10 @@ router.post("/save", async (req, res) => {
 });
 
 router.post("/generar_token_contr", async (req, res) => {
-  
+
   try {
-    const { id_seguro, url,id_pers } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
-    const payload = { id_seguro:id_seguro,id_pers:id_pers};
+    const { id_seguro, url, id_pers } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
+    const payload = { id_seguro: id_seguro, id_pers: id_pers };
     const token = jwt.sign(payload, "nuevacontratacion", { expiresIn: "24h" });
 
     await database.query(
@@ -258,18 +258,18 @@ router.post("/validar-token-contr", async (req, res) => {
     } catch (err) {
       return res.status(401).json({ success: false, message: "Token inválido o expirado." });
     }
-     const query = `SELECT * FROM cliente WHERE id_pers = $1`;
+    const query = `SELECT * FROM cliente WHERE id_pers = $1`;
     const data = await database.query(query, [payload.id_pers]);
-     const queryCont = `SELECT * FROM seguros WHERE id_seguro = $1`;
+    const queryCont = `SELECT * FROM seguros WHERE id_seguro = $1`;
     const dataCont = await database.query(queryCont, [payload.id_seguro]);
 
     res.status(200).json({
       success: true,
       message: "Token válido.",
       data: payload,// contiene id_pers
-      client:data.rows,
-      contr:dataCont.rows,
-      idvalid:result.rows[0].id_val_contra
+      client: data.rows,
+      contr: dataCont.rows,
+      idvalid: result.rows[0].id_val_contra
     });
 
   } catch (error) {
@@ -287,7 +287,7 @@ router.put("/activar-seguro", async (req, res) => {
 
 
   const estadoActivo = '1';
-  
+
   if (!id || !idvalid) {
     return res.status(400).json({ error: "Faltan datos requeridos (id o idvalid)." });
   }
@@ -315,6 +315,24 @@ router.put("/activar-seguro", async (req, res) => {
   }
 });
 
+router.get("/informacion-ben-categ", async (req, res) => {
+  try {
+    const id_tip_seg = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+    if (!id_tip_seg) {
+      return res.status(400).json({ message: id_tip_seg });
+    }
+    const query = `Select c.nom_categoria,b.nom_beneficios
+                    from seguro_bedeficio sg
+                    inner join beneficios b ON b.id_beneficios=sg.id_beneficios
+                    inner join categoria c ON c.id_categoria=b.id_categoria
+                    WHERE sg.id_tip_seg = $1`;
+    const values = [id_tip_seg];
+    const data = await database.query(query, values);
+    res.json(data.rows);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el empleado", error });
+  }
+});
 
 
 module.exports = router; 
