@@ -21,7 +21,7 @@ npm install dotenv
 npm install cors
 
 npm install nodemailer
-
+npm install multer
 
 -----FRONTEND
 
@@ -33,5 +33,3 @@ npm i sweetalert
 npm i react-select
 npm install react-icons --save
 npm install sweetalert2
-
-

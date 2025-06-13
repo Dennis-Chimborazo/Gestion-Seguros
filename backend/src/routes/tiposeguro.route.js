@@ -140,36 +140,19 @@ router.delete("/deleteBeneficios", async (req, res) => {
 
 router.put("/updateSeguro", async (req, res) => {
   const tipoSeguro = req.body;
-
   if (!tipoSeguro.id_tip_seg) {
     return res.status(400).json({ message: "Falta el ID del tipo de seguro" });
   }
-
   try {
-
-    const existe = await database.query(`
-      SELECT 1 FROM tipo_seguro WHERE nom_tip_seg = $1;
-    `, [tipoSeguro.nom_tip_seg]);
-
-    if (existe.rowCount > 0) {
-      return res.status(400).json({ message: "El nombre del tipo de seguro ya existe" });
-    }
+    
     const result = await database.query(`
       UPDATE tipo_seguro
       SET
-        nom_tip_seg = $1,
-        descrip_tip_seg = $2,
-        pago_tip_seg = $3,
-        suma_tip_seg = $4,
-        id_estado = $5
-      WHERE id_tip_seg = $6
+        descrip_tip_seg = $1
+      WHERE id_tip_seg = $2
       RETURNING *;
     `, [
-      tipoSeguro.nom_tip_seg,
       tipoSeguro.descrip_tip_seg,
-      tipoSeguro.pago_tip_seg,
-      tipoSeguro.suma_tip_seg,
-      tipoSeguro.id_estado,
       tipoSeguro.id_tip_seg
     ]);
 

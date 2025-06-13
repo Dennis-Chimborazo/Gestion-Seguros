@@ -200,8 +200,22 @@ CREATE TABLE validar_email (
   FOREIGN KEY (id_pers) REFERENCES cliente(id_pers)
 );
 
-CREATE TABLE validar_contratacion (
-  id_val_contra SERIAL PRIMARY KEY,
-  url_contra VARCHAR(20) NOT NULL,
-  token_val_contra VARCHAR(512) NOT NULL
+CREATE TABLE agente (
+  id_agente SERIAL PRIMARY KEY,
+  ced_agente VARCHAR(10) NOT NULL,
+  nom_agente VARCHAR(70) NOT NULL,
+  ape_agente VARCHAR(70) NOT NULL,
+  email_agente VARCHAR(70) NOT NULL,
+  dire_agente VARCHAR(120) NOT NULL,
+  tel_agente VARCHAR(10) NOT NULL,
+  id_estado INTEGER,
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado),
+);
+
+CREATE TABLE token_agente (
+  id_val SERIAL PRIMARY KEY,
+  url_emal VARCHAR(20) NOT NULL,
+  token_val VARCHAR(512) NOT NULL,
+  id_agente INTEGER,
+  FOREIGN KEY (id_agente) REFERENCES agente(id_agente)
 );

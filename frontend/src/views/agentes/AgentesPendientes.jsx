@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import ClientesFun from "./ClientesFun";
 import { FcClearFilters } from "react-icons/fc";
 import { TfiEmail } from "react-icons/tfi";
 import CargarTablas from "../cargando/CargarTablas";
-import ModalReenvioValidacion from "./ModalReenvioValidacion";
 import stylesmod from "../estilos/modalDependientes.module.css";
+import AgenteFun from "./AgenteFun";
+import ModalCorreoAgente from "./ModalCorreoAgente";
 import { SlRefresh } from "react-icons/sl";
 
-export function ValidacionCliente({ mostrarSeccion }) {
+export function AgentesPendientes({ mostrarSeccion }) {
     const navigate = useNavigate();
     const [clientes, setClientes] = useState();
     const [filtroCli, setFiltroCli] = useState();
@@ -21,7 +21,7 @@ export function ValidacionCliente({ mostrarSeccion }) {
     useEffect(() => {
         const traterClientes = async () => {
             try {
-                const dataClientes = await ClientesFun.obtenerClientePeniente(navigate);
+                const dataClientes = await AgenteFun.obtenerAgentesPendientes(navigate);
                 setFiltroCli(dataClientes.rows);
                 setClientes(dataClientes.rows);
             } catch (error) {
@@ -34,20 +34,12 @@ export function ValidacionCliente({ mostrarSeccion }) {
     }, []);
 
     const columasClientes = [
-        { name: "Cedula/Pasaporte", selector: row => row.cedr_cli },
-        { name: "Nombre", selector: row => row.nom_cli },
-        { name: "Apellido", selector: row => row.ape_cli },
-        {
-            name: "Pendiente", selector: row => {
-                if (row.id_estado === 4) {
-                    return 'Cargar Archivos';
-                } else if (row.id_estado === 3) {
-                    return 'Cambiar contraseña';
-                }
-                return row.id_estado;
-            }
-        },
-        { name: "Correo", selector: row => row.email_pers },
+        { name: "Cedula/Pasaporte", selector: row => row.ced_agente },
+        { name: "Nombre", selector: row => row.nom_agente },
+        { name: "Apellido", selector: row => row.ape_agente },
+        { name: "Telefono", selector: row => row.email_agente },
+        { name: "Celular", selector: row => row.dire_agente },
+        { name: "Correo", selector: row => row.tel_agente },
         {
             name: "Reenviar Correo",
             cell: (row, index) => (
@@ -55,7 +47,8 @@ export function ValidacionCliente({ mostrarSeccion }) {
                     <TfiEmail
                         data-testid={`icono-correo-${index}`}
                         size={25}
-                        onClick={() => reenviarCorreo(row)}/>
+                        onClick={() => reenviarCorreo(row)}
+                    />
                 </div>
             ),
             ignoreRowClick: true
@@ -78,13 +71,13 @@ export function ValidacionCliente({ mostrarSeccion }) {
     const reenviarCorreo = (row) => {
         localStorage.setItem("editCorreo", JSON.stringify({
             edit: true,
-            cliente: row
+            agente: row
         }));
         abrirModal()
     }
     const refrescar = async () => {
         try {
-            const dataClientes = await ClientesFun.obtenerClientePeniente(navigate);
+            const dataClientes = await AgenteFun.obtenerAgentesPendientes(navigate);
             setFiltroCli(dataClientes.rows);
             setClientes(dataClientes.rows);
         } catch (error) {
@@ -93,6 +86,7 @@ export function ValidacionCliente({ mostrarSeccion }) {
             setLoading(false)
         }
     }
+
     return (
         <div>
             <form action="" method="get">
@@ -123,11 +117,11 @@ export function ValidacionCliente({ mostrarSeccion }) {
                 <div className={stylesmod.overlay}>
                     <div className={stylesmod.modal}>
                         <button className={stylesmod.closeBtn} onClick={cerrarModal}>X</button>
-                        <ModalReenvioValidacion cerrarModal={cerrarModal} datosCliente={formulario} mostrarSeccion={mostrarSeccion} />
+                        <ModalCorreoAgente cerrarModal={cerrarModal} datosCliente={formulario} mostrarSeccion={mostrarSeccion} />
                     </div>
                 </div>
             )}
         </div>
     );
 }
-export default ValidacionCliente;
+export default AgentesPendientes;
