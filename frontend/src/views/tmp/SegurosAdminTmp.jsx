@@ -1,7 +1,7 @@
 import React, {useEffect,useState} from "react";
 import { useNavigate,useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import SegurosAdminFun from "./SegurosAdminFun";
+import SegurosAdminFun from "../segurosAdmin/SegurosAdminFun";
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
 import CargarTablas from "../cargando/CargarTablas";
 import { FaSearch } from "react-icons/fa";

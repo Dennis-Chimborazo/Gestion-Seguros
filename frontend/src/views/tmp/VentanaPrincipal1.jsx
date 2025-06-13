@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import ApiService from "../services/ApiService";
+import ApiService from "../../services/ApiService";
 import styles from "./estilos/VentanaAdmin.module.css";
 import { 
   FiCreditCard, 

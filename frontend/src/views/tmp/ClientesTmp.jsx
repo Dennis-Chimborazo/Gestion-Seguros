@@ -1,11 +1,11 @@
 import React, {useEffect,useState} from "react";
 import { useNavigate,useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import ClientesFun from "./ClientesFun.js";
+import ClientesFun from "../clientes/ClientesFun.js";
 import styles from '../estilos/cliente.module.css';
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
-import CargarTablas from "../cargando/CargarTablas";
-import InfoCard from "../cargando/InfoCards";
+import CargarTablas from "../cargando/CargarTablas.jsx";
+import InfoCard from "../cargando/InfoCards.jsx";
 import "../estilos/Cliente.css"; // Importar el archivo CSS
 
 

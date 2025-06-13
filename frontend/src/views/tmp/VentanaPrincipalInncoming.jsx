@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import ApiService from "../services/ApiService";
+import ApiService from "../../services/ApiService";
 import styles from "./VentanaAdmin.module.css"; // importar estilos
 
 export function VentanaPrincipal() {
