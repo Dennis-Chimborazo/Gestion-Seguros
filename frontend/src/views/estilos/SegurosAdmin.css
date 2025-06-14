@@ -1,7 +1,7 @@
 /* SegurosAdmin.css */
 
 .seguros-admin-container {
-  padding: 0;
+  padding: 2rem;
   background: transparent; /* Fondo transparente para evitar duplicar el fondo */
   min-height: 100vh;
   width: 100%;
