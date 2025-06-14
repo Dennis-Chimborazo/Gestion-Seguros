@@ -1,22 +1,25 @@
-/* SegurosAdmin.css */
+/* Agentes.css */
 
-.cliente-container {
+.agentes-container {
   padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: transparent;
   min-height: 100vh;
+  width: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.cliente-form {
+.agentes-form {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 2.5rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: none;
+  border: none;
+  height: 100%;
+  width: 100%;
 }
 
-.cliente-title {
+.agentes-title {
   color: #2d3748;
   font-size: 2.5rem;
   font-weight: 700;
@@ -58,16 +61,14 @@
 }
 
 .search-input-container {
-  padding-left: 3rem;
   position: relative;
   display: flex;
   align-items: center;
-
 }
 
 .search-input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 3rem; 
+  padding: 0.75rem 1rem 0.75rem 3rem;
   border: 2px solid #e2e8f0;
   border-radius: 12px;
   font-size: 1rem;
@@ -85,18 +86,15 @@
 
 .search-icon {
   position: absolute;
-
   left: 1rem;
   color: #a0aec0;
   pointer-events: none;
   z-index: 1;
 }
 
-.search-input:focus ~ .search-icon,
 .search-input:focus + .search-icon {
   color: #667eea;
 }
-
 
 .control-buttons {
   display: flex;
@@ -154,7 +152,7 @@
 }
 
 /* Estilos para DataTable */
-.cliente-container .rdt_Table {
+.agentes-container .rdt_Table {
   background: white;
   border-radius: 15px;
   overflow: hidden;
@@ -162,16 +160,16 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.cliente-container .rdt_TableHead {
+.agentes-container .rdt_TableHead {
   background: linear-gradient(45deg, #667eea, #764ba2);
 }
 
-.cliente-container .rdt_TableHeadRow {
+.agentes-container .rdt_TableHeadRow {
   background: transparent;
   border: none;
 }
 
-.cliente-container .rdt_TableCol {
+.agentes-container .rdt_TableCol {
   color: white;
   font-weight: 600;
   font-size: 0.9rem;
@@ -179,17 +177,17 @@
   letter-spacing: 0.5px;
 }
 
-.cliente-container .rdt_TableRow {
+.agentes-container .rdt_TableRow {
   border-bottom: 1px solid #e2e8f0;
   transition: all 0.2s ease;
 }
 
-.cliente-container .rdt_TableRow:hover {
+.agentes-container .rdt_TableRow:hover {
   background: rgba(103, 126, 234, 0.05);
   transform: translateX(2px);
 }
 
-.cliente-container .rdt_TableCell {
+.agentes-container .rdt_TableCell {
   padding: 1rem;
   font-size: 0.95rem;
   color: #2d3748;
@@ -201,6 +199,7 @@
   transition: all 0.3s ease;
   padding: 0.3rem;
   border-radius: 8px;
+  margin: 0 0.2rem;
 }
 
 .option-icon:hover {
@@ -209,13 +208,13 @@
 }
 
 /* Estilos para paginación */
-.cliente-container .rdt_Pagination {
+.agentes-container .rdt_Pagination {
   background: #f8fafc;
   border-top: 1px solid #e2e8f0;
   padding: 1rem;
 }
 
-.cliente-container .rdt_Pagination button {
+.agentes-container .rdt_Pagination button {
   background: white;
   border: 1px solid #e2e8f0;
   color: #4a5568;
@@ -223,18 +222,18 @@
   transition: all 0.2s ease;
 }
 
-.cliente-container .rdt_Pagination button:hover:not(:disabled) {
+.agentes-container .rdt_Pagination button:hover:not(:disabled) {
   background: #667eea;
   color: white;
   border-color: #667eea;
 }
 
-.cliente-container .rdt_Pagination button:disabled {
+.agentes-container .rdt_Pagination button:disabled {
   opacity: 0.5;
 }
 
 /* Mensaje cuando no hay datos */
-.cliente-container .rdt_TableWrapper .rdt_Table .rdt_TableBody .rdt_EmptyWrapper {
+.agentes-container .rdt_TableWrapper .rdt_Table .rdt_TableBody .rdt_EmptyWrapper {
   background: white;
   color: #718096;
   font-style: italic;
@@ -243,15 +242,15 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .cliente-container {
+  .agentes-container {
     padding: 1rem;
   }
   
-  .cliente-form {
-    padding: 1rem;
+  .agentes-form {
+    padding: 1.5rem;
   }
   
-  .cliente-title {
+  .agentes-title {
     font-size: 2rem;
   }
   
@@ -279,7 +278,7 @@
 }
 
 @media (max-width: 480px) {
-  .cliente-title {
+  .agentes-title {
     font-size: 1.5rem;
   }
   
