@@ -5,7 +5,6 @@ import GestionContratacionFun from "./GestionContratacionFun";
 import { FcClearFilters,FcSupport,FcFinePrint } from "react-icons/fc";
 import CargarTablas from "../cargando/CargarTablas";
 
-
 export function GestionContratacion({ mostrarSeccion }){
     const navigate= useNavigate();
     const location = useLocation();

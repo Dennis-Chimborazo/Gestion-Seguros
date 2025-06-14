@@ -13,21 +13,15 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
     const [categorias, setCategorias] = useState([]);
     const [categoriaCombo, setCategoriaCombo] = useState([]);
     const [beneficios, setBeneficios] = useState([]);
-    const [formulario, setFormulario] = useState({ nom_tip_seg: '', descrip_tip_seg: '', pago_tip_seg: '', suma_tip_seg: '', id_estado: '', id_tip_seg: '' });
+    const [formulario, setFormulario] = useState({ nom_tip_seg: '', descrip_tip_seg: '', id_estado: '', id_tip_seg: '' });
     const [listbeneficios, setListBeneficios] = useState([]);
-    const [nom_tip_seg, setNom_tip_seg] = useState('');
-    const [descrip_tip_seg, setDescrip_tip_seg] = useState('');
-    const [pago_tip_seg, setpago_tip_seg] = useState('');
-    const [suma_tip_seg, setsuma_tip_seg] = useState('');
-    const [seguroActual, setSeguroActual] = useState([]);
-    const [beneficiosActuales, setBeneficiosActuales] = useState([]);
-
-
+    const [beneficiosFijos, setBeneficiosFijos] = useState([]);
     const navigate = useNavigate();
+    const [seguro, setSeguro] = useState();
 
     useEffect(() => {
 
-        const serugo = async () => {
+        const cargarDatos = async () => {
             let api = await SegurosAdminFun.categoria(navigate);
             const apiConv = api.map((datos) => ({
                 value: datos.id_categoria,
@@ -35,60 +29,60 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
             }));
             setCategorias(apiConv);
             const editData = JSON.parse(localStorage.getItem("editSeguro"));
-            setFormulario({
-                ...formulario, nom_tip_seg: editData.seguro.nom_tip_seg,
-                descrip_tip_seg: editData.seguro.descrip_tip_seg,
-                pago_tip_seg: editData.seguro.pago_tip_seg,
-                suma_tip_seg: editData.seguro.suma_tip_seg,
-                id_estado: editData.seguro.id_estado,
-                id_tip_seg: editData.seguro.id_tip_seg,
-            });
-            setNom_tip_seg(editData.seguro.nom_tip_seg)
-            setDescrip_tip_seg(editData.seguro.descrip_tip_seg)
-            setpago_tip_seg(editData.seguro.pago_tip_seg)
-            setsuma_tip_seg(editData.seguro.suma_tip_seg)
-
-            const seguroBeneficios = await SegurosAdminFun.SeguroBeneficios(editData.seguro.id_tip_seg, navigate)
-            let categoriaBus = apiConv.filter(item => item.value === seguroBeneficios[0].id_categoria);
-            setCategoriaCombo(categoriaBus);
-            let apiBeneficio = await SegurosAdminFun.beneficios(seguroBeneficios[0].id_categoria, navigate);
-            setBeneficios(apiBeneficio);
-            const soloIds = seguroBeneficios.map(item => item.id_beneficios);
-            setListBeneficios(soloIds);
-            setBeneficiosActuales(soloIds);
-            setSeguroActual(editData);
+            if (editData && editData.seguro) {
+                setFormulario(editData.seguro);
+                setSeguro(editData.seguro)
+                const seguroBeneficios = await SegurosAdminFun.SeguroBeneficios(editData.seguro.id_tip_seg, navigate)
+                let categoriaBus = apiConv.filter(item => item.value === seguroBeneficios[0].id_categoria);
+                setCategoriaCombo(categoriaBus);
+                let apiBeneficio = await SegurosAdminFun.beneficios(seguroBeneficios[0].id_categoria, navigate);
+                setBeneficios(apiBeneficio);
+                const soloIds = seguroBeneficios.map(item => item.id_beneficios);
+                setListBeneficios(soloIds);
+                setBeneficiosFijos(soloIds)
+                localStorage.removeItem("AgenteInformacion");
+            }
         }
-
-        serugo();
-
+        cargarDatos();
     }, []);
+
     const comulasBeneficios = [
-    {
-        name: "Seleccionar",
-        cell: (row,index) => (
-        <input
-            type="checkbox"
-            data-testid={`checkbox-${index}`}
-            checked={listbeneficios.includes(row.id_beneficios)}
-            onChange={(e) => selecionBeneficio(e, row)}/>),
-        ignoreRowClick: true,
-        allowOverflow: true,
-        button: true,
-    },
-    {
-        name: "Descripción",
-        selector: (row) => row.nom_beneficios,
-        sortable: true,
-    },
+        {
+            name: "Seleccionar",
+            cell: (row, index) => {
+                const isFijo = beneficiosFijos.includes(row.id_beneficios);
+                const isChecked = isFijo || listbeneficios.includes(row.id_beneficios);
+
+                return (
+                    <input
+                        type="checkbox"
+                        data-testid={`checkbox-${index}`}
+                        checked={isChecked}
+                        disabled={isFijo} // solo desactiva los beneficios fijos
+                        onChange={(e) => selecionBeneficio(e, row)}
+                    />
+                );
+            },
+            button: true,
+        },
+        {
+            name: "Descripción",
+            selector: (row) => row.nom_beneficios,
+            sortable: true,
+        },
     ];
-    
+
     const selecionBeneficio = (e, row) => {
+        const id = row.id_beneficios;
+
+        if (beneficiosFijos.includes(id)) return;
+
         setListBeneficios((prev) => {
-            const exists = prev.includes(row.id_beneficios);
+            const exists = prev.includes(id);
             if (exists) {
-                return prev.filter((item) => item !== row.id_beneficios);
+                return prev.filter((item) => item !== id);
             } else {
-                return [...prev, row.id_beneficios];
+                return [...prev, id];
             }
         });
     };
@@ -101,9 +95,7 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
     }
     const agregarClaveFormulario = (e) => {
         setFormulario({ ...formulario, [e.target.name]: e.target.value })
-        document.getElementById(e.target.name).value = e.target.value;
     }
-
     const vefCambioBeneficios = (arr1, arr2) => {
         if (arr1.length !== arr2.length) return false;
 
@@ -112,68 +104,60 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
 
         return sorted1.every((val, i) => val === sorted2[i]);
     };
-
-    const guardarTipoSeguro = async (e) => {
+    const actualizarTipoSeguro = async (e) => {
         e.preventDefault()
-        if (Object.values(formulario).every(valor => valor !== '')) {
+        if (formulario.descrip_tip_seg.trim() !== '') {
+            const cambiosFormulario = formulario.descrip_tip_seg !== seguro.descrip_tip_seg;
+            const cambiosBeneficios = !vefCambioBeneficios(beneficiosFijos, listbeneficios);
+            if (cambiosFormulario || cambiosBeneficios) {
+                swal.fire({
+                    title: "<label>Confirmacion</label>",
+                    text: "Desea aplicar los cambios",
+                    showDenyButton: true,
+                    denyButtonText: "No",
+                    confirmButtonText: "Si"
+                }).then(async (respuesta) => {
 
-            if (listbeneficios.length == 0) {
-                toast.error("Debe seleccionar minimo un beneficio ⚠️");
-
-            } else {
-                const cambiosFormulario = Object.keys(formulario).some((key) => formulario[key] !== seguroActual.seguro[key]);
-                const cambiosBeneficios = !vefCambioBeneficios(beneficiosActuales, listbeneficios);
-                if (cambiosFormulario || cambiosBeneficios) {
-                    swal.fire({
-                        title: "<label>Confirmacion</label>",
-                        text: "Desea aplicar los cambios",
-                        showDenyButton: true,
-                        denyButtonText: "No",
-                        confirmButtonText: "Si"
-                    }).then(async (respuesta) => {
-                        if (respuesta.isConfirmed) {
-                            if (cambiosFormulario) {
-                                const api = await SegurosAdminFun.actualizarTipoSeguro(formulario, navigate)
-                                swal.fire({
-                                    title: "<label>Exito</label>",
-                                    text: "Se ha aplicado los cambios correctamente",
-                                    timer: 3500,
-                                })
-                                if (cambiosBeneficios) {
-                                    const data = { id: formulario.id_tip_seg }
-                                    const api = await SegurosAdminFun.borrarBeneficios(data, navigate)
-                                    guardarBeneficios(formulario.id_tip_seg)
-                                }
-                                mostrarSeccion("segurosAdmin")
-
-                            } else {
-                                const data = { id: formulario.id_tip_seg }
-                                const api = await SegurosAdminFun.borrarBeneficios(data, navigate)
+                    if (respuesta.isConfirmed) {
+                        if (cambiosFormulario) {
+                            await SegurosAdminFun.actualizarTipoSeguro(formulario, navigate)
+                            swal.fire({
+                                title: "<label>Exito</label>",
+                                text: "Se ha aplicado los cambios correctamente",
+                                timer: 3500,
+                            })
+                            if (cambiosBeneficios) {
+                                await SegurosAdminFun.borrarBeneficios({ id: formulario.id_tip_seg }, navigate)
                                 guardarBeneficios(formulario.id_tip_seg)
-                                mostrarSeccion("segurosAdmin")
                             }
+                            mostrarSeccion("segurosAdmin")
+
+                        } else {
+                            await SegurosAdminFun.borrarBeneficios({ id: formulario.id_tip_seg }, navigate)
+                            guardarBeneficios(formulario.id_tip_seg)
+                            mostrarSeccion("segurosAdmin")
                         }
-                    });
-                } else {
-                    swal.fire({
-                        title: "<label>Advertencia</label>",
-                        text: "No se han realizado ningun Cambio",
-                        timer: 3500,
-                    })
-                }
+                    }
+                });
             }
+
+            else {
+                swal.fire({
+                    title: "<label>Advertencia</label>",
+                    text: "No se han realizado ningun Cambio",
+                    timer: 3500,
+                })
+            }
+
         } else {
-            toast.error("Faltan campos por llenar ⚠️");
+            toast.error("Falta la descripción del seguro ");
         }
-
-
     }
     const guardarBeneficios = async (id) => {
         const valores = listbeneficios.map(b => [id, b]);
-        const res = await SegurosAdminFun.guardarBeneficioSeguro(valores, navigate);
+        await SegurosAdminFun.guardarBeneficioSeguro(valores, navigate);
     };
-
-    const actualzarEstado = async (e) => {
+    const actualizarEstado = async (e) => {
         e.preventDefault()
         const data = { id: formulario.id_tip_seg }
         swal.fire({
@@ -190,7 +174,6 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
                     text: "Seguro desactivado Completamente",
                     timer: 3500,
                 })
-
                 mostrarSeccion("segurosAdmin")
             }
         });
@@ -209,12 +192,11 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
                     mostrarSeccion("segurosAdmin")
                 }
             });
-    
+
         } else {
             mostrarSeccion("segurosAdmin")
         }
     };
-
     const customStyles = {
         header: {
             style: {
@@ -272,11 +254,11 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
 
     return (
         <div className={styles.container}>
-            <form onSubmit={guardarTipoSeguro}>
+            <form onSubmit={actualizarTipoSeguro}>
                 <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
                 <h2>Editar Seguro</h2>
 
-                <button type="button" className={styles.btnGuardar} onClick={actualzarEstado}>
+                <button type="button" className={styles.btnGuardar} onClick={actualizarEstado}>
                     Desactivar Seguro
                 </button>
 
@@ -287,23 +269,20 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
                             type="text"
                             name="nom_tip_seg"
                             id="nom_tip_seg"
-                            onChange={(e) => { agregarClaveFormulario(e); setNom_tip_seg(e.target.value); }}
-                            value={nom_tip_seg}
+                            value={seguro?.nom_tip_seg || ''}
+                            readOnly
                         />
                     </div>
-
                     <div className={styles.formGroup}>
                         <label>Descripción</label>
                         <textarea
                             name="descrip_tip_seg"
                             id="descrip_tip_seg"
-                            onChange={(e) => { agregarClaveFormulario(e); setDescrip_tip_seg(e.target.value); }}
-                            value={descrip_tip_seg}
+                            onChange={agregarClaveFormulario}
+                            value={formulario?.descrip_tip_seg || ''}
                         />
                     </div>
-
                 </div>
-
                 <div className={styles.formRow}>
                     <div className={styles.formGroup}>
                         <label>Categoría</label>
@@ -311,10 +290,10 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
                             options={categorias}
                             onChange={cargarBeneficios}
                             value={categoriaCombo}
+                            isDisabled={true}
                         />
                     </div>
                 </div>
-
                 <div className={styles.formGroup}>
                     <label>Beneficios</label>
                     <DataTable
@@ -333,8 +312,8 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
                             placeholder="Ej.: $50/mes"
                             name="pago_tip_seg"
                             id="pago_tip_seg"
-                            onChange={(e) => { agregarClaveFormulario(e); setpago_tip_seg(e.target.value); }}
-                            value={pago_tip_seg}
+                            value={seguro?.pago_tip_seg || ''}
+                            readOnly
                         />
                     </div>
 
@@ -345,12 +324,11 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
                             placeholder="En caso de fallecimiento"
                             name="suma_tip_seg"
                             id="suma_tip_seg"
-                            onChange={(e) => { agregarClaveFormulario(e); setsuma_tip_seg(e.target.value); }}
-                            value={suma_tip_seg}
+                            value={seguro?.suma_tip_seg || ''}
+                            readOnly
                         />
                     </div>
                 </div>
-
                 <div className={styles.buttonGroup}>
                     <button type="submit" className={styles.btnGuardar}>Guardar</button>
                     <button
