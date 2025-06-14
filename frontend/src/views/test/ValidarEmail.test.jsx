@@ -143,33 +143,33 @@ describe('ValidarEmail', () => {
   });
 
   describe('Validación exitosa', () => {
-    it('debe mostrar información del cliente cuando la validación es exitosa', async () => {
+   it('debe mostrar información del cliente cuando la validación es exitosa', async () => {
       renderWithRouter(<ValidarEmail />);
 
       await waitFor(() => {
-        expect(screen.getByText('🎉 ¡Gracias por registrarte en Seguros.SA!')).toBeInTheDocument();
-        expect(screen.getByText(/Bienvenido\/a María González/)).toBeInTheDocument();
-        expect(screen.getByText('Validar mi cuenta')).toBeInTheDocument();
+        expect(screen.getByText(/gracias por registrarte en seguros\.sa/i)).toBeInTheDocument();
+        expect(screen.getByText(/bienvenido\/a maría gonzález/i)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /validar cuenta/i })).toBeInTheDocument();
       });
     });
 
-    it('debe mostrar todos los elementos de la interfaz exitosa', async () => {
+   it('debe mostrar todos los elementos de la interfaz exitosa', async () => {
       renderWithRouter(<ValidarEmail />);
 
       await waitFor(() => {
-        // Verificar título
-        expect(screen.getByText('🎉 ¡Gracias por registrarte en Seguros.SA!')).toBeInTheDocument();
-        
-        // Verificar mensaje de bienvenida
-        expect(screen.getByText(/Bienvenido\/a María González/)).toBeInTheDocument();
-        expect(screen.getByText(/tu cuenta ha sido creada con éxito/)).toBeInTheDocument();
-        
-        // Verificar mensaje de validación
-        expect(screen.getByText(/Esta validación garantiza la integridad/)).toBeInTheDocument();
-        expect(screen.getByText(/Al hacer clic en el siguiente botón/)).toBeInTheDocument();
-        
-        // Verificar botón
-        expect(screen.getByText('Validar mi cuenta')).toBeInTheDocument();
+        expect(screen.getByText(/gracias por registrarte en seguros\.sa/i)).toBeInTheDocument();
+        expect(screen.getByText(/bienvenido\/a maría gonzález/i)).toBeInTheDocument();
+        expect(screen.getByText(/tu cuenta ha sido creada con éxito/i)).toBeInTheDocument();
+        expect(screen.getByText(/esta validación garantiza la integridad/i)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /validar cuenta/i })).toBeInTheDocument();
+
+        // Inputs
+        expect(screen.getByLabelText(/ingrese contraseña temporal/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/ingrese una contraseña/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/vuelva a escribir la contraseña/i)).toBeInTheDocument();
+
+        // Botones cancelar y validar
+        expect(screen.getByRole('button', { name: /cancelar/i })).toBeInTheDocument();
       });
     });
 

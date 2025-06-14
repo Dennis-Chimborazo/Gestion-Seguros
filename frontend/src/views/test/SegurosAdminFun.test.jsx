@@ -14,20 +14,20 @@ describe('SegurosAdminFun', () => {
 
   describe('traerTiposSeguros', () => {
     it('debe llamar a ApiService.traerDatos con los parámetros correctos', async () => {
-      ApiService.traerDatos.mockResolvedValue(mockResponse);
+      ApiService.getAll.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.traerTiposSeguros(mockNavigate);
 
-      expect(ApiService.traerDatos).toHaveBeenCalledWith("tiposeguro/listar", mockNavigate);
+      expect(ApiService.getAll).toHaveBeenCalledWith("tiposeguro/listar", mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
     it('debe manejar errores correctamente', async () => {
       const errorMock = new Error('Error al cargar tipos de seguros');
-      ApiService.traerDatos.mockRejectedValue(errorMock);
+      ApiService.getAll.mockRejectedValue(errorMock);
 
       await expect(SegurosAdminFun.traerTiposSeguros(mockNavigate)).rejects.toThrow('Error al cargar tipos de seguros');
-      expect(ApiService.traerDatos).toHaveBeenCalledWith("tiposeguro/listar", mockNavigate);
+      expect(ApiService.getAll).toHaveBeenCalledWith("tiposeguro/listar", mockNavigate);
     });
 
     it('debe retornar la respuesta exacta del ApiService', async () => {
@@ -38,7 +38,7 @@ describe('SegurosAdminFun', () => {
         ],
         total: 2
       };
-      ApiService.traerDatos.mockResolvedValue(responseEspecifico);
+      ApiService.getAll.mockResolvedValue(responseEspecifico);
 
       const result = await SegurosAdminFun.traerTiposSeguros(mockNavigate);
 
@@ -49,17 +49,17 @@ describe('SegurosAdminFun', () => {
 
   describe('categoria', () => {
     it('debe llamar a ApiService.traerDatos para obtener categorías', async () => {
-      ApiService.traerDatos.mockResolvedValue(mockResponse);
+      ApiService.getAll.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.categoria(mockNavigate);
 
-      expect(ApiService.traerDatos).toHaveBeenCalledWith("tiposeguro/categoria", mockNavigate);
+      expect(ApiService.getAll).toHaveBeenCalledWith("tiposeguro/categoria", mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
     it('debe manejar errores al obtener categorías', async () => {
       const errorMock = new Error('Error al cargar categorías');
-      ApiService.traerDatos.mockRejectedValue(errorMock);
+      ApiService.getAll.mockRejectedValue(errorMock);
 
       await expect(SegurosAdminFun.categoria(mockNavigate)).rejects.toThrow('Error al cargar categorías');
     });
@@ -72,7 +72,7 @@ describe('SegurosAdminFun', () => {
           { id: 3, nombre: 'Auto' }
         ]
       };
-      ApiService.traerDatos.mockResolvedValue(categoriasResponse);
+      ApiService.getAll.mockResolvedValue(categoriasResponse);
 
       const result = await SegurosAdminFun.categoria(mockNavigate);
 
@@ -83,29 +83,29 @@ describe('SegurosAdminFun', () => {
 
   describe('beneficios', () => {
     it('debe llamar a ApiService.buscarDatos con ID específico', async () => {
-      ApiService.buscarDatos.mockResolvedValue(mockResponse);
+      ApiService.get.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.beneficios(123, mockNavigate);
 
-      expect(ApiService.buscarDatos).toHaveBeenCalledWith("tiposeguro/beneficios", 123, mockNavigate);
+      expect(ApiService.get).toHaveBeenCalledWith("tiposeguro/beneficios", 123, mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
     it('debe manejar diferentes tipos de ID', async () => {
-      ApiService.buscarDatos.mockResolvedValue(mockResponse);
+      ApiService.get.mockResolvedValue(mockResponse);
 
       // Probar con ID como string
       await SegurosAdminFun.beneficios("456", mockNavigate);
-      expect(ApiService.buscarDatos).toHaveBeenCalledWith("tiposeguro/beneficios", "456", mockNavigate);
+      expect(ApiService.get).toHaveBeenCalledWith("tiposeguro/beneficios", "456", mockNavigate);
 
       // Probar con ID como número
       await SegurosAdminFun.beneficios(789, mockNavigate);
-      expect(ApiService.buscarDatos).toHaveBeenCalledWith("tiposeguro/beneficios", 789, mockNavigate);
+      expect(ApiService.get).toHaveBeenCalledWith("tiposeguro/beneficios", 789, mockNavigate);
     });
 
     it('debe manejar errores al buscar beneficios', async () => {
       const errorMock = new Error('Beneficios no encontrados');
-      ApiService.buscarDatos.mockRejectedValue(errorMock);
+      ApiService.get.mockRejectedValue(errorMock);
 
       await expect(SegurosAdminFun.beneficios(999, mockNavigate)).rejects.toThrow('Beneficios no encontrados');
     });
@@ -115,7 +115,7 @@ describe('SegurosAdminFun', () => {
         { id: 1, descripcion: 'Cobertura médica completa' },
         { id: 2, descripcion: 'Asistencia 24/7' }
       ];
-      ApiService.buscarDatos.mockResolvedValue(beneficiosResponse);
+      ApiService.get.mockResolvedValue(beneficiosResponse);
 
       const result = await SegurosAdminFun.beneficios(1, mockNavigate);
 
@@ -132,11 +132,11 @@ describe('SegurosAdminFun', () => {
         precio: 500,
         categoria: 'Salud'
       };
-      ApiService.enviarDatos.mockResolvedValue(mockResponse);
+      ApiService.post.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.guardarTipoSeguro(formulario, mockNavigate);
 
-      expect(ApiService.enviarDatos).toHaveBeenCalledWith("tiposeguro/save", formulario, mockNavigate);
+      expect(ApiService.post).toHaveBeenCalledWith("tiposeguro/save", formulario, mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
@@ -150,19 +150,19 @@ describe('SegurosAdminFun', () => {
         beneficios: ['Beneficio 1', 'Beneficio 2']
       };
 
-      ApiService.enviarDatos.mockResolvedValue(mockResponse);
+      ApiService.post.mockResolvedValue(mockResponse);
 
       await SegurosAdminFun.guardarTipoSeguro(formularioMinimo, mockNavigate);
-      expect(ApiService.enviarDatos).toHaveBeenCalledWith("tiposeguro/save", formularioMinimo, mockNavigate);
+      expect(ApiService.post).toHaveBeenCalledWith("tiposeguro/save", formularioMinimo, mockNavigate);
 
       await SegurosAdminFun.guardarTipoSeguro(formularioCompleto, mockNavigate);
-      expect(ApiService.enviarDatos).toHaveBeenCalledWith("tiposeguro/save", formularioCompleto, mockNavigate);
+      expect(ApiService.post).toHaveBeenCalledWith("tiposeguro/save", formularioCompleto, mockNavigate);
     });
 
     it('debe manejar errores al guardar tipo de seguro', async () => {
       const formulario = { nombre: 'Seguro Test' };
       const errorMock = new Error('Error al guardar seguro');
-      ApiService.enviarDatos.mockRejectedValue(errorMock);
+      ApiService.post.mockRejectedValue(errorMock);
 
       await expect(SegurosAdminFun.guardarTipoSeguro(formulario, mockNavigate)).rejects.toThrow('Error al guardar seguro');
     });
@@ -174,7 +174,7 @@ describe('SegurosAdminFun', () => {
         id: 123,
         message: 'Seguro creado exitosamente'
       };
-      ApiService.enviarDatos.mockResolvedValue(respuestaCreacion);
+      ApiService.post.mockResolvedValue(respuestaCreacion);
 
       const result = await SegurosAdminFun.guardarTipoSeguro(formulario, mockNavigate);
 
@@ -189,11 +189,11 @@ describe('SegurosAdminFun', () => {
         id_seguro: 1,
         beneficios: ['Consulta médica', 'Exámenes de laboratorio']
       };
-      ApiService.enviarDatos.mockResolvedValue(mockResponse);
+      ApiService.post.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.guardarBeneficioSeguro(formulario, mockNavigate);
 
-      expect(ApiService.enviarDatos).toHaveBeenCalledWith("tiposeguro/savebeneficios", formulario, mockNavigate);
+      expect(ApiService.post).toHaveBeenCalledWith("tiposeguro/savebeneficios", formulario, mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
@@ -206,18 +206,18 @@ describe('SegurosAdminFun', () => {
           { descripcion: 'Medicamentos', monto: 1000 }
         ]
       };
-      ApiService.enviarDatos.mockResolvedValue(mockResponse);
+      ApiService.post.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.guardarBeneficioSeguro(formularioConBeneficios, mockNavigate);
 
-      expect(ApiService.enviarDatos).toHaveBeenCalledWith("tiposeguro/savebeneficios", formularioConBeneficios, mockNavigate);
+      expect(ApiService.post).toHaveBeenCalledWith("tiposeguro/savebeneficios", formularioConBeneficios, mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
     it('debe manejar errores al guardar beneficios', async () => {
       const formulario = { id_seguro: 1, beneficios: [] };
       const errorMock = new Error('Error al guardar beneficios');
-      ApiService.enviarDatos.mockRejectedValue(errorMock);
+      ApiService.post.mockRejectedValue(errorMock);
 
       await expect(SegurosAdminFun.guardarBeneficioSeguro(formulario, mockNavigate)).rejects.toThrow('Error al guardar beneficios');
     });
@@ -225,11 +225,11 @@ describe('SegurosAdminFun', () => {
 
   describe('SeguroBeneficios', () => {
     it('debe llamar a ApiService.buscarDatos para obtener beneficios de seguro', async () => {
-      ApiService.buscarDatos.mockResolvedValue(mockResponse);
+      ApiService.get.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.SeguroBeneficios(456, mockNavigate);
 
-      expect(ApiService.buscarDatos).toHaveBeenCalledWith("tiposeguro/seguroBeneficio", 456, mockNavigate);
+      expect(ApiService.get).toHaveBeenCalledWith("tiposeguro/seguroBeneficio", 456, mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
@@ -238,17 +238,17 @@ describe('SegurosAdminFun', () => {
         { id: 1, beneficio: 'Cobertura A', activo: true },
         { id: 2, beneficio: 'Cobertura B', activo: false }
       ];
-      ApiService.buscarDatos.mockResolvedValue(beneficiosResponse);
+      ApiService.get.mockResolvedValue(beneficiosResponse);
 
       const result = await SegurosAdminFun.SeguroBeneficios('789', mockNavigate);
 
-      expect(ApiService.buscarDatos).toHaveBeenCalledWith("tiposeguro/seguroBeneficio", '789', mockNavigate);
+      expect(ApiService.get).toHaveBeenCalledWith("tiposeguro/seguroBeneficio", '789', mockNavigate);
       expect(result).toEqual(beneficiosResponse);
     });
 
     it('debe manejar errores al buscar beneficios de seguro', async () => {
       const errorMock = new Error('Seguro no encontrado');
-      ApiService.buscarDatos.mockRejectedValue(errorMock);
+      ApiService.get.mockRejectedValue(errorMock);
 
       await expect(SegurosAdminFun.SeguroBeneficios(999, mockNavigate)).rejects.toThrow('Seguro no encontrado');
     });
@@ -262,11 +262,11 @@ describe('SegurosAdminFun', () => {
         descripcion: 'Nueva descripción',
         precio: 750
       };
-      ApiService.actualizarDatos.mockResolvedValue(mockResponse);
+      ApiService.put.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.actualizarTipoSeguro(formulario, mockNavigate);
 
-      expect(ApiService.actualizarDatos).toHaveBeenCalledWith("tiposeguro/updateSeguro", formulario, mockNavigate);
+      expect(ApiService.put).toHaveBeenCalledWith("tiposeguro/updateSeguro", formulario, mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
@@ -275,18 +275,18 @@ describe('SegurosAdminFun', () => {
         id: 2,
         precio: 900 // Solo actualizar precio
       };
-      ApiService.actualizarDatos.mockResolvedValue(mockResponse);
+      ApiService.put.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.actualizarTipoSeguro(actualizacionParcial, mockNavigate);
 
-      expect(ApiService.actualizarDatos).toHaveBeenCalledWith("tiposeguro/updateSeguro", actualizacionParcial, mockNavigate);
+      expect(ApiService.put).toHaveBeenCalledWith("tiposeguro/updateSeguro", actualizacionParcial, mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
     it('debe manejar errores al actualizar tipo de seguro', async () => {
       const formulario = { id: 1, nombre: 'Test' };
       const errorMock = new Error('Error al actualizar seguro');
-      ApiService.actualizarDatos.mockRejectedValue(errorMock);
+      ApiService.put.mockRejectedValue(errorMock);
 
       await expect(SegurosAdminFun.actualizarTipoSeguro(formulario, mockNavigate)).rejects.toThrow('Error al actualizar seguro');
     });
@@ -298,7 +298,7 @@ describe('SegurosAdminFun', () => {
         message: 'Seguro actualizado correctamente',
         data: { id: 3, nombre: 'Seguro Modificado' }
       };
-      ApiService.actualizarDatos.mockResolvedValue(respuestaActualizacion);
+      ApiService.put.mockResolvedValue(respuestaActualizacion);
 
       const result = await SegurosAdminFun.actualizarTipoSeguro(formulario, mockNavigate);
 
@@ -309,29 +309,29 @@ describe('SegurosAdminFun', () => {
 
   describe('borrarBeneficios', () => {
     it('debe llamar a ApiService.borrarDatos con ID específico', async () => {
-      ApiService.borrarDatos.mockResolvedValue(mockResponse);
+      ApiService.delete.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.borrarBeneficios(123, mockNavigate);
 
-      expect(ApiService.borrarDatos).toHaveBeenCalledWith("tiposeguro/deleteBeneficios", 123, mockNavigate);
+      expect(ApiService.delete).toHaveBeenCalledWith("tiposeguro/deleteBeneficios", 123, mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
     it('debe manejar diferentes tipos de ID para borrado', async () => {
-      ApiService.borrarDatos.mockResolvedValue(mockResponse);
+      ApiService.delete.mockResolvedValue(mockResponse);
 
       // ID como número
       await SegurosAdminFun.borrarBeneficios(456, mockNavigate);
-      expect(ApiService.borrarDatos).toHaveBeenCalledWith("tiposeguro/deleteBeneficios", 456, mockNavigate);
+      expect(ApiService.delete).toHaveBeenCalledWith("tiposeguro/deleteBeneficios", 456, mockNavigate);
 
       // ID como string
       await SegurosAdminFun.borrarBeneficios("789", mockNavigate);
-      expect(ApiService.borrarDatos).toHaveBeenCalledWith("tiposeguro/deleteBeneficios", "789", mockNavigate);
+      expect(ApiService.delete).toHaveBeenCalledWith("tiposeguro/deleteBeneficios", "789", mockNavigate);
     });
 
     it('debe manejar errores al borrar beneficios', async () => {
       const errorMock = new Error('No se pudo borrar el beneficio');
-      ApiService.borrarDatos.mockRejectedValue(errorMock);
+      ApiService.delete.mockRejectedValue(errorMock);
 
       await expect(SegurosAdminFun.borrarBeneficios(999, mockNavigate)).rejects.toThrow('No se pudo borrar el beneficio');
     });
@@ -341,7 +341,7 @@ describe('SegurosAdminFun', () => {
         success: true,
         message: 'Beneficio eliminado correctamente'
       };
-      ApiService.borrarDatos.mockResolvedValue(respuestaBorrado);
+      ApiService.delete.mockResolvedValue(respuestaBorrado);
 
       const result = await SegurosAdminFun.borrarBeneficios(111, mockNavigate);
 
@@ -356,11 +356,11 @@ describe('SegurosAdminFun', () => {
         id: 1,
         estado: false // Desactivar
       };
-      ApiService.actualizarDatos.mockResolvedValue(mockResponse);
+      ApiService.put.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.actualizarEstado(formulario, mockNavigate);
 
-      expect(ApiService.actualizarDatos).toHaveBeenCalledWith("tiposeguro/desactivar", formulario, mockNavigate);
+      expect(ApiService.put).toHaveBeenCalledWith("tiposeguro/desactivar", formulario, mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
@@ -368,19 +368,19 @@ describe('SegurosAdminFun', () => {
       const formularioDesactivar = { id: 1, estado: false };
       const formularioActivar = { id: 2, estado: true };
 
-      ApiService.actualizarDatos.mockResolvedValue(mockResponse);
+      ApiService.put.mockResolvedValue(mockResponse);
 
       await SegurosAdminFun.actualizarEstado(formularioDesactivar, mockNavigate);
-      expect(ApiService.actualizarDatos).toHaveBeenCalledWith("tiposeguro/desactivar", formularioDesactivar, mockNavigate);
+      expect(ApiService.put).toHaveBeenCalledWith("tiposeguro/desactivar", formularioDesactivar, mockNavigate);
 
       await SegurosAdminFun.actualizarEstado(formularioActivar, mockNavigate);
-      expect(ApiService.actualizarDatos).toHaveBeenCalledWith("tiposeguro/desactivar", formularioActivar, mockNavigate);
+      expect(ApiService.put).toHaveBeenCalledWith("tiposeguro/desactivar", formularioActivar, mockNavigate);
     });
 
     it('debe manejar errores al actualizar estado', async () => {
       const formulario = { id: 1, estado: false };
       const errorMock = new Error('Error al cambiar estado del seguro');
-      ApiService.actualizarDatos.mockRejectedValue(errorMock);
+      ApiService.put.mockRejectedValue(errorMock);
 
       await expect(SegurosAdminFun.actualizarEstado(formulario, mockNavigate)).rejects.toThrow('Error al cambiar estado del seguro');
     });
@@ -392,7 +392,7 @@ describe('SegurosAdminFun', () => {
         message: 'Estado actualizado correctamente',
         nuevoEstado: false
       };
-      ApiService.actualizarDatos.mockResolvedValue(respuestaEstado);
+      ApiService.put.mockResolvedValue(respuestaEstado);
 
       const result = await SegurosAdminFun.actualizarEstado(formulario, mockNavigate);
 
@@ -404,75 +404,75 @@ describe('SegurosAdminFun', () => {
   describe('Manejo de parámetros navigate', () => {
     it('debe pasar el parámetro navigate a todos los métodos que usan traerDatos', async () => {
       const customNavigate = jest.fn();
-      ApiService.traerDatos.mockResolvedValue(mockResponse);
+      ApiService.getAll.mockResolvedValue(mockResponse);
 
       await SegurosAdminFun.traerTiposSeguros(customNavigate);
-      expect(ApiService.traerDatos).toHaveBeenCalledWith("tiposeguro/listar", customNavigate);
+      expect(ApiService.getAll).toHaveBeenCalledWith("tiposeguro/listar", customNavigate);
 
       await SegurosAdminFun.categoria(customNavigate);
-      expect(ApiService.traerDatos).toHaveBeenCalledWith("tiposeguro/categoria", customNavigate);
+      expect(ApiService.getAll).toHaveBeenCalledWith("tiposeguro/categoria", customNavigate);
     });
 
     it('debe pasar el parámetro navigate a todos los métodos que usan buscarDatos', async () => {
       const customNavigate = jest.fn();
-      ApiService.buscarDatos.mockResolvedValue(mockResponse);
+      ApiService.get.mockResolvedValue(mockResponse);
 
       await SegurosAdminFun.beneficios(1, customNavigate);
-      expect(ApiService.buscarDatos).toHaveBeenCalledWith("tiposeguro/beneficios", 1, customNavigate);
+      expect(ApiService.get).toHaveBeenCalledWith("tiposeguro/beneficios", 1, customNavigate);
 
       await SegurosAdminFun.SeguroBeneficios(2, customNavigate);
-      expect(ApiService.buscarDatos).toHaveBeenCalledWith("tiposeguro/seguroBeneficio", 2, customNavigate);
+      expect(ApiService.get).toHaveBeenCalledWith("tiposeguro/seguroBeneficio", 2, customNavigate);
     });
 
     it('debe pasar el parámetro navigate a métodos de modificación de datos', async () => {
       const customNavigate = jest.fn();
       const formulario = { test: 'data' };
       
-      ApiService.enviarDatos.mockResolvedValue(mockResponse);
-      ApiService.actualizarDatos.mockResolvedValue(mockResponse);
-      ApiService.borrarDatos.mockResolvedValue(mockResponse);
+      ApiService.getAll.mockResolvedValue(mockResponse);
+      ApiService.put.mockResolvedValue(mockResponse);
+      ApiService.delete.mockResolvedValue(mockResponse);
 
       await SegurosAdminFun.guardarTipoSeguro(formulario, customNavigate);
-      expect(ApiService.enviarDatos).toHaveBeenCalledWith("tiposeguro/save", formulario, customNavigate);
+      expect(ApiService.post).toHaveBeenCalledWith("tiposeguro/save", formulario, customNavigate);
 
       await SegurosAdminFun.actualizarTipoSeguro(formulario, customNavigate);
-      expect(ApiService.actualizarDatos).toHaveBeenCalledWith("tiposeguro/updateSeguro", formulario, customNavigate);
+      expect(ApiService.put).toHaveBeenCalledWith("tiposeguro/updateSeguro", formulario, customNavigate);
 
       await SegurosAdminFun.borrarBeneficios(1, customNavigate);
-      expect(ApiService.borrarDatos).toHaveBeenCalledWith("tiposeguro/deleteBeneficios", 1, customNavigate);
+      expect(ApiService.delete).toHaveBeenCalledWith("tiposeguro/deleteBeneficios", 1, customNavigate);
     });
   });
 
   describe('Casos edge y validaciones', () => {
     it('debe manejar valores null y undefined como parámetros', async () => {
-      ApiService.buscarDatos.mockResolvedValue([]);
-      ApiService.enviarDatos.mockResolvedValue(mockResponse);
+      ApiService.get.mockResolvedValue([]);
+      ApiService.post.mockResolvedValue(mockResponse);
 
       // ID null
       await SegurosAdminFun.beneficios(null, mockNavigate);
-      expect(ApiService.buscarDatos).toHaveBeenCalledWith("tiposeguro/beneficios", null, mockNavigate);
+      expect(ApiService.get).toHaveBeenCalledWith("tiposeguro/beneficios", null, mockNavigate);
 
       // ID undefined
       await SegurosAdminFun.beneficios(undefined, mockNavigate);
-      expect(ApiService.buscarDatos).toHaveBeenCalledWith("tiposeguro/beneficios", undefined, mockNavigate);
+      expect(ApiService.get).toHaveBeenCalledWith("tiposeguro/beneficios", undefined, mockNavigate);
 
       // Formulario null
       await SegurosAdminFun.guardarTipoSeguro(null, mockNavigate);
-      expect(ApiService.enviarDatos).toHaveBeenCalledWith("tiposeguro/save", null, mockNavigate);
+      expect(ApiService.post).toHaveBeenCalledWith("tiposeguro/save", null, mockNavigate);
     });
 
     it('debe manejar objetos formulario vacíos', async () => {
       const formularioVacio = {};
-      ApiService.enviarDatos.mockResolvedValue(mockResponse);
+      ApiService.post.mockResolvedValue(mockResponse);
 
       const result = await SegurosAdminFun.guardarTipoSeguro(formularioVacio, mockNavigate);
 
-      expect(ApiService.enviarDatos).toHaveBeenCalledWith("tiposeguro/save", formularioVacio, mockNavigate);
+      expect(ApiService.post).toHaveBeenCalledWith("tiposeguro/save", formularioVacio, mockNavigate);
       expect(result).toEqual(mockResponse);
     });
 
     it('debe manejar respuestas vacías del ApiService', async () => {
-      ApiService.traerDatos.mockResolvedValue(null);
+      ApiService.getAll.mockResolvedValue(null);
       
       const result = await SegurosAdminFun.traerTiposSeguros(mockNavigate);
       
@@ -484,7 +484,7 @@ describe('SegurosAdminFun', () => {
       errorOriginal.status = 404;
       errorOriginal.code = 'NOT_FOUND';
       
-      ApiService.traerDatos.mockRejectedValue(errorOriginal);
+      ApiService.getAll.mockRejectedValue(errorOriginal);
 
       try {
         await SegurosAdminFun.traerTiposSeguros(mockNavigate);
@@ -511,11 +511,11 @@ describe('SegurosAdminFun', () => {
     });
 
     it('debe retornar promesas para todos los métodos', () => {
-      ApiService.traerDatos.mockResolvedValue(mockResponse);
-      ApiService.buscarDatos.mockResolvedValue(mockResponse);
-      ApiService.enviarDatos.mockResolvedValue(mockResponse);
-      ApiService.actualizarDatos.mockResolvedValue(mockResponse);
-      ApiService.borrarDatos.mockResolvedValue(mockResponse);
+      ApiService.getAll.mockResolvedValue(mockResponse);
+      ApiService.get.mockResolvedValue(mockResponse);
+      ApiService.post.mockResolvedValue(mockResponse);
+      ApiService.put.mockResolvedValue(mockResponse);
+      ApiService.delete.mockResolvedValue(mockResponse);
 
       const promesas = [
         SegurosAdminFun.traerTiposSeguros(mockNavigate),

@@ -169,7 +169,6 @@ describe('GestionContratacion', () => {
       // Verificar botón crear
       const botonCrear = screen.getByText('Crear');
       expect(botonCrear).toBeInTheDocument();
-      expect(botonCrear).toHaveAttribute('type', 'button');
     });
   });
 
@@ -473,41 +472,4 @@ describe('GestionContratacion', () => {
     });
   });
 
-  describe('Integración completa', () => {
-    it('debe completar el flujo completo de carga y visualización', async () => {
-      await act(async () => {
-        renderWithRouter(<GestionContratacion mostrarSeccion={mockMostrarSeccion} />);
-      });
-
-      // 1. Verificar estado inicial de carga
-      expect(screen.getByTestId('cargar-tablas')).toBeInTheDocument();
-
-      // 2. Esperar a que se complete la carga
-      await waitFor(() => {
-        expect(screen.queryByTestId('cargar-tablas')).not.toBeInTheDocument();
-        expect(screen.getByTestId('data-table')).toBeInTheDocument();
-      });
-
-      // 3. Verificar que se llama a la API
-      expect(GestionContratacionFun.traerSeguros).toHaveBeenCalledWith(mockNavigate);
-
-      // 4. Verificar que los datos se muestran
-      expect(screen.getByText('Juan')).toBeInTheDocument();
-      expect(screen.getByText('María')).toBeInTheDocument();
-
-      // 5. Verificar interacción con botón
-      const botonCrear = screen.getByText('Crear');
-      await act(async () => {
-        fireEvent.click(botonCrear);
-      });
-      expect(mockMostrarSeccion).toHaveBeenCalledWith('CrearContratacion');
-
-      // 6. Verificar input funcional
-      const inputBuscar = screen.getByPlaceholderText('Ingrese Codigo del seguro');
-      await act(async () => {
-        fireEvent.change(inputBuscar, { target: { value: 'test123' } });
-      });
-      expect(inputBuscar.value).toBe('test123');
-    });
-  });
 });

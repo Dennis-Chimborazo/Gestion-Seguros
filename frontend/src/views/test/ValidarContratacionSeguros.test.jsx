@@ -2,6 +2,8 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
+  import styles from '../estilos/validarEmail.module.css';
+
 
 // Mock todos los módulos externos primero
 const mockNavigate = jest.fn();
@@ -82,11 +84,15 @@ describe('ValidarContratacionSeguro', () => {
     }
   };
 
+  const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+afterAll(() => {
+  logSpy.mockRestore();
+});
+
   beforeEach(() => {
     jest.clearAllMocks();
     
     // Mock console.log para evitar ruido en las pruebas
-    jest.spyOn(console, 'log').mockImplementation(() => {});
     
     // Setup mock por defecto - éxito
     GestionContratacionFun.validarTokenContratacion.mockResolvedValue(mockValidacionExitosa);
@@ -94,9 +100,10 @@ describe('ValidarContratacionSeguro', () => {
   });
 
   afterEach(() => {
+  if (console.log.mockRestore) {
     console.log.mockRestore();
-  });
-
+  }
+});
   describe('Estado de carga inicial', () => {
     it('debe mostrar el componente de carga inicialmente', async () => {
       // Hacer que la promesa no se resuelva inmediatamente
@@ -435,19 +442,21 @@ describe('ValidarContratacionSeguro', () => {
       await waitFor(() => {
         expect(screen.getByText('🎉 ¡Validación de Contratación Exitosa!')).toBeInTheDocument();
         // Los campos vacíos aún deben renderizarse
-        expect(screen.getByText('Estimado/a')).toBeInTheDocument();
+        expect(screen.getByText(/Estimado\/a/i)).toBeInTheDocument();
       });
     });
   });
-
+  
   describe('Estructura y estilos CSS', () => {
     it('debe aplicar las clases CSS correctas', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
-        const container = screen.getByText('🎉 ¡Validación de Contratación Exitosa!').closest('div');
-        expect(container.parentElement).toHaveClass('card');
-        expect(container.parentElement.parentElement).toHaveClass('container');
+        const container = screen.getByTestId("container");
+        const card = screen.getByTestId("card");
+        expect(container).toHaveClass(styles.container);
+        expect(card).toHaveClass(styles.card);
+
       });
     });
 

@@ -101,10 +101,10 @@ export function ValidacionCliente({ mostrarSeccion }) {
                     <div>
                         <label htmlFor=""> Buscar</label>
                         <input type="text" id="buscar" name="buscar" placeholder="Ingrese numero de cedula" onChange={filtrarClientes} />
-                        <FcClearFilters size={25} onClick={borrarFiltro} />
+                        <FcClearFilters data-testid="btn-borrar-filtro" size={25} onClick={borrarFiltro} />
                         <div>
                             <label htmlFor="">Actualizar</label>
-                            <SlRefresh size={18} onClick={refrescar} />
+                            <SlRefresh data-testid="btn-actualizar" size={18} onClick={refrescar} />
 
                         </div>
                     </div>

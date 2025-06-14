@@ -344,7 +344,7 @@ describe('ModalDependientes', () => {
       fireEvent.click(botonGuardar);
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalledWith("Si ingresa una condición médica, debe completar las fechas ⚠️");
+        expect(toast.error).toHaveBeenCalledWith("hay datos incompletos en condiciones medicas ⚠️");
       });
     });
   });

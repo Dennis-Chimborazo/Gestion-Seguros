@@ -81,9 +81,9 @@ export function Agentes({ mostrarSeccion }) {
                 <div>
                     <h2>Agentes </h2>
                     <div>
-                        <label htmlFor=""> Buscar</label>
+                        <label htmlFor="buscar"> Buscar</label>
                         <input type="text" id="buscar" name="buscar" placeholder="Ingrese numero de cedula" onChange={filtrarClientes} />
-                        <FcClearFilters size={25} onClick={borrarFiltro} />
+                        <FcClearFilters  data-testid="boton-borrar-filtro" size={25} onClick={borrarFiltro} />
                         <div style={{ display: 'flex', justifyContent: 'flex-start', margin: '20px 0' }}>
                             <InfoCard
                                 text="Nuevo Agente"
