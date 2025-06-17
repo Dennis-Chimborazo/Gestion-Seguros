@@ -20,6 +20,8 @@ export function ValidarEmail() {
     const verificar = async () => {
       try {
         const res = await ClientesFun.validarTokenEmail({ url: id }, navigate);
+        console.log(res); // ✅ Agregado para test
+        console.log(res.data?.id_pers);
         if (res?.success && res.data?.id_pers) {
           const resCli = await ClientesFun.buscarcliente(res.data.id_pers, navigate);
           setCliente({
@@ -79,8 +81,9 @@ export function ValidarEmail() {
     e.preventDefault()
     if (verificarDatos()) {
       try {
-        const api = await ClientesFun.preActivarCuentaUsuario(({ id: cliente.id_pers, idvalid: cliente.idvalid }), navigate)
+        const api = await ClientesFun.preActivarCuentaUsuario({ id: cliente.id_pers, idvalid: cliente.idvalid }, navigate)
         if (api) {
+          console.log(true); 
           await UsuariosFun.actualizarPass(formulario, navigate)
           swal.fire({
             title: "<label>Muchas Felicidades</label>",
@@ -131,15 +134,15 @@ export function ValidarEmail() {
               Para completar tu registro y validar tu identidad, ingresa una nueva contraseña.
               Su usuario por defecto es: {cliente.email_pers || ''}
             </p>
-            <label htmlFor="password">Ingrese contraseña temporal</label>
-            <input type="text" id="passTemp" name="passTemp" onChange={asignarValores} />
-            <label htmlFor="password">Ingrese una contraseña</label>
-            <input type="text" id="pass" name="pass" onChange={asignarValores} />
+            <label htmlFor="passTemp">Ingrese contraseña temporal</label>
+            <input type="text" id="passTemp" name="passTemp" data-testid="passTemp"  onChange={asignarValores} />
+            <label htmlFor="pass">Ingrese una contraseña</label>
+            <input type="text" id="pass" name="pass" data-testid="pass"  onChange={asignarValores} />
             <label htmlFor="confirmPassword">Vuelva a escribir la contraseña</label>
-            <input type="text" id="confirmPassword" name="confirmPassword" onChange={asignarValores} />
+            <input type="text" id="confirmPassword" name="confirmPassword" data-testid="confirmpass" onChange={asignarValores} />
             <div className={styles.message}>
               <button className={styles.button} onClick={cancelarCuenta}>cancelar</button>
-              <button className={styles.button} onClick={preValidarCuenta}>Validar Cuenta</button>
+              <button  className={styles.button}  data-testid="btn-validar-cuenta" onClick={preValidarCuenta}>Validar Cuenta</button>
             </div >
           </>
         ) : (
