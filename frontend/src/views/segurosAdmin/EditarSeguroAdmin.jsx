@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import SegurosAdminFun from "./SegurosAdminFun";
 import DataTable from "react-data-table-component";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import swal from "sweetalert2";
 import "../estilos/EditarSeguroAdmin.css";
@@ -257,16 +257,11 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
              <form className="editar-seguro-form" onSubmit={actualizarTipoSeguro}>
                  <div className="editar-seguro-header">
                      <h2 className="editar-seguro-title">Editar Seguro</h2>
-                 <button type="button" className="btn-desactivar" onClick={actualizarEstado}>
-                     Desactivar Seguro
-                 </button>
-
+                     <button type="button" className="btn-desactivar" onClick={actualizarEstado}>
+                         Desactivar Seguro
+                     </button>
+                 </div>
                  <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-                 
-                 
-
-                 
-</div>
                  <div className="form-row">
                     <div className="form-group">
                          <label className="form-label">Nombre del seguro</label>
