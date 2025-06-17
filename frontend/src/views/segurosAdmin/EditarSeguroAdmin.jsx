@@ -257,14 +257,16 @@ export function EditarSeguroAdmin({ mostrarSeccion }) {
              <form className="editar-seguro-form" onSubmit={actualizarTipoSeguro}>
                  <div className="editar-seguro-header">
                      <h2 className="editar-seguro-title">Editar Seguro</h2>
-                 </div>
-
-                 <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-                 
                  <button type="button" className="btn-desactivar" onClick={actualizarEstado}>
                      Desactivar Seguro
                  </button>
 
+                 <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
+                 
+                 
+
+                 
+</div>
                  <div className="form-row">
                     <div className="form-group">
                          <label className="form-label">Nombre del seguro</label>

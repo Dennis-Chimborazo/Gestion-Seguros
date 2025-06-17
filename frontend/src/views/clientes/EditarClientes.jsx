@@ -377,7 +377,7 @@ export function EditarClientes({ mostrarSeccion }) {
             <div className="editar-clientes-form">
                 <div className="editar-clientes-header">
                     <h3 className="editar-clientes-title">Editar Cliente</h3>
-                    <button className="btn-desactivar" onClick={cambiarEstadoCliente}>Desactivación</button>
+                    <button className="btn-desactivar" onClick={cambiarEstadoCliente}>Desactivar Cliente</button>
                 </div>
                 
                 {/* Sección de Información Personal */}
