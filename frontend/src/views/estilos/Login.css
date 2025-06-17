@@ -6,6 +6,7 @@
   height: 100vh;
   background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
 }
 
 .login-card {
@@ -17,6 +18,18 @@
   max-width: 400px;
   text-align: center;
   animation: fadeIn 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(to right, #4caf50, #8bc34a);
 }
 
 @keyframes fadeIn {
@@ -25,34 +38,51 @@
 }
 
 .login-title {
-  font-size: 2rem;
-  margin-bottom: 25px;
+  font-size: 2.2rem;
+  margin-bottom: 30px;
   color: #2e7d32;
   font-weight: 600;
+  position: relative;
+}
+
+.login-title::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: #4caf50;
+  margin: 10px auto 0;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
 
 .login-input {
-  padding: 12px 15px;
-  border: 1px solid #ccc;
+  padding: 14px 16px;
+  border: 1px solid #d4d4d8;
   border-radius: 10px;
   font-size: 1rem;
   transition: all 0.3s ease;
+  background-color: #f8fafc;
+}
+
+.login-input::placeholder {
+  color: #94a3b8;
 }
 
 .login-input:focus {
   outline: none;
-  border-color: #66bb6a;
-  box-shadow: 0 0 5px rgba(102, 187, 106, 0.5);
+  border-color: #4caf50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+  background-color: white;
 }
 
 .login-button {
-  padding: 12px;
+  padding: 14px;
+  margin-top: 10px;
   background-color: #4caf50;
   color: white;
   font-weight: bold;
@@ -60,10 +90,33 @@
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .login-button:hover {
   background-color: #388e3c;
-  transform: scale(1.02);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 30px 20px;
+  }
+  
+  .login-title {
+    font-size: 1.8rem;
+  }
+  
+  .login-input,
+  .login-button {
+    padding: 12px;
+  }
 }
