@@ -1,0 +1,300 @@
+/* CrearSeguroAdmin.css */
+
+.crear-seguro-container {
+  padding: 2rem;
+  background: transparent;
+  min-height: 100vh;
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.crear-seguro-form {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: none;
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+
+.crear-seguro-title {
+  color: #2d3748;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-row {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a5568;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-group textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+/* Estilos para Select de react-select */
+.form-group .css-yk16xz-control {
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 0.25rem !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.3s ease !important;
+}
+
+.form-group .css-yk16xz-control:hover {
+  border-color: #667eea !important;
+}
+
+.form-group .css-1pahdxg-control--is-focused {
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+}
+
+.form-group .css-1uccc91-singleValue {
+  color: #2d3748 !important;
+}
+
+.form-group .css-1wa3eu0-placeholder {
+  color: #a0aec0 !important;
+  font-style: italic !important;
+}
+
+/* Estilos para DataTable */
+.beneficios-table-container {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 1rem;
+}
+
+.beneficios-table-container .rdt_Table {
+  background: white;
+}
+
+.beneficios-table-container .rdt_TableHead {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+}
+
+.beneficios-table-container .rdt_TableHeadRow {
+  background: transparent;
+  border: none;
+}
+
+.beneficios-table-container .rdt_TableCol {
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.beneficios-table-container .rdt_TableRow {
+  border-bottom: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.beneficios-table-container .rdt_TableRow:hover {
+  background: rgba(103, 126, 234, 0.05);
+  transform: translateX(2px);
+}
+
+.beneficios-table-container .rdt_TableCell {
+  padding: 1rem;
+  font-size: 0.95rem;
+  color: #2d3748;
+}
+
+/* Estilo para checkbox */
+.beneficios-table-container input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #667eea;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Mensaje cuando no hay datos en la tabla */
+.beneficios-table-container .rdt_TableWrapper .rdt_Table .rdt_TableBody .rdt_EmptyWrapper {
+  background: white;
+  color: #718096;
+  font-style: italic;
+  padding: 3rem;
+  text-align: center;
+}
+
+/* Estilos para los botones */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(103, 126, 234, 0.1);
+  border-radius: 15px;
+  border: 1px solid rgba(103, 126, 234, 0.2);
+}
+
+.btn-guardar {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 120px;
+}
+
+.btn-guardar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-guardar:active {
+  transform: translateY(0);
+}
+
+.btn-cancelar {
+  background: linear-gradient(45deg, #f56565, #e53e3e);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(245, 101, 101, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 120px;
+}
+
+.btn-cancelar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245, 101, 101, 0.4);
+}
+
+.btn-cancelar:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .crear-seguro-container {
+    padding: 1rem;
+  }
+  
+  .crear-seguro-form {
+    padding: 1.5rem;
+  }
+  
+  .crear-seguro-title {
+    font-size: 2rem;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .form-group {
+    min-width: 100%;
+  }
+  
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn-guardar,
+  .btn-cancelar {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .crear-seguro-title {
+    font-size: 1.5rem;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .button-group {
+    padding: 1rem;
+  }
+}
+
+
+
+/* Estilos para el toast de Sonner */
+.crear-seguro-container [data-sonner-toast] {
+  border-radius: 12px !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}

@@ -2,10 +2,10 @@ import React, {useEffect,useState} from "react";
 import Select from "react-select";
 import SegurosAdminFun from "./SegurosAdminFun.js";
 import DataTable from "react-data-table-component";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {Toaster,toast} from "sonner";
 import swal from "sweetalert2";
-import styles from "../estilos/Seguros.module.css"; 
+import "../estilos/CrearSeguroAdmin.css";
 
 export function CrearSeguroAdmin({ mostrarSeccion }){
     const [categorias,setCategorias]= useState([]);
@@ -27,7 +27,7 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
         }
         apiCateg();
 
-    },[]);
+    },[navigate]);
 
     const comulasBeneficios = [
         {
@@ -73,7 +73,7 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
       e.preventDefault()
       if (Object.values(formulario).every(valor => valor !== '')) {
 
-        if (listbeneficios.length==0) {
+        if (listbeneficios.length === 0) {
         toast.error("Debe seleccionar minimo un beneficio ⚠️");
         }else{
           try {
@@ -93,13 +93,11 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
         }
       }else{
         toast.error("Faltan campos por llenar ⚠️");
-      }
-
-    }
+      }    }
 
     const guardarBeneficios = async (id) => {
       const valores = listbeneficios.map(b => [id, b.id_beneficios]);
-      const res = await SegurosAdminFun.guardarBeneficioSeguro(valores, navigate);
+      await SegurosAdminFun.guardarBeneficioSeguro(valores, navigate);
     };
     const cancelarOperacion = (e)=>{
       e.preventDefault()
@@ -123,140 +121,145 @@ export function CrearSeguroAdmin({ mostrarSeccion }){
 
       }
     }
-  
-  const customStyles = {
+    const customStyles = {
     header: {
         style: {
             minHeight: '56px',
             fontSize: '18px',
             fontWeight: 'bold',
             color: '#ffffff',
-            backgroundColor: '#0077b6',
-
+            backgroundColor: 'transparent',
         },
     },
     headRow: {
         style: {
-            backgroundColor: '#0077b6',
-            borderTop: '1px solid #dddddd',
-
+            background: 'linear-gradient(45deg, #667eea, #764ba2)',
+            borderTop: 'none',
         },
     },
     headCells: {
         style: {
-            fontSize: '16px',
+            fontSize: '0.9rem',
             fontWeight: '600',
-            textTransform: 'capitalize',
-            paddingLeft: '8px',
-            paddingRight: '8px',
+            textTransform: 'uppercase',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
             color: '#ffffff',
+            letterSpacing: '0.5px',
         },
     },
     rows: {
         style: {
             backgroundColor: '#ffffff',
-            '&:nth-of-type(even)': {
-                backgroundColor: '#f9f9f9', // Color alternativo para filas pares
-            },
+            borderBottom: '1px solid #e2e8f0',
+            transition: 'all 0.2s ease',
             '&:hover': {
-                backgroundColor: '#ffe3e3', // Color al pasar el cursor
+                backgroundColor: 'rgba(103, 126, 234, 0.05)',
+                transform: 'translateX(2px)',
             },
         },
     },
     cells: {
         style: {
-            paddingLeft: '8px',
-            paddingRight: '8px',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
+            fontSize: '0.95rem',
+            color: '#2d3748',
         },
     },
-    pagination: {
+    noData: {
         style: {
-            borderTop: '1px solid #dddddd',
-            backgroundColor: '#ffffff',
-            padding: '8px',
+            background: 'white',
+            color: '#718096',
+            fontStyle: 'italic',
+            padding: '3rem',
+            textAlign: 'center',
         },
-
     },
 };
 
-
   return (
-    <div className={styles.container}>
-      <form onSubmit={guardarTipoSeguro}>
-  
-        <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-        <h2>Nuevo Seguro</h2>
-  
-        <div className={styles.formRow}>
-          <div className={styles.formGroup}>
-            <label htmlFor="nom_tip_seg">Nombre del seguro</label>
-            <input type="text" name="nom_tip_seg" id="nom_tip_seg" onChange={agregarClaveFormulario} />
+    <div className="crear-seguro-container">
+      <div className="crear-seguro-form">
+        <form onSubmit={guardarTipoSeguro}>
+    
+          <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
+          <h2 className="crear-seguro-title">Nuevo Seguro</h2>
+    
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="nom_tip_seg">Nombre del seguro</label>
+              <input type="text" name="nom_tip_seg" id="nom_tip_seg" onChange={agregarClaveFormulario} />
+            </div>
+    
+            <div className="form-group">
+              <label htmlFor="descrip_tip_seg">Descripción</label>
+              <textarea name="descrip_tip_seg" id="descrip_tip_seg" onChange={agregarClaveFormulario}></textarea>
+            </div>
           </div>
-  
-          <div className={styles.formGroup}>
-            <label htmlFor="descrip_tip_seg">Descripción</label>
-            <textarea name="descrip_tip_seg" id="descrip_tip_seg" onChange={agregarClaveFormulario}></textarea>
+    
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="categoria">Categoría</label>
+              <Select
+                options={categorias}
+                onChange={(e) => cargarBeneficios(e)}
+                placeholder="Seleccione una categoría"
+              />
+            </div>
           </div>
-        </div>
-  
-        <div className={styles.formRow}>
-          <div className={styles.formGroup}>
-            <label htmlFor="categoria">Categoría</label>
-            <Select
-              options={categorias}
-              onChange={(e) => cargarBeneficios(e)}
-            />
+    
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="beneficios">Beneficios</label>
+              <div className="beneficios-table-container">
+                <DataTable
+                  columns={comulasBeneficios}
+                  data={beneficios}
+                  noDataComponent="No hay categoría seleccionada"
+                  customStyles={customStyles}
+                  persistTableHead
+                />
+              </div>
+            </div>
           </div>
-        </div>
-  
-        <div className={styles.formRow}>
-          <div className={styles.formGroup}>
-            <label htmlFor="beneficios">Beneficios</label>
-            <DataTable
-              columns={comulasBeneficios}
-              data={beneficios}
-              noDataComponent="No hay categoría seleccionada"
-              customStyles={customStyles}
-              persistTableHead
-            />
+    
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="pago_tip_seg">Prima mensual o anual (costo base)</label>
+              <input
+                type="text"
+                placeholder="Ej.: $50/mes"
+                name="pago_tip_seg"
+                id="pago_tip_seg"
+                onChange={agregarClaveFormulario}
+              />
+            </div>
+    
+            <div className="form-group">
+              <label htmlFor="suma_tip_seg">Suma asegurada máxima</label>
+              <input
+                type="text"
+                placeholder="En caso de fallecimiento"
+                name="suma_tip_seg"
+                id="suma_tip_seg"
+                onChange={agregarClaveFormulario}
+              />
+            </div>
           </div>
-        </div>
-  
-        <div className={styles.formRow}>
-          <div className={styles.formGroup}>
-            <label htmlFor="pago_tip_seg">Prima mensual o anual (costo base)</label>
-            <input
-              type="text"
-              placeholder="Ej.: $50/mes"
-              name="pago_tip_seg"
-              id="pago_tip_seg"
-              onChange={agregarClaveFormulario}
-            />
+    
+          <div className="button-group">
+            <button type="submit" className="btn-guardar">Guardar</button>
+            <button
+              type="button"
+              className="btn-cancelar"
+              onClick={cancelarOperacion}
+            >
+              Cancelar
+            </button>
           </div>
-  
-          <div className={styles.formGroup}>
-            <label htmlFor="suma_tip_seg">Suma asegurada máxima</label>
-            <input
-              type="text"
-              placeholder="En caso de fallecimiento"
-              name="suma_tip_seg"
-              id="suma_tip_seg"
-              onChange={agregarClaveFormulario}
-            />
-          </div>
-        </div>
-  
-        <div className={styles.buttonGroup}>
-          <button type="submit" className={styles.btnGuardar}>Guardar</button>
-          <button
-            type="button"
-            className={styles.btnCancelar}
-            onClick={cancelarOperacion}
-          >
-            Cancelar
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
   
