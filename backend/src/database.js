@@ -8,15 +8,23 @@ const { Client } = pkg;
       return DataBase.instancia;
     }
 
-   this.client = new Client({
-      user: 'admin',
-      host: 'dpg-d0j12bd6ubrc73cko57g-a.oregon-postgres.render.com',
-      database: 'gestionpruebas',
-      password: 'cTbyF9p3fcC4Yo7xpFNzcLwtvK6TboTH',
+  //  this.client = new Client({
+  //     user: 'admin',
+  //     host: 'dpg-d0j12bd6ubrc73cko57g-a.oregon-postgres.render.com',
+  //     database: 'gestionpruebas',
+  //     password: 'cTbyF9p3fcC4Yo7xpFNzcLwtvK6TboTH',
+  //     port: 5432, 
+  //      ssl: {
+  //       rejectUnauthorized: false // ⚠ Importante para Render
+  //     }
+  //   });
+
+    this.client = new Client({
+      user: 'kevin',
+      host: 'localhost',
+      database: 'seguros',
+      password: 'root',
       port: 5432, 
-       ssl: {
-        rejectUnauthorized: false // ⚠ Importante para Render
-      }
     });
 
     this.#connect(); 
