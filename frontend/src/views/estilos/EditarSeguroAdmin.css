@@ -23,15 +23,6 @@
   margin-bottom: 2rem;
 }
 
-.editar-seguro-header {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-
-
-
 .editar-seguro-title {
   color: #2d3748;
   font-size: 2.5rem;
