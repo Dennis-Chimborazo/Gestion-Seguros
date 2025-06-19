@@ -28,7 +28,7 @@ router.post("/ingreso", async (req, res) => {
     }
     let usuarioData = result.rows[0];
     if (usuarioData.nom_rol === 'admin') {
-      usuarioData = { success: true, nom_rol: "admin", estado: 1, id: usuarioData.id_persona }
+      usuarioData = { success: true, nom_rol: "admin", estado: 1, id_persona: usuarioData.id_persona }
     } else if (usuarioData.nom_rol === 'cliente') {
       const estado = await database.query(
         `SELECT id_estado FROM cliente WHERE id_pers = $1`,
@@ -36,13 +36,13 @@ router.post("/ingreso", async (req, res) => {
       );
       const idEstado = estado.rows[0]?.id_estado;
       if (idEstado === 1) {
-        usuarioData = { success: true, nom_rol: "cliente", estado: 1, id: usuarioData.id_persona }
+        usuarioData = { success: true, nom_rol: "cliente", estado: 1, id_persona: usuarioData.id_persona }
       } else if (idEstado === 2) {
         return res.json({ success: false, user: "El cliente está desactivado." });
       } else if (idEstado === 3) {
-        return res.json({ success: false, user: { nom_rol: "cliente", estado: 3, id: usuarioData.id_persona } });
+        return res.json({ success: false, user: { nom_rol: "cliente", estado: 3, id_persona: usuarioData.id_persona } });
       } else if (idEstado === 4) {
-        usuarioData = { success: true, nom_rol: "cliente", estado: 4, id: usuarioData.id_persona }
+        usuarioData = { success: true, nom_rol: "cliente", estado: 4, id_persona: usuarioData.id_persona }
       }
 
     } else if (usuarioData.nom_rol === 'agente') {
@@ -54,9 +54,10 @@ router.post("/ingreso", async (req, res) => {
       if (idEstado === 2) {
         return res.json({ success: false, user: "El agente está desactivado." });
       } else if (idEstado === 3) {
-        return res.json({ success: false, user: { nom_rol: "agente", estado: 3, id: usuarioData.id_persona } });
+        return res.json({ success: false, user: { nom_rol: "agente", estado: 3, id_persona: usuarioData.id_persona } });
       }
-      usuarioData = { success: true, nom_rol: "agente", estado: 1, id: usuarioData.id_persona }
+      usuarioData = { success: true, nom_rol: "agente", estado: 1, id_persona: usuarioData.id_persona }
+      
     }
 
     const payload = { id: usuarioData.id };

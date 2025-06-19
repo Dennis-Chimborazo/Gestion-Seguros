@@ -101,5 +101,10 @@ class ClientesFun {
       return response;
    }
 
+   static async buscarSegurosContatados( id, navigate) {
+      const response = await ApiService.get('seguro/seguros-clientes', id,  navigate);
+      return response;
+   }
+
 }
 export default ClientesFun;

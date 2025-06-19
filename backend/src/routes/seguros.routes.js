@@ -334,5 +334,27 @@ router.get("/informacion-ben-categ", async (req, res) => {
   }
 });
 
+router.get("/seguros-clientes", async (req, res) => {
+  try {
+    const id_pers = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+    if (!id_pers) {
+      return res.status(400).json({ message: id_pers });
+    }
+    const query = `SELECT s.id_seguro,s.monto_seguro, s.tiempo_seguro,tp.nom_tip_seg, 
+                  (s.dia_seguro || '/' || s.mes_seguro || '/' || s.anio_seguro) AS fecha,
+                  COUNT(sf.id_tip_seg) AS numBeneficios
+                  FROM public.seguros s
+                  INNER JOIN tipo_seguro tp ON tp.id_tip_seg = s.id_tip_seg
+                  INNER JOIN seguro_bedeficio sf ON sf.id_tip_seg = tp.id_tip_seg
+                  WHERE s.id_pers = $1
+                  GROUP BY s.id_seguro, tp.nom_tip_seg;
+                  `;
+    const values = [id_pers];
+    const data = await database.query(query, values);
+    res.json(data.rows);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el empleado", error });
+  }
+});
 
 module.exports = router; 
