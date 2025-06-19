@@ -108,7 +108,7 @@ CREATE TABLE tipo_seguro (
   nom_tip_seg VARCHAR(450) NOT NULL,
   descrip_tip_seg VARCHAR(450) NOT NULL,
   pago_tip_seg VARCHAR(450) NOT NULL,
-  suma_tip_seg VARCHAR(450) NOT NULL,
+  suma_tip_seg VARCHAR(450) NOT NULL, 
   id_estado INTEGER,
   FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
 );

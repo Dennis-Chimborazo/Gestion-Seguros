@@ -347,8 +347,7 @@ router.get("/seguros-clientes", async (req, res) => {
                   INNER JOIN tipo_seguro tp ON tp.id_tip_seg = s.id_tip_seg
                   INNER JOIN seguro_bedeficio sf ON sf.id_tip_seg = tp.id_tip_seg
                   WHERE s.id_pers = $1
-                  GROUP BY s.id_seguro, tp.nom_tip_seg;
-                  `;
+                  GROUP BY s.id_seguro, tp.nom_tip_seg`;
     const values = [id_pers];
     const data = await database.query(query, values);
     res.json(data.rows);
