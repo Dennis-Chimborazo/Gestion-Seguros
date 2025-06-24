@@ -99,18 +99,20 @@ export function ValidarAgente() {
         }
     }
 
-    const cancelarCuenta = (e) => {
-        e.preventDefault()
-        swal.fire({
+    const cancelarCuenta = async (e) => {
+        e.preventDefault();
+        const respuesta = await swal.fire({
             title: "⚠️ <label>Advertencia</label>",
             text: "Desea salir de la validanción de cuenta",
             showDenyButton: true,
             denyButtonText: "No",
             confirmButtonText: "Si"
-        }).then(respuesta => {
-            if (respuesta.isConfirmed) {navigate('/');}
         });
-    }
+        if (respuesta.isConfirmed) {
+            navigate('/');
+        }
+    };
+
 
     return (
         <div className={styles.container}>
@@ -129,10 +131,10 @@ export function ValidarAgente() {
                             Tu usuario por defecto es: {formulario.user || ''}
                         </p>
 
-                        <label htmlFor="password">Contraseña temporal</label>
+                        <label htmlFor="passtemp">Contraseña temporal</label>
                         <input type="text" id="passtemp" name="passtemp" onChange={asignarValores} />
 
-                        <label htmlFor="password"> Nueva Contraseña </label>
+                        <label htmlFor="pass"> Nueva Contraseña </label>
                         <input type="text" id="pass" name="pass" onChange={asignarValores} />
 
                         <label htmlFor="confirmPassword">Confirme contraseña</label>
