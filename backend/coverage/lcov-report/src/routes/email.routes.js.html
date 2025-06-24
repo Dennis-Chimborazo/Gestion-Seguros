@@ -23,28 +23,28 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.46% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
                 <span class='fraction'>47/47</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>15/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
                 <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.46% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
                 <span class='fraction'>47/47</span>
             </div>
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -221,7 +221,6 @@
 <a name='L156'></a><a href='#L156'>156</a>
 <a name='L157'></a><a href='#L157'>157</a>
 <a name='L158'></a><a href='#L158'>158</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
-<a name='L158'></a><a href='#L158'>158</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -375,59 +374,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -444,17 +390,7 @@ const database = db.getConexion();
 router.post("/enviar-correo", async (req, res) =&gt; {
   const { to, token,pass } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
   const subject = 'Validar la creacion de la cuenta'
-  const { to, token,pass } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
-  const subject = 'Validar la creacion de la cuenta'
   const text = `
-        🎉 ¡Gracias por registrarte en Seguros.SA!
-        Nos complace darte la bienvenida a nuestra plataforma. Tu cuenta ha sido creada con éxito y estás a un paso de comenzar a disfrutar de todos los beneficios que ofrecemos.
-        🔐 Para garantizar la seguridad de tu información y asegurarnos de que tú solicitaste esta cuenta, necesitamos que confirmes tu dirección de correo electrónico.
-            👉 Clave temporaal: ${pass}
-&nbsp;
-        👉 Por favor, haz clic en el siguiente botón para validar tu cuenta:
-        
-         "http://localhost:3000/validacionEmail/${token}" 
         🎉 ¡Gracias por registrarte en Seguros.SA!
         Nos complace darte la bienvenida a nuestra plataforma. Tu cuenta ha sido creada con éxito y estás a un paso de comenzar a disfrutar de todos los beneficios que ofrecemos.
         🔐 Para garantizar la seguridad de tu información y asegurarnos de que tú solicitaste esta cuenta, necesitamos que confirmes tu dirección de correo electrónico.
@@ -466,11 +402,8 @@ router.post("/enviar-correo", async (req, res) =&gt; {
             Validar mi cuenta
         Si tú no solicitaste esta cuenta, puedes ignorar este mensaje. No se tomará ninguna acción sin tu confirmación.
         Atentamente,&lt;br&gt;&lt;strong&gt;El equipo de Seguros.SA
-        Si tú no solicitaste esta cuenta, puedes ignorar este mensaje. No se tomará ninguna acción sin tu confirmación.
-        Atentamente,&lt;br&gt;&lt;strong&gt;El equipo de Seguros.SA
     `;
 &nbsp;
-  //mznp sfmv ihna scjb
   //mznp sfmv ihna scjb
   if (!to || !subject || !text) {
     return res.status(400).json({ message: "Faltan datos para enviar el correo" });
@@ -485,7 +418,6 @@ router.post("/enviar-correo", async (req, res) =&gt; {
       pass: "mznp sfmv ihna scjb", // Usa una contraseña de aplicación si usas Gmail
     },
   });
-&nbsp;
 &nbsp;
 &nbsp;
 &nbsp;
@@ -506,18 +438,6 @@ router.post("/enviar-correo", async (req, res) =&gt; {
 });
 &nbsp;
 router.post("/correo-Gest-contratacion", async (req, res) =&gt; {
-  const { to, token } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
-  const subject = 'Validación de contratación de seguro en Seguros.SA';
-  const text = `
-      📄 Validación de Contratación de Seguro
-      Estimado/a cliente,
-      Recientemente se ha generado una solicitud de contratación de un nuevo seguro a tu nombre en nuestra plataforma Seguros.SA
-      🔐 Para confirmar que estás de acuerdo con este contrato, es necesario que valides tu aceptación.
-      👉 Haz clic en el siguiente botón para revisar los detalles y confirmar la contratación:
-        "http://localhost:3000/validacionContratacion/${token}" 
-      Si tú no solicitaste este contrato, puedes ignorar este mensaje. No se realizará ninguna acción sin tu confirmación
-      Atentamente,
-      El equipo de Seguros.SA
   const { to, token } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
   const subject = 'Validación de contratación de seguro en Seguros.SA';
   const text = `
@@ -621,7 +541,7 @@ module.exports = router; </pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-12T22:44:19.103Z
+                at 2025-06-24T17:06:34.872Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
