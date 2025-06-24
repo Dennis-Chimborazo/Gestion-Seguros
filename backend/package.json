@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test:coverage": "react-scripts test --coverage --watchAll=false"
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -26,9 +26,12 @@
     "@babel/preset-env": "^7.24.0",
     "babel-jest": "^29.7.0",
     "chai": "^5.2.0",
+    "char-regex": "^2.0.2",
     "jest": "^29.7.0",
     "mocha": "^11.1.0",
     "nodemon": "^3.1.10",
+    "string-length": "^5.0.1",
+    "strip-ansi": "^7.1.0",
     "supertest": "^7.1.0"
   },
   "directories": {

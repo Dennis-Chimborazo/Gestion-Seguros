@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.24% </span>
+                <span class="strong">82.92% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>37/41</span>
+                <span class='fraction'>34/41</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.24% </span>
+                <span class="strong">82.92% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>37/41</span>
+                <span class='fraction'>34/41</span>
             </div>
         
             
@@ -141,7 +141,24 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -153,28 +170,11 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -191,7 +191,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -209,9 +209,9 @@ const database = db.getConexion();
 router.get("/pais", async (req, res) =&gt; {
   try {
     const data = await database.query("SELECT * FROM pais");
-    res.json(data);
+<span class="cstat-no" title="statement not covered" >    res.json(data);</span>
   } catch (error) {
-<span class="cstat-no" title="statement not covered" >    res.status(500).json({ message: "Error al obtener datos", error });</span>
+    res.status(500).json({ message: "Error al obtener datos", error });
   }
 });
 &nbsp;
@@ -226,7 +226,7 @@ router.get("/provincia", async (req, res) =&gt; {
       const values = [pais]; // ✅ aquí va el valor correcto
       const data = await database.query(query, values);
   
-      res.json(data.rows);
+<span class="cstat-no" title="statement not covered" >      res.json(data.rows);</span>
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >      res.status(500).json({ message: "Error al obtener datos", error });</span>
     }
@@ -242,7 +242,7 @@ router.get("/ciudad", async (req, res) =&gt; {
       const values = [provincia]; // ✅ aquí va el valor correcto
       const data = await database.query(query, values);
   
-      res.json(data.rows);
+<span class="cstat-no" title="statement not covered" >      res.json(data.rows);</span>
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >      res.status(500).json({ message: "Error al obtener datos dd", error });</span>
     }
@@ -259,7 +259,7 @@ router.get("/client", async (req, res) =&gt; {
       const values = [ciudad]; 
       const data = await database.query(query, values);
   
-      res.json(data.rows);
+<span class="cstat-no" title="statement not covered" >      res.json(data.rows);</span>
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >      res.status(500).json({ message: "Error al obtener datos dd", error });</span>
     }
@@ -274,7 +274,7 @@ module.exports = router;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-21T18:55:38.881Z
+                at 2025-06-24T15:40:40.606Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
