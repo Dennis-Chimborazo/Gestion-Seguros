@@ -11,10 +11,25 @@ export function CrearAgentes({ mostrarSeccion }) {
     const navigate = useNavigate();
     const [formulario, setFormulario] = useState({ ced_agente: '', nom_agente: '', ape_agente: '', email_agente: '', dire_agente: '', tel_agente: '' })
     const asignarValores = (e) => {
-        setFormulario({ ...formulario, [e.target.name]: e.target.value })
-    }
+        const { name, value } = e.target;
+
+        if (name === "tel_agente") {
+            // Filtrar para aceptar solo números
+            const soloNumeros = value.replace(/[^0-9]/g, "");
+            setFormulario({ ...formulario, [name]: soloNumeros });
+        } else {
+            setFormulario({ ...formulario, [name]: value });
+        }
+    };
+
     const crearAgente = async (e) => {
         e.preventDefault()
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formulario.email_agente)) {
+            toast.error("correo inválido");
+            return;
+        }
         try {
             if (Object.values(formulario).every(valor => valor !== '')) {
                 let resVerif = await UsuariosFun.verificarDatosUsuario({ users: formulario.email_agente, cedula: formulario.ced_agente }, navigate);
@@ -38,9 +53,21 @@ export function CrearAgentes({ mostrarSeccion }) {
                 }
             }
         } catch (error) {
-
+            console.error("Error inesperado al crear agente:", error);
+            toast.error("Error servidor");
         }
     }
+
+    const limpiarFormulario = () => {
+  setFormulario({
+    ced_agente: '',
+    nom_agente: '',
+    ape_agente: '',
+    email_agente: '',
+    dire_agente: '',
+    tel_agente: ''
+  });
+};
 
     const cancelar = () => {
         const algunCampoLleno = Object.values(formulario).some(valor => valor.trim() !== '');
@@ -53,6 +80,7 @@ export function CrearAgentes({ mostrarSeccion }) {
                 confirmButtonText: "Si"
             }).then(respuesta => {
                 if (respuesta.isConfirmed) {
+                    limpiarFormulario();
                     mostrarSeccion("agente")
                 }
             });
@@ -66,18 +94,24 @@ export function CrearAgentes({ mostrarSeccion }) {
             <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
 
             <div>
-                <label htmlFor=""> cedula</label>
-                <input type="text" name="ced_agente" id="ced_agente" onChange={asignarValores} />
-                <label htmlFor=""> Nombres</label>
-                <input type="text" name="nom_agente" id="nom_agente" onChange={asignarValores} />
-                <label htmlFor=""> Apellidos</label>
-                <input type="text" name="ape_agente" id="ape_agente" onChange={asignarValores} />
-                <label htmlFor=""> Telefono</label>
-                <input type="tel" name="tel_agente" id="tel_agente" onChange={asignarValores} maxLength={10} />
-                <label htmlFor=""> Correo</label>
-                <input type="text" name="email_agente" id="email_agente" onChange={asignarValores} />
-                <label htmlFor=""> Direccion</label>
-                <input type="text" name="dire_agente" id="dire_agente" onChange={asignarValores} />
+                <label htmlFor="ced_agente">cedula</label>
+                <input type="text" name="ced_agente" id="ced_agente" onChange={asignarValores}  value={formulario.ced_agente}/>
+
+                <label htmlFor="nom_agente">Nombres</label>
+                <input type="text" name="nom_agente" id="nom_agente" onChange={asignarValores}  value={formulario.nom_agente} />
+
+                <label htmlFor="ape_agente">Apellidos</label>
+                <input type="text" name="ape_agente" id="ape_agente" onChange={asignarValores}  value={formulario.ape_agente}/>
+
+                <label htmlFor="tel_agente">Telefono</label>
+                <input type="tel" name="tel_agente" id="tel_agente" onChange={asignarValores} maxLength={10} value={formulario.tel_agente} />
+
+                <label htmlFor="email_agente">Correo</label>
+                <input type="text" name="email_agente" id="email_agente" onChange={asignarValores}  value={formulario.email_agente} />
+
+                <label htmlFor="dire_agente">Direccion</label>
+                <input type="text" name="dire_agente" id="dire_agente" onChange={asignarValores}  value={formulario.dire_agente} />
+
             </div>
             <div>
                 <button onClick={cancelar}>Cancelar</button>

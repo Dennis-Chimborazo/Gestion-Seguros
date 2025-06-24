@@ -122,17 +122,17 @@ export function EditarAgente({ mostrarSeccion }) {
         <div>
             <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
             <div>
-                <label htmlFor=""> cedula</label>
+                <label htmlFor="ced_agente"> cedula</label>
                 <input type="text" name="ced_agente" id="ced_agente" onChange={asignarValores} value={formularioEdit?.ced_agente || ''} />
-                <label htmlFor=""> Nombres</label>
+                <label htmlFor="nom_agente"> Nombres</label>
                 <input type="text" name="nom_agente" id="nom_agente" onChange={asignarValores} value={formularioEdit?.nom_agente || ''} />
-                <label htmlFor=""> Apellidos</label>
+                <label htmlFor="ape_agente"> Apellidos</label>
                 <input type="text" name="ape_agente" id="ape_agente" onChange={asignarValores} value={formularioEdit?.ape_agente || ''} />
-                <label htmlFor=""> Telefono</label>
+                <label htmlFor="tel_agente"> Telefono</label>
                 <input type="tel" name="tel_agente" id="tel_agente" onChange={asignarValores} maxLength={10} value={formularioEdit?.tel_agente || ''} />
-                <label htmlFor=""> Correo</label>
+                <label htmlFor="email_agente"> Correo</label>
                 <input type="text" name="email_agente" id="email_agente" onChange={asignarValores} value={formularioEdit?.email_agente || ''} />
-                <label htmlFor=""> Direccion</label>
+                <label htmlFor="dire_agente"> Direccion</label>
                 <input type="text" name="dire_agente" id="dire_agente" onChange={asignarValores} value={formularioEdit?.dire_agente || ''} />
             </div>
             <div>
