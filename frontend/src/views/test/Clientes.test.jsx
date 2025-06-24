@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import Clientes from "../clientes/Clientes";
 import ClientesFun from "../clientes/ClientesFun";
 
-// Mock de Api
+// Mock de API
 jest.mock("../clientes/ClientesFun", () => ({
   obtenerCliente: jest.fn(),
 }));
@@ -29,7 +29,7 @@ const mockClientes = {
       email_pers: "ana@example.com",
     },
   ],
-}
+};
 
 const renderWithRouter = (ui) => {
   return render(<BrowserRouter>{ui}</BrowserRouter>);
@@ -69,7 +69,8 @@ describe("Clientes component", () => {
 
     await screen.findByText("Juan");
 
-    const input = screen.getByPlaceholderText("Ingrese número de cédula");
+    // CORREGIDO: el placeholder exacto es "Ingrese numero de cedula" (sin tilde)
+    const input = screen.getByPlaceholderText("Ingrese numero de cedula");
     fireEvent.change(input, { target: { value: "123" } });
 
     expect(screen.getByText("Juan")).toBeInTheDocument();
@@ -83,7 +84,8 @@ describe("Clientes component", () => {
 
     await screen.findByText("Clientes");
 
-    fireEvent.click(screen.getByRole("button", { name: /crear/i }));
+    // Puedes hacer esto más robusto si agregas un role/button a InfoCard, pero esto depende de su implementación
+    fireEvent.click(screen.getByText("Nuevo Cliente"));
     expect(mockMostrarSeccion).toHaveBeenCalledWith("crearClientes");
   });
 });

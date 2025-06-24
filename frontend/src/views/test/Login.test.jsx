@@ -34,8 +34,11 @@ describe("Login component", () => {
   });
 
   test("muestra error si las credenciales son incorrectas", async () => {
-    ApiService.login.mockResolvedValueOnce({ success: false });
-
+    ApiService.login.mockResolvedValueOnce({
+      success: false,
+      user: "Usuario o contrasena incorrecta",
+    });
+  
     renderWithRouter(<Login />);
     fireEvent.change(screen.getByPlaceholderText("Usuario"), {
       target: { name: "user", value: "usuarioFake" },
@@ -43,13 +46,15 @@ describe("Login component", () => {
     fireEvent.change(screen.getByPlaceholderText("Contraseña"), {
       target: { name: "pass", value: "wrongpass" },
     });
-
+  
     fireEvent.click(screen.getByText("Ingresar"));
-
-    await waitFor(() => {
-      expect(screen.getByText("Usuario o contrasena incorrecta")).toBeInTheDocument();
-    });
+  
+    // findByText ya espera hasta que el texto aparezca (timeout por defecto 1000ms)
+    const errorToast = await screen.findByText(/usuario o contrasena incorrecta/i);
+    expect(errorToast).toBeInTheDocument();
   });
+  
+  
 
   test("redirecciona si el login es exitoso", async () => {
     const mockUser = { nom_rol: "admin" };

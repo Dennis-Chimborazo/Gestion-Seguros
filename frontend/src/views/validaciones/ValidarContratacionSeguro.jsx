@@ -76,8 +76,8 @@ export function ValidarContratacionSeguro() {
   }
 
  return (
-  <div className={styles.container}>
-    <div className={styles.card}>
+  <div className={styles.container} data-testid="container">
+    <div className={styles.card} data-testid="card">
       {success ? (
         <>
           <h2 className={styles.title}>🎉 ¡Validación de Contratación Exitosa!</h2>
@@ -105,7 +105,7 @@ export function ValidarContratacionSeguro() {
             Para finalizar el proceso , haz clic en el siguiente botón:
           </p>
 
-          <button className={styles.button} onClick={validarCuenta}>
+          <button type="button" className={styles.button} onClick={validarCuenta}>
             Validar contratación
           </button>
         </>

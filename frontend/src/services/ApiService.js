@@ -18,7 +18,11 @@ class ApiService {
 
     const data = response.data;
 
-    if (data.message === "Token no proporcionado" || data.message === "Token inválido o expirado") {
+    if (
+      data &&
+      typeof data === "object" &&
+      (data.message === "Token no proporcionado" || data.message === "Token inválido o expirado")
+    ) {
       swal({
         title: "Acceso restringuido",
         text: "Ha excedido el tiempo límite de la sesión",
@@ -107,21 +111,21 @@ class ApiService {
 
     return response.data;
   }
-static async getArchivo(getApi, id, tipo, navigate) {
-  const tokenInfo = JSON.parse(localStorage.getItem("login"));
-  const token = tokenInfo ? tokenInfo.token : "";
+  static async getArchivo(getApi, id, tipo, navigate) {
+    const tokenInfo = JSON.parse(localStorage.getItem("login"));
+    const token = tokenInfo ? tokenInfo.token : "";
 
-  const url = `${apiUrl}${getApi}/${id}?tipo=${tipo}`;
+    const url = `${apiUrl}${getApi}/${id}?tipo=${tipo}`;
 
-  const response = await axios.get(url, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+    const response = await axios.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  return response.data.url;
-}
+    return response.data.url;
+  }
 
 }
 

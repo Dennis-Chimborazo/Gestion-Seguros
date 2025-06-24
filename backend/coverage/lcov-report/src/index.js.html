@@ -24,7 +24,9 @@
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">93.54% </span>
+                <span class="strong">93.54% </span>
                 <span class="quiet">Statements</span>
+                <span class='fraction'>29/31</span>
                 <span class='fraction'>29/31</span>
             </div>
         
@@ -45,7 +47,9 @@
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">93.54% </span>
+                <span class="strong">93.54% </span>
                 <span class="quiet">Lines</span>
+                <span class='fraction'>29/31</span>
                 <span class='fraction'>29/31</span>
             </div>
         
@@ -106,6 +110,15 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -123,6 +136,9 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -155,6 +171,9 @@ const emailRoute = require("./routes/email.routes.js");
 const agenteRoute = require("./routes/agente.routes.js");
 const archivosRoute = require("./routes/archivos.routes.js");
 const path = require('path');
+const agenteRoute = require("./routes/agente.routes.js");
+const archivosRoute = require("./routes/archivos.routes.js");
+const path = require('path');
 &nbsp;
 const app = express();
 app.use(cors());
@@ -168,6 +187,9 @@ app.use("/seguro", seguroRoute);
 app.use("/tiposeguro", tipoSeguroeguroRoute);
 app.use("/empleado", empleadosRoute);
 app.use("/email", emailRoute);
+app.use("/agente", agenteRoute);
+app.use("/archivo", archivosRoute);
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 app.use("/agente", agenteRoute);
 app.use("/archivo", archivosRoute);
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
