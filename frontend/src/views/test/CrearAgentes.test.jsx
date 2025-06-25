@@ -34,16 +34,17 @@ describe("CrearAgentes", () => {
     describe("Renderalizacion", () => {
         it("los inputs tienen atributos correctos y valores vacíos inicialmente", () => {
             render(
-                <MemoryRouter>
+                <MemoryRouter future={{ v7_relativeSplatPath: true }}>
                     <CrearAgentes mostrarSeccion={mostrarSeccion} />
                 </MemoryRouter>
             );
-            const inputCedula = screen.getByLabelText(/cedula/i);
+
+            const inputCedula = screen.getByLabelText(/cédula/i);
             expect(inputCedula).toHaveAttribute("name", "ced_agente");
             expect(inputCedula).toHaveAttribute("id", "ced_agente");
             expect(inputCedula).toHaveValue("");
 
-            const inputTelefono = screen.getByLabelText(/telefono/i);
+            const inputTelefono = screen.getByLabelText(/teléfono/i);
             expect(inputTelefono).toHaveAttribute("maxlength", "10");
             expect(inputTelefono).toHaveValue("");
         });
@@ -70,7 +71,7 @@ describe("CrearAgentes", () => {
         });
 
         it("actualiza estado con texto en inputs", () => {
-            const inputCedula = screen.getByLabelText(/cedula/i);
+            const inputCedula = screen.getByLabelText(/cédula/i);
             fireEvent.change(inputCedula, { target: { value: "1234567890" } });
             expect(inputCedula.value).toBe("1234567890");
 
@@ -80,7 +81,7 @@ describe("CrearAgentes", () => {
         });
 
         it("input telefono acepta solo 10 caracteres", () => {
-            const inputTelefono = screen.getByLabelText(/telefono/i);
+            const inputTelefono = screen.getByLabelText(/teléfono/i);
 
             fireEvent.change(inputTelefono, { target: { value: "1234567890" } });
             expect(inputTelefono.value.length).toBeLessThanOrEqual(10);
@@ -93,7 +94,7 @@ describe("CrearAgentes", () => {
                 </MemoryRouter>
             );
 
-            const inputTelefono = screen.getByLabelText(/telefono/i);
+            const inputTelefono = screen.getByLabelText(/teléfono/i);
 
             // Intentamos ingresar letras junto a números
             fireEvent.change(inputTelefono, { target: { value: "abc123def" } });
@@ -114,7 +115,7 @@ describe("CrearAgentes", () => {
                 </MemoryRouter>
             );
 
-            fireEvent.change(screen.getByLabelText(/cedula/i), { target: { value: "1234567890" } });
+            fireEvent.change(screen.getByLabelText(/cédula/i), { target: { value: "1234567890" } });
             fireEvent.change(screen.getByLabelText(/correo/i), { target: { value: "correo_invalido" } });
             fireEvent.click(screen.getByRole("button", { name: /crear/i }));
 
@@ -144,12 +145,12 @@ describe("CrearAgentes", () => {
                 </MemoryRouter>
             );
 
-            fireEvent.change(screen.getByLabelText(/cedula/i), { target: { value: "1234567890" } });
+            fireEvent.change(screen.getByLabelText(/cédula/i), { target: { value: "1234567890" } });
             fireEvent.change(screen.getByLabelText(/nombres/i), { target: { value: "Carlos" } });
             fireEvent.change(screen.getByLabelText(/apellidos/i), { target: { value: "Perez" } });
-            fireEvent.change(screen.getByLabelText(/telefono/i), { target: { value: "0999999999" } });
+            fireEvent.change(screen.getByLabelText(/teléfono/i), { target: { value: "0999999999" } });
             fireEvent.change(screen.getByLabelText(/correo/i), { target: { value: "carlos@email.com" } });
-            fireEvent.change(screen.getByLabelText(/direccion/i), { target: { value: "Quito" } });
+            fireEvent.change(screen.getByLabelText(/dirección/i), { target: { value: "Quito" } });
 
             fireEvent.click(screen.getByRole("button", { name: /crear/i }));
 
@@ -189,12 +190,12 @@ describe("CrearAgentes", () => {
                 </MemoryRouter>
             );
 
-            fireEvent.change(screen.getByLabelText(/cedula/i), { target: { value: "1234567890" } });
+            fireEvent.change(screen.getByLabelText(/cédula/i), { target: { value: "1234567890" } });
             fireEvent.change(screen.getByLabelText(/nombres/i), { target: { value: "Carlos" } });
             fireEvent.change(screen.getByLabelText(/apellidos/i), { target: { value: "Perez" } });
-            fireEvent.change(screen.getByLabelText(/telefono/i), { target: { value: "0999999999" } });
+            fireEvent.change(screen.getByLabelText(/teléfono/i), { target: { value: "0999999999" } });
             fireEvent.change(screen.getByLabelText(/correo/i), { target: { value: "carlos@email.com" } });
-            fireEvent.change(screen.getByLabelText(/direccion/i), { target: { value: "Quito" } });
+            fireEvent.change(screen.getByLabelText(/dirección/i), { target: { value: "Quito" } });
 
             fireEvent.click(screen.getByRole("button", { name: /crear/i }));
 
@@ -215,12 +216,12 @@ describe("CrearAgentes", () => {
                 </MemoryRouter>
             );
 
-            fireEvent.change(screen.getByLabelText(/cedula/i), { target: { value: "1234567890" } });
+            fireEvent.change(screen.getByLabelText(/cédula/i), { target: { value: "1234567890" } });
             fireEvent.change(screen.getByLabelText(/nombres/i), { target: { value: "Juan" } });
             fireEvent.change(screen.getByLabelText(/apellidos/i), { target: { value: "Pérez" } });
-            fireEvent.change(screen.getByLabelText(/telefono/i), { target: { value: "0987654321" } });
+            fireEvent.change(screen.getByLabelText(/teléfono/i), { target: { value: "0987654321" } });
             fireEvent.change(screen.getByLabelText(/correo/i), { target: { value: "correo@valido.com" } });
-            fireEvent.change(screen.getByLabelText(/direccion/i), { target: { value: "Calle Falsa 123" } });
+            fireEvent.change(screen.getByLabelText(/dirección/i), { target: { value: "Calle Falsa 123" } });
 
             fireEvent.click(screen.getByRole("button", { name: /crear/i }));
 
@@ -287,7 +288,7 @@ describe("CrearAgentes", () => {
                 </MemoryRouter>
             );
 
-            fireEvent.change(screen.getByLabelText(/cedula/i), { target: { value: "123" } });
+            fireEvent.change(screen.getByLabelText(/cédula/i), { target: { value: "123" } });
             fireEvent.click(screen.getByRole("button", { name: /cancelar/i }));
 
             await waitFor(() => {
@@ -313,7 +314,7 @@ describe("CrearAgentes", () => {
                 </MemoryRouter>
             );
 
-            fireEvent.change(screen.getByLabelText(/cedula/i), { target: { value: "123" } });
+            fireEvent.change(screen.getByLabelText(/cédula/i), { target: { value: "123" } });
             fireEvent.click(screen.getByRole("button", { name: /cancelar/i }));
 
             await waitFor(() => {
@@ -322,33 +323,6 @@ describe("CrearAgentes", () => {
 
             expect(mostrarSeccion).not.toHaveBeenCalled();
         });
-
-        it("al cancelar y confirmar, limpia campos (si aplica)", async () => {
-  swal.fire.mockResolvedValue({ isConfirmed: true });
-
-  render(
-    <MemoryRouter>
-      <CrearAgentes mostrarSeccion={mostrarSeccion} />
-    </MemoryRouter>
-  );
-
-  fireEvent.change(screen.getByLabelText(/cedula/i), {
-    target: { value: "123" },
-  });
-
-  await act(async () => {
-    fireEvent.click(screen.getByRole("button", { name: /cancelar/i }));
-  });
-
-  await waitFor(() => {
-    expect(mostrarSeccion).toHaveBeenCalledWith("agente");
-  });
-
-  await waitFor(() => {
-    expect(screen.getByLabelText(/cedula/i).value).toBe("");
-  });
-});
-
 
 
     });

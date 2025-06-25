@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor, fireEvent, act } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import SegurosAdmin from '../segurosAdmin/SegurosAdmin';  // Ajusta ruta
 import SegurosAdminFun from '../segurosAdmin/SegurosAdminFun'; // Importa la clase entera
@@ -11,9 +11,6 @@ const mockData = {
     { nom_tip_seg: 'Seguro Vida', descrip_tip_seg: 'Cobertura completa', pago_tip_seg: 100 },
     { nom_tip_seg: 'Seguro Auto', descrip_tip_seg: 'Cobertura parcial', pago_tip_seg: 50 },
   ],
-};
-const renderWithRouter = (ui) => {
-  return render(<BrowserRouter>{ui}</BrowserRouter>);
 };
 
 describe('SegurosAdmin', () => {
@@ -32,7 +29,6 @@ describe('SegurosAdmin', () => {
     );
 
     expect(screen.getByTestId('cargar-tablas')).toBeInTheDocument();
-    // Eliminado el chequeo de texto 'Cargando...' porque no aparece en el DOM.
   });
 
   it('debe renderizar título y botón Crear después de cargar', async () => {
@@ -45,8 +41,8 @@ describe('SegurosAdmin', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/Tipos de Seguros/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /crear/i })).toBeInTheDocument();
+      expect(screen.getByText(/Gestión de Tipos de Seguros/i)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Nuevo Tipo de Seguro/i })).toBeInTheDocument();
     });
   });
 
@@ -75,7 +71,7 @@ describe('SegurosAdmin', () => {
 
     await waitFor(() => expect(screen.queryByTestId('cargar-tablas')).not.toBeInTheDocument());
 
-    const inputBuscar = screen.getByPlaceholderText('Ingrese Codigo del seguro');
+    const inputBuscar = screen.getByPlaceholderText('Ingrese nombre del seguro');
 
     fireEvent.change(inputBuscar, { target: { value: 'Seguro Vida' } });
 
@@ -83,7 +79,7 @@ describe('SegurosAdmin', () => {
     expect(screen.queryByText('Seguro Auto')).not.toBeInTheDocument();
   });
 
-  it('borra el filtro al hacer click en el icono de borrar filtro', async () => {
+  it('borra el filtro al hacer click en el botón limpiar filtro', async () => {
     jest.spyOn(SegurosAdminFun, 'traerTiposSeguros').mockResolvedValue(mockData);
 
     render(
@@ -94,14 +90,14 @@ describe('SegurosAdmin', () => {
 
     await waitFor(() => expect(screen.queryByTestId('cargar-tablas')).not.toBeInTheDocument());
 
-    const inputBuscar = screen.getByPlaceholderText('Ingrese Codigo del seguro');
+    const inputBuscar = screen.getByPlaceholderText('Ingrese nombre del seguro');
     fireEvent.change(inputBuscar, { target: { value: 'Seguro Vida' } });
 
     expect(screen.getByText('Seguro Vida')).toBeInTheDocument();
     expect(screen.queryByText('Seguro Auto')).not.toBeInTheDocument();
 
-    const clearFilterIcon = screen.getByTestId('clear-filter-icon');
-    fireEvent.click(clearFilterIcon);
+    const botonLimpiar = screen.getByRole('button', { name: /Limpiar filtros/i });
+    fireEvent.click(botonLimpiar);
 
     expect(screen.getByText('Seguro Vida')).toBeInTheDocument();
     expect(screen.getByText('Seguro Auto')).toBeInTheDocument();
@@ -118,7 +114,7 @@ describe('SegurosAdmin', () => {
 
     await waitFor(() => expect(screen.queryByTestId('cargar-tablas')).not.toBeInTheDocument());
 
-    const botonCrear = screen.getByRole('button', { name: /crear/i });
+    const botonCrear = screen.getByRole('button', { name: /Nuevo Tipo de Seguro/i });
     fireEvent.click(botonCrear);
 
     expect(mockMostrarSeccion).toHaveBeenCalledWith('CrearSeguroAdmin');
@@ -154,9 +150,9 @@ describe('SegurosAdmin', () => {
     expect(mockMostrarSeccion).toHaveBeenCalledWith('EditarSeguroAdmin');
   });
 
-  // --- Aquí agregamos el bloque pedido ---
+  // --- Bloque agregado para visualización de datos ---
 
-  describe('Visualización de datos', () => {
+  describe('Visualización de datos en tabla', () => {
     beforeEach(async () => {
       jest.spyOn(SegurosAdminFun, 'traerTiposSeguros').mockResolvedValue(mockData);
       render(
@@ -170,22 +166,19 @@ describe('SegurosAdmin', () => {
       });
     });
 
-    it('debe mostrar datos en la tabla', async () => {
-      await waitFor(() => {
-        expect(screen.getByText('Seguro Vida')).toBeInTheDocument();
-        expect(screen.getByText('Cobertura completa')).toBeInTheDocument();
-        expect(screen.getByText('100')).toBeInTheDocument();
-        expect(screen.getByText('Seguro Auto')).toBeInTheDocument();
-        expect(screen.getByText('Cobertura parcial')).toBeInTheDocument();
-        expect(screen.getByText('50')).toBeInTheDocument();
-      });
+    it('debe mostrar todos los datos de los seguros', async () => {
+      expect(screen.getByText('Seguro Vida')).toBeInTheDocument();
+      expect(screen.getByText('Cobertura completa')).toBeInTheDocument();
+      expect(screen.getByText('100')).toBeInTheDocument();
+
+      expect(screen.getByText('Seguro Auto')).toBeInTheDocument();
+      expect(screen.getByText('Cobertura parcial')).toBeInTheDocument();
+      expect(screen.getByText('50')).toBeInTheDocument();
     });
 
-    it('debe mostrar iconos de edición', async () => {
-      await waitFor(() => {
-        expect(screen.getByTestId('icono-seguro-0')).toBeInTheDocument();
-        expect(screen.getByTestId('icono-seguro-1')).toBeInTheDocument();
-      });
+    it('debe mostrar iconos de opciones para cada fila', async () => {
+      expect(screen.getByTestId('icono-seguro-0')).toBeInTheDocument();
+      expect(screen.getByTestId('icono-seguro-1')).toBeInTheDocument();
     });
   });
 });

@@ -46,11 +46,11 @@ export function Agentes({ mostrarSeccion }) {
             (<div>
                 <FcFinePrint size={25}
                     className="option-icon"
-                    data-testid={`icono-cliente-${index}`}
+                    data-testid={`icono-info-${index}`}
                     onClick={() => mostrarInformacion(row)} />
                 <FaUserEdit size={25}
                     className="option-icon"
-                    data-testid={`icono-cliente-${index}`}
+                    data-testid={`icono-editar-${index}`}
                     onClick={() => EditarAgente(row)} />
             </div>
             ), ignoreRowClick: true
@@ -110,6 +110,7 @@ export function Agentes({ mostrarSeccion }) {
                         <button 
                             type="button"
                             className="clear-filter-btn"
+                            data-testid="boton-borrar-filtro"
                             onClick={borrarFiltro}
                             title="Limpiar filtros"
                         >

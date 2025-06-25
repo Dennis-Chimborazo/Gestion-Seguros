@@ -1,3 +1,5 @@
+// src/AppRoutes.jsx
+
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./views/Login.jsx";
@@ -8,22 +10,28 @@ import ValidarContratacionSeguro from "./views/validaciones/ValidarContratacionS
 import ValidarEmail from "./views/validaciones/ValidarEmail";
 import ValidarAgente from "./views/validaciones/ValidarAgente";
 
-function App() {
+// Componente solo con las rutas, sin router
+export function RoutesOnly() {
   return (
-    <React.Fragment>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/admin" element={<VentanaAdmin />} />
-          <Route path="/agente" element={<VentanaAgente />} />
-          <Route path="/cliente" element={<VentanaCliente />} />
-          <Route path="/validacionContratacion/:id" element={<ValidarContratacionSeguro />} />
-          <Route path="/validacionEmail/:id" element={<ValidarEmail />} />
-          <Route path="/validacionAgente/:id" element={<ValidarAgente />} />
-        </Routes>
-      </BrowserRouter>
-    </React.Fragment>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/admin" element={<VentanaAdmin />} />
+      <Route path="/agente" element={<VentanaAgente />} />
+      <Route path="/cliente" element={<VentanaCliente />} />
+      <Route path="/validacionContratacion/:id" element={<ValidarContratacionSeguro />} />
+      <Route path="/validacionEmail/:id" element={<ValidarEmail />} />
+      <Route path="/validacionAgente/:id" element={<ValidarAgente />} />
+    </Routes>
   );
 }
 
-export default App;
+// Componente usado en producción que envuelve en BrowserRouter
+function AppRoutes() {
+  return (
+    <BrowserRouter>
+      <RoutesOnly />
+    </BrowserRouter>
+  );
+}
+
+export default AppRoutes;

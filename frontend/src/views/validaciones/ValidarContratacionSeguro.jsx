@@ -75,8 +75,8 @@ export function ValidarContratacionSeguro() {
     }
   }
  return (
-  <div className="validar-email-container">
-    <div className="validar-email-card">
+  <div className="validar-email-container" data-testid="container">
+    <div className="validar-email-card" data-testid="card">
       {success ? (
         <>
           <h2 className="validar-email-title">🎉 ¡Validación de Contratación Exitosa!</h2>
@@ -105,7 +105,7 @@ export function ValidarContratacionSeguro() {
           </p>
 
           <div className="validar-email-button-container">
-            <button className="validar-email-button" onClick={validarCuenta}>
+            <button type="button" className="validar-email-button" onClick={validarCuenta}>
               Validar contratación
             </button>
           </div>
