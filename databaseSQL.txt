@@ -1,75 +1,17 @@
-CREATE TABLE cliente (
-  id_pers SERIAL PRIMARY KEY,
-  cedr_cli VARCHAR(15) NOT NULL,
-  tipo_cedr_cli VARCHAR(20) NOT NULL,
-  nacion_cli VARCHAR(30) NOT NULL,
-  nom_cli VARCHAR(100) NOT NULL,
-  ape_cli VARCHAR(100) NOT NULL,
-  fecha_naci_cli VARCHAR(12) NOT NULL,
-  lugar_naci_cli VARCHAR(100) NOT NULL,
-  tel_pers VARCHAR(10),
-  cel_pers VARCHAR(10),
-  email_pers VARCHAR(60) NOT NULL,
-  edad_pers VARCHAR(20) NOT NULL,
-  sexo_cli VARCHAR(20) NOT NULL,
-  estado_civil_pers VARCHAR(30) NOT NULL,
-  estatura_cli VARCHAR(30) NOT NULL,
-  peso_cli VARCHAR(30) NOT NULL,
-  parroq_cli VARCHAR(100) NOT NULL,
-  calle_princ_pers VARCHAR(100) NOT NULL,
-  calle_secun_pers VARCHAR(100) NOT NULL,
-  id_ciud INTEGER,
-  FOREIGN KEY (id_ciud) REFERENCES ciudad(id_ciud),
-  id_estado INTEGER,
-  FOREIGN KEY (id_estado) REFERENCES estado(id_estado),
-);
-
+-- 1. Tablas sin dependencias
 CREATE TABLE estado (
   id_estado SERIAL PRIMARY KEY,
-  nom_estado VARCHAR(100) NOT NULL,
-)
-
+  nom_estado VARCHAR(100) NOT NULL
+);
 
 CREATE TABLE pais (
   id_pais SERIAL PRIMARY KEY,
-  nom_pais VARCHAR(100) NOT NULL,
-);
-
-CREATE TABLE provincia (
-  id_provin SERIAL PRIMARY KEY,
-  nom_provin VARCHAR(100) NOT NULL,
-  id_pais INTEGER,
-  FOREIGN KEY (id_pais) REFERENCES pais(id_pais)
-
-);
-CREATE TABLE ciudad (
-  id_ciud SERIAL PRIMARY KEY,
-  nom_ciud VARCHAR(100) NOT NULL,
-  id_provin INTEGER,
-  FOREIGN KEY (id_provin) REFERENCES provincia(id_provin)
-);
-
-
-CREATE TABLE usuarios (
-  id_usuario SERIAL PRIMARY KEY,
-  users VARCHAR(100) NOT NULL,
-  pass VARCHAR(150) NOT NULL,
-  id_persona INTEGER,
-  id_rol INTEGER,
-  FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
+  nom_pais VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE roles (
   id_rol SERIAL PRIMARY KEY,
-  nom_rol VARCHAR(20) NOT NULL,
-);
-
-
-CREATE TABLE roles_usuarios (
-  id_rol INTEGER,
-  id_usuario INTEGER,
-  FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
-  FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+  nom_rol VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE empleado (
@@ -79,19 +21,6 @@ CREATE TABLE empleado (
   email_emple VARCHAR(100) NOT NULL,
   firma_emple VARCHAR(100) NOT NULL
 );
-
-
-  CREATE TABLE excl_empresa (
-    id_excl_empresa SERIAL PRIMARY KEY,
-    ciud_excl_empresa VARCHAR(100) NOT NULL,
-    dia_excl_empresa VARCHAR(100) NOT NULL,
-    mes_excl_empresa VARCHAR(100) NOT NULL,
-    anio_excl_empresa VARCHAR(100) NOT NULL,
-    firma_excl_empresa VARCHAR(100) NOT NULL,
-    nombre_excl_empresa VARCHAR(100) NOT NULL,
-    cargo_excl_empresa VARCHAR(100) NOT NULL
-  
-  );
 
 CREATE TABLE persona_fac (
   id_pers_fac SERIAL PRIMARY KEY,
@@ -115,6 +44,92 @@ CREATE TABLE cuenta_banco (
   mun_cuent_Ban VARCHAR(50) NOT NULL
 );
 
+CREATE TABLE categoria (
+  id_categoria SERIAL PRIMARY KEY,
+  nom_categoria VARCHAR(450) NOT NULL
+);
+
+-- 2. Tablas que dependen de pais
+CREATE TABLE provincia (
+  id_provin SERIAL PRIMARY KEY,
+  nom_provin VARCHAR(100) NOT NULL,
+  id_pais INTEGER,
+  FOREIGN KEY (id_pais) REFERENCES pais(id_pais)
+);
+
+-- 3. Tablas que dependen de provincia
+CREATE TABLE ciudad (
+  id_ciud SERIAL PRIMARY KEY,
+  nom_ciud VARCHAR(100) NOT NULL,
+  id_provin INTEGER,
+  FOREIGN KEY (id_provin) REFERENCES provincia(id_provin)
+);
+
+-- 4. Tablas que dependen de ciudad y estado
+CREATE TABLE cliente (
+  id_pers SERIAL PRIMARY KEY,
+  cedr_cli VARCHAR(15) NOT NULL,
+  tipo_cedr_cli VARCHAR(20) NOT NULL,
+  nacion_cli VARCHAR(30) NOT NULL,
+  nom_cli VARCHAR(100) NOT NULL,
+  ape_cli VARCHAR(100) NOT NULL,
+  fecha_naci_cli VARCHAR(12) NOT NULL,
+  lugar_naci_cli VARCHAR(100) NOT NULL,
+  tel_pers VARCHAR(10),
+  cel_pers VARCHAR(10),
+  email_pers VARCHAR(60) NOT NULL,
+  edad_pers VARCHAR(20) NOT NULL,
+  sexo_cli VARCHAR(20) NOT NULL,
+  estado_civil_pers VARCHAR(30) NOT NULL,
+  estatura_cli VARCHAR(30) NOT NULL,
+  peso_cli VARCHAR(30) NOT NULL,
+  parroq_cli VARCHAR(100) NOT NULL,
+  calle_princ_pers VARCHAR(100) NOT NULL,
+  calle_secun_pers VARCHAR(100) NOT NULL,
+  id_ciud INTEGER,
+  FOREIGN KEY (id_ciud) REFERENCES ciudad(id_ciud),
+  id_estado INTEGER,
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
+
+-- 5. Tablas que dependen de roles y cliente
+CREATE TABLE usuarios (
+  id_usuario SERIAL PRIMARY KEY,
+  users VARCHAR(100) NOT NULL,
+  pass VARCHAR(150) NOT NULL,
+  id_persona INTEGER,
+  id_rol INTEGER,
+  FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
+);
+
+-- 7. Beneficios y dependencias
+CREATE TABLE beneficios (
+  id_beneficios SERIAL PRIMARY KEY,
+  nom_beneficios VARCHAR(450) NOT NULL,
+  id_categoria INTEGER,
+  FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
+);
+
+-- 8. Tipos de seguro
+CREATE TABLE tipo_seguro (
+  id_tip_seg SERIAL PRIMARY KEY,
+  nom_tip_seg VARCHAR(450) NOT NULL,
+  descrip_tip_seg VARCHAR(450) NOT NULL,
+  pago_tip_seg VARCHAR(450) NOT NULL,
+  suma_tip_seg VARCHAR(450) NOT NULL,
+  id_estado INTEGER,
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
+
+-- 9. Relación tipo_seguro-beneficios
+CREATE TABLE seguro_bedeficio (
+  id_tip_seg INTEGER,
+  id_beneficios INTEGER,
+  FOREIGN KEY (id_tip_seg) REFERENCES tipo_seguro(id_tip_seg),
+  FOREIGN KEY (id_beneficios) REFERENCES beneficios(id_beneficios)
+);
+
+-- 10. Tabla seguros con múltiples FK
 CREATE TABLE seguros (
   id_seguro SERIAL PRIMARY KEY,
   ciud_seguro VARCHAR(100) NOT NULL,
@@ -137,6 +152,7 @@ CREATE TABLE seguros (
   FOREIGN KEY (id_cuent_Ban) REFERENCES cuenta_banco(id_cuent_Ban)
 );
 
+-- 11. Tabla dependientes
 CREATE TABLE dependientes (
   id_depen SERIAL PRIMARY KEY,
   cedr_depen VARCHAR(15) NOT NULL,
@@ -153,45 +169,7 @@ CREATE TABLE dependientes (
   FOREIGN KEY (id_seguro) REFERENCES seguros(id_seguro)
 );
 
-CREATE TABLE salud (
-  id_salud SERIAL PRIMARY KEY,
-  discapci_salud VARCHAR(150) NOT NULL,
-  diagnos_salud VARCHAR(150) NOT NULL,
-  fecha_ini_salud VARCHAR(50) NOT NULL
- fecha_fin_salud VARCHAR(50) NOT NULL,
-);
-
-
-CREATE TABLE categoria (
-  id_categoria SERIAL PRIMARY KEY,
-  nom_categoria VARCHAR(450) NOT NULL,
-);
-
-
-CREATE TABLE beneficios (
-  id_beneficios SERIAL PRIMARY KEY,
-  nom_beneficios VARCHAR(450) NOT NULL,
-  id_categoria INTEGER,
-  FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
-);
-
-CREATE TABLE tipo_seguro (
-  id_tip_seg SERIAL PRIMARY KEY,
-  nom_tip_seg VARCHAR(450) NOT NULL,
-  descrip_tip_seg VARCHAR(450) NOT NULL,
-  pago_tip_seg VARCHAR(450) NOT NULL,
-  suma_tip_seg VARCHAR(450) NOT NULL,
-  id_estado INTEGER,
-  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
-);
-
-CREATE TABLE seguro_bedeficio (
-  id_tip_seg INTEGER,
-  id_beneficios INTEGER,
-  FOREIGN KEY (id_tip_seg) REFERENCES tipo_seguro(id_tip_seg),
-  FOREIGN KEY (id_beneficios) REFERENCES beneficios(id_beneficios)
-);
-
+-- 13. Validación de email para clientes
 CREATE TABLE validar_email (
   id_val_email SERIAL PRIMARY KEY,
   url_emal VARCHAR(20) NOT NULL,
@@ -200,6 +178,7 @@ CREATE TABLE validar_email (
   FOREIGN KEY (id_pers) REFERENCES cliente(id_pers)
 );
 
+-- 14. Agente y tokens
 CREATE TABLE agente (
   id_agente SERIAL PRIMARY KEY,
   ced_agente VARCHAR(10) NOT NULL,
@@ -209,7 +188,7 @@ CREATE TABLE agente (
   dire_agente VARCHAR(120) NOT NULL,
   tel_agente VARCHAR(10) NOT NULL,
   id_estado INTEGER,
-  FOREIGN KEY (id_estado) REFERENCES estado(id_estado),
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
 );
 
 CREATE TABLE token_agente (
@@ -219,3 +198,158 @@ CREATE TABLE token_agente (
   id_agente INTEGER,
   FOREIGN KEY (id_agente) REFERENCES agente(id_agente)
 );
+
+
+-- Insert País
+INSERT INTO pais (nom_pais) VALUES ('Ecuador');
+
+-- Suponiendo que el id_pais generado es 1
+-- Insert Provincias (3 de ejemplo)
+INSERT INTO provincia (nom_provin, id_pais) VALUES 
+('Pichincha', 1),
+('Guayas', 1),
+('Azuay', 1);
+
+-- Suponiendo ids generados para provincia:
+-- Pichincha: 1, Guayas: 2, Azuay: 3
+
+-- Insert Ciudades (3 por provincia)
+INSERT INTO ciudad (nom_ciud, id_provin) VALUES 
+-- Pichincha
+('Quito', 1),
+('Cayambe', 1),
+('Sangolquí', 1),
+-- Guayas
+('Guayaquil', 2),
+('Daule', 2),
+('Samborondón', 2),
+-- Azuay
+('Cuenca', 3),
+('Gualaceo', 3),
+('Paute', 3);
+
+-- Insert Estados
+INSERT INTO estado (nom_estado) VALUES 
+('Activo'),
+('Desactivado'),
+('Pendiente'),
+('Preactivo');
+
+-- Insert Roles
+INSERT INTO roles (nom_rol) VALUES 
+('Admin'),
+('Agente'),
+('Cliente');
+
+-- Insert Categorías de tipo de seguros (ejemplos)
+INSERT INTO categoria (nom_categoria) VALUES 
+('Vida'),
+('Salud'),
+('Vehicular'),
+('Hogar');
+
+-- Suponiendo ids generados para categoria:
+-- Vida: 1, Salud: 2, Vehicular: 3, Hogar: 4
+
+-- Insert Beneficios asociados a cada categoría
+
+-- Vida (Categoría 1)
+INSERT INTO beneficios (nom_beneficios, id_categoria) VALUES
+('Cobertura de fallecimiento por cualquier causa', 1),
+('Invalidez total y permanente por enfermedad o accidente', 1),
+('Gastos funerarios y de sepelio', 1),
+('Anticipo de suma asegurada por enfermedades terminales', 1),
+('Doble indemnización por muerte accidental', 1),
+('Beneficio por desmembración o pérdidas funcionales', 1),
+('Gastos de hospitalización y estancia hospitalaria', 2),
+('Honorarios médicos y quirúrgicos', 2),
+('Medicamentos recetados dentro y fuera del hospital', 2),
+('Exámenes de laboratorio e imagenología (Rayos X, resonancias, etc.)', 2),
+('Terapias de rehabilitación (física, respiratoria, ocupacional)', 2),
+('Atención de emergencias médicas 24/7', 2),
+('Cobertura de enfermedades catastróficas (cáncer, infarto, etc.)', 2),
+('Daños propios al vehículo por colisión, vuelco o incendio', 3),
+('Robo total o parcial del vehículo', 3),
+('Responsabilidad civil por daños a terceros (bienes y personas)', 3),
+('Asistencia legal en caso de accidente de tránsito', 3),
+('Servicio de grúa y asistencia vial (cambio de llanta, paso de corriente)', 3),
+('Gastos médicos ocupantes (conductor y pasajeros)', 3),
+('Auto sustituto por reparación o robo', 3),
+('Daños a la estructura por incendio, rayo o explosión', 4),
+('Robo de contenidos (muebles, electrodomésticos, joyas)', 4),
+('Daños por agua (rotura de tuberías, inundación)', 4),
+('Responsabilidad civil familiar por daños a terceros dentro y fuera del hogar', 4),
+('Gastos de remoción de escombros y limpieza', 4),
+('Daños por fenómenos naturales (terremoto, temblor, huracán, inundación)', 4),
+('Asistencia en el hogar (plomería, electricidad, cerrajería, vidriería)', 4);
+
+
+INSERT INTO cuenta_banco (tipo_cuent_Ban, nom_cuent_Ban, mun_cuent_Ban) VALUES
+('Ahorros', 'Banco Pichincha', '00001'),
+('Corriente', 'Banco Guayaquil', '00002'),
+('Ahorros', 'Produbanco', '00003'),
+('Corriente', 'Banco Pacífico', '00004'),
+('Ahorros', 'Banco Internacional', '00005');
+
+
+INSERT INTO empleado (ced_emple, nom_emple, email_emple, firma_emple) VALUES
+('1701000001', 'Juan Pérez', 'juan.perez@empresa.com', 'Firma1');
+
+INSERT INTO persona_fac (cedr_pers_fac, razon_pers_fac, tipo_pers_fac, nacion_pers_fac, nom_pers_fac, ape_pers_fac, tel_pers_fac, cel_pers_fac, email_pers_fac, direc_pers_fac, parent_pers_fac) VALUES
+('1799000001', 'RUC001', 'Natural', 'Ecuatoriana', 'Carlos', 'Gómez', '022345678', '0998765432', 'carlos.gomez@cliente.com', 'Av. Amazonas', 'Padre'),
+('1799000002', 'RUC002', 'Natural', 'Ecuatoriana', 'Andrea', 'Martínez', '022345679', '0998765433', 'andrea.martinez@cliente.com', 'Av. 6 de Diciembre', 'Madre'),
+('1799000003', 'RUC003', 'Natural', 'Ecuatoriana', 'Miguel', 'Cruz', '022345680', '0998765434', 'miguel.cruz@cliente.com', 'Av. República', 'Hermano'),
+('1799000004', 'RUC004', 'Natural', 'Ecuatoriana', 'Sofía', 'Mora', '022345681', '0998765435', 'sofia.mora@cliente.com', 'Av. Shyris', 'Hermana'),
+('1799000005', 'RUC005', 'Natural', 'Ecuatoriana', 'David', 'Vera', '022345682', '0998765436', 'david.vera@cliente.com', 'Av. Naciones Unidas', 'Esposo');
+
+INSERT INTO cliente (cedr_cli, tipo_cedr_cli, nacion_cli, nom_cli, ape_cli, fecha_naci_cli, lugar_naci_cli, tel_pers, cel_pers, email_pers, edad_pers, sexo_cli, estado_civil_pers, estatura_cli, peso_cli, parroq_cli, calle_princ_pers, calle_secun_pers, id_ciud, id_estado)
+VALUES
+('1700000001', 'Cédula', 'Ecuatoriana', 'Carlos', 'Lozano', '1990-05-01', 'Quito', '022345000', '0999000001', 'carlos.lozano@cliente.com', '34', 'Masculino', 'Soltero', '1.75', '70', 'La Magdalena', 'Av. América', 'Av. Mariscal', 1, 1),
+('1700000002', 'Cédula', 'Ecuatoriana', 'Luisa', 'Salazar', '1988-07-15', 'Guayaquil', '042345000', '0999000002', 'luisa.salazar@cliente.com', '36', 'Femenino', 'Casada', '1.60', '60', 'Urdesa', 'Av. Las Monjas', 'Av. Plaza Dañin', 4, 1),
+('1700000003', 'Cédula', 'Ecuatoriana', 'Fernando', 'Castillo', '1995-09-10', 'Cuenca', '072345000', '0999000003', 'fernando.castillo@cliente.com', '29', 'Masculino', 'Soltero', '1.80', '75', 'Totoracocha', 'Av. Loja', 'Av. Don Bosco', 7, 1),
+('1700000004', 'Cédula', 'Ecuatoriana', 'María', 'Chávez', '1992-11-25', 'Daule', '042345001', '0999000004', 'maria.chavez@cliente.com', '32', 'Femenino', 'Divorciada', '1.65', '62', 'La Aurora', 'Av. Samborondón', 'Av. León Febres', 5, 1),
+('1700000005', 'Cédula', 'Ecuatoriana', 'Pablo', 'Muñoz', '1985-03-08', 'Sangolquí', '022345002', '0999000005', 'pablo.munoz@cliente.com', '39', 'Masculino', 'Casado', '1.78', '72', 'San Rafael', 'Av. Ilaló', 'Av. Intervalles', 3, 1);
+
+
+
+INSERT INTO tipo_seguro (nom_tip_seg, descrip_tip_seg, pago_tip_seg, suma_tip_seg, id_estado) VALUES
+('Seguro de Vida Básico', 'Cobertura por fallecimiento', 'Anual', '10000', 1),
+('Seguro Médico Premium', 'Cobertura total salud', 'Mensual', '5000', 1),
+('Seguro Vehicular Full', 'Daños totales y terceros', 'Mensual', '15000', 1),
+('Seguro Hogar Completo', 'Daños estructurales y contenido', 'Anual', '20000', 1),
+('Seguro de Vida Platinum', 'Cobertura máxima', 'Anual', '50000', 1);
+
+INSERT INTO seguro_bedeficio (id_tip_seg, id_beneficios) VALUES
+(1, 1), (1, 2), (1, 3),
+(2, 4), (2, 5), (2, 6),
+(3, 7), (3, 8), (3, 9),
+(4, 10), (4, 11), (4, 12),
+(5, 1), (5, 2), (5, 3);
+
+INSERT INTO seguros (ciud_seguro, dia_seguro, mes_seguro, anio_seguro, monto_seguro, tiempo_seguro, id_pers, id_emple, id_tip_seg, id_pers_fac, id_cuent_Ban, id_estado) VALUES
+('Quito', '01', '06', '2025', '10000', '12 meses', 1, 1, 1, 1, 1, 1),
+('Guayaquil', '15', '05', '2025', '5000', '6 meses', 1, 2, 2, 2, 2, 1),
+('Cuenca', '10', '04', '2025', '15000', '24 meses', 1, 3, 3, 3, 3, 1),
+('Samborondón', '05', '03', '2025', '20000', '36 meses', 1, 4, 4, 4, 4, 1),
+('Paute', '20', '02', '2025', '50000', '48 meses', 1, 5, 5, 5, 5, 1);
+
+INSERT INTO validar_email (url_emal, token_val_email, id_pers) VALUES
+('url4', 'token4', 4);
+
+
+INSERT INTO agente (ced_agente, nom_agente, ape_agente, email_agente, dire_agente, tel_agente, id_estado) VALUES
+('0101010001', 'Alberto', 'Reyes', 'alberto.reyes@agente.com', 'Av. Naciones Unidas', '0991000001', 1),
+('0101010002', 'Sandra', 'Pérez', 'sandra.perez@agente.com', 'Av. La Prensa', '0991000002', 3);
+
+INSERT INTO token_agente (url_emal, token_val, id_agente) VALUES
+('urlA2', 'tokenA2', 2);
+
+INSERT INTO usuarios (users, pass, id_persona, id_rol) VALUES
+('admin', 'admin', 0, 1),
+('alberto.reyes@agente.com', 'passagente1', 1, 2),
+('sandra.perez@agente.com', 'passagente1', 2, 2),
+('carlos.lozano@cliente.com',', 'passcliente1', 1, 3),
+('luisa.salazar@cliente.com', 'passcliente2', 2, 3),
+('fernando.castillo@cliente.com', 'passcliente3', 3, 3);
+
+

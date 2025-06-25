@@ -19,14 +19,14 @@ export function Login() {
         localStorage.setItem("login", JSON.stringify({
           login: true,
           token: res.token,
-          user: res.user.id
+          user: res.user.id_persona
         }));
         navigate("/" + res.user.nom_rol, { state: { user: res.user } });
       } else {
         if (res.user.estado === 3) {
           if (res.user.nom_rol === 'agente') {
             try {
-              const resAgente = await AgenteFun.BuscarRutaValidacion({ id: res.user.id }, navigate);
+              const resAgente = await AgenteFun.BuscarRutaValidacion({ id: res.user.id_persona }, navigate);
               if (resAgente.success) {
                 navigate(`/validacionAgente/${resAgente.url}`);
               }
@@ -47,7 +47,7 @@ export function Login() {
             }
           } else {
              try {
-              const resCliente = await ClientesFun.BuscarRutaValidacion({ id: res.user.id }, navigate);
+              const resCliente = await ClientesFun.BuscarRutaValidacion({ id: res.user.id_persona }, navigate);
               if (resCliente.success) {
                 navigate(`/validacionEmail/${resCliente.url}`);
               }
