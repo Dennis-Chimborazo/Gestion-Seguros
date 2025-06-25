@@ -84,7 +84,7 @@ export function VentanaCliente() {
           <>
             <section >
               {seccionActiva === "SegurosContratados" && <SeguroContrado mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers} />}
-              {seccionActiva === "Reembolso" && <ReembolsoCliente mostrarSeccion={mostrarSeccion} />}
+              {seccionActiva === "Reembolso" && <ReembolsoCliente mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers}  />}
 
               {seccionActiva === "inicio" && <>
                 <div className={styles2.bienvenida}>

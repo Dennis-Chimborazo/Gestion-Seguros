@@ -14,6 +14,14 @@ CREATE TABLE roles (
   nom_rol VARCHAR(20) NOT NULL
 );
 
+CREATE TABLE empleado (
+  id_emple SERIAL PRIMARY KEY,
+  ced_emple VARCHAR(15) NOT NULL,
+  nom_emple VARCHAR(100) NOT NULL,
+  email_emple VARCHAR(100) NOT NULL,
+  firma_emple VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE persona_fac (
   id_pers_fac SERIAL PRIMARY KEY,
   cedr_pers_fac VARCHAR(15) NOT NULL,
@@ -108,7 +116,7 @@ CREATE TABLE tipo_seguro (
   nom_tip_seg VARCHAR(450) NOT NULL,
   descrip_tip_seg VARCHAR(450) NOT NULL,
   pago_tip_seg VARCHAR(450) NOT NULL,
-  suma_tip_seg VARCHAR(450) NOT NULL, 
+  suma_tip_seg VARCHAR(450) NOT NULL,
   id_estado INTEGER,
   FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
 );
@@ -121,18 +129,6 @@ CREATE TABLE seguro_bedeficio (
   FOREIGN KEY (id_beneficios) REFERENCES beneficios(id_beneficios)
 );
 
-CREATE TABLE agente (
-  id_agente SERIAL PRIMARY KEY,
-  ced_agente VARCHAR(10) NOT NULL,
-  nom_agente VARCHAR(70) NOT NULL,
-  ape_agente VARCHAR(70) NOT NULL,
-  email_agente VARCHAR(70) NOT NULL,
-  dire_agente VARCHAR(120) NOT NULL,
-  tel_agente VARCHAR(10) NOT NULL,
-  id_estado INTEGER,
-  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
-);
-
 -- 10. Tabla seguros con múltiples FK
 CREATE TABLE seguros (
   id_seguro SERIAL PRIMARY KEY,
@@ -142,15 +138,15 @@ CREATE TABLE seguros (
   anio_seguro VARCHAR(100) NOT NULL,
   monto_seguro VARCHAR(100) NOT NULL,
   tiempo_seguro VARCHAR(100) NOT NULL,
-  id_emple INTEGER,
-  cargoemple VARCHAR(100) NOT NULL,
   id_pers INTEGER,
+  id_emple INTEGER,
   id_tip_seg INTEGER,
   id_pers_fac INTEGER,
   id_cuent_Ban INTEGER,
   id_estado INTEGER,
   FOREIGN KEY (id_estado) REFERENCES estado(id_estado),
   FOREIGN KEY (id_pers) REFERENCES cliente(id_pers),
+  FOREIGN KEY (id_emple) REFERENCES empleado(id_emple),
   FOREIGN KEY (id_tip_seg) REFERENCES tipo_seguro(id_tip_seg),
   FOREIGN KEY (id_pers_fac) REFERENCES persona_fac(id_pers_fac),
   FOREIGN KEY (id_cuent_Ban) REFERENCES cuenta_banco(id_cuent_Ban)
@@ -183,7 +179,17 @@ CREATE TABLE validar_email (
 );
 
 -- 14. Agente y tokens
-
+CREATE TABLE agente (
+  id_agente SERIAL PRIMARY KEY,
+  ced_agente VARCHAR(10) NOT NULL,
+  nom_agente VARCHAR(70) NOT NULL,
+  ape_agente VARCHAR(70) NOT NULL,
+  email_agente VARCHAR(70) NOT NULL,
+  dire_agente VARCHAR(120) NOT NULL,
+  tel_agente VARCHAR(10) NOT NULL,
+  id_estado INTEGER,
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
 
 CREATE TABLE token_agente (
   id_val SERIAL PRIMARY KEY,
@@ -192,6 +198,7 @@ CREATE TABLE token_agente (
   id_agente INTEGER,
   FOREIGN KEY (id_agente) REFERENCES agente(id_agente)
 );
+
 
 -- Insert País
 INSERT INTO pais (nom_pais) VALUES ('Ecuador');
@@ -276,12 +283,17 @@ INSERT INTO beneficios (nom_beneficios, id_categoria) VALUES
 ('Daños por fenómenos naturales (terremoto, temblor, huracán, inundación)', 4),
 ('Asistencia en el hogar (plomería, electricidad, cerrajería, vidriería)', 4);
 
+
 INSERT INTO cuenta_banco (tipo_cuent_Ban, nom_cuent_Ban, mun_cuent_Ban) VALUES
 ('Ahorros', 'Banco Pichincha', '00001'),
 ('Corriente', 'Banco Guayaquil', '00002'),
 ('Ahorros', 'Produbanco', '00003'),
 ('Corriente', 'Banco Pacífico', '00004'),
 ('Ahorros', 'Banco Internacional', '00005');
+
+
+INSERT INTO empleado (ced_emple, nom_emple, email_emple, firma_emple) VALUES
+('1701000001', 'Juan Pérez', 'juan.perez@empresa.com', 'Firma1');
 
 INSERT INTO persona_fac (cedr_pers_fac, razon_pers_fac, tipo_pers_fac, nacion_pers_fac, nom_pers_fac, ape_pers_fac, tel_pers_fac, cel_pers_fac, email_pers_fac, direc_pers_fac, parent_pers_fac) VALUES
 ('1799000001', 'RUC001', 'Natural', 'Ecuatoriana', 'Carlos', 'Gómez', '022345678', '0998765432', 'carlos.gomez@cliente.com', 'Av. Amazonas', 'Padre'),
@@ -292,16 +304,20 @@ INSERT INTO persona_fac (cedr_pers_fac, razon_pers_fac, tipo_pers_fac, nacion_pe
 
 INSERT INTO cliente (cedr_cli, tipo_cedr_cli, nacion_cli, nom_cli, ape_cli, fecha_naci_cli, lugar_naci_cli, tel_pers, cel_pers, email_pers, edad_pers, sexo_cli, estado_civil_pers, estatura_cli, peso_cli, parroq_cli, calle_princ_pers, calle_secun_pers, id_ciud, id_estado)
 VALUES
-('1700000001', 'cedula', 'Ecuatoriana', 'Carlos', 'Lozano', '1990-05-01', 'Quito', '022345000', '0999000001', 'carlos.lozano@cliente.com', '34', 'masculino', 'soltero', '1.75', '70 lb', 'La Magdalena', 'Av. América', 'Av. Mariscal', 1, 4),
-('1700000002', 'cedula', 'Ecuatoriana', 'Luisa', 'Salazar', '1988-07-15', 'Guayaquil', '042345000', '0999000002', 'luisa.salazar@cliente.com', '36', 'femenino', 'soltero', '1.60', '60 kg', 'Urdesa', 'Av. Las Monjas', 'Av. Plaza Dañin', 4, 3),
-('1700000003', 'cedula', 'Ecuatoriana', 'Fernando', 'Castillo', '1995-09-10', 'Cuenca', '072345000', '0999000003', 'fernando.castillo@cliente.com', '29', 'masculino', 'soltero', '1.80', '75 kg', 'Totoracocha', 'Av. Loja', 'Av. Don Bosco', 7, 4);
+('1700000001', 'Cédula', 'Ecuatoriana', 'Carlos', 'Lozano', '1990-05-01', 'Quito', '022345000', '0999000001', 'carlos.lozano@cliente.com', '34', 'Masculino', 'Soltero', '1.75', '70', 'La Magdalena', 'Av. América', 'Av. Mariscal', 1, 1),
+('1700000002', 'Cédula', 'Ecuatoriana', 'Luisa', 'Salazar', '1988-07-15', 'Guayaquil', '042345000', '0999000002', 'luisa.salazar@cliente.com', '36', 'Femenino', 'Casada', '1.60', '60', 'Urdesa', 'Av. Las Monjas', 'Av. Plaza Dañin', 4, 1),
+('1700000003', 'Cédula', 'Ecuatoriana', 'Fernando', 'Castillo', '1995-09-10', 'Cuenca', '072345000', '0999000003', 'fernando.castillo@cliente.com', '29', 'Masculino', 'Soltero', '1.80', '75', 'Totoracocha', 'Av. Loja', 'Av. Don Bosco', 7, 1),
+('1700000004', 'Cédula', 'Ecuatoriana', 'María', 'Chávez', '1992-11-25', 'Daule', '042345001', '0999000004', 'maria.chavez@cliente.com', '32', 'Femenino', 'Divorciada', '1.65', '62', 'La Aurora', 'Av. Samborondón', 'Av. León Febres', 5, 1),
+('1700000005', 'Cédula', 'Ecuatoriana', 'Pablo', 'Muñoz', '1985-03-08', 'Sangolquí', '022345002', '0999000005', 'pablo.munoz@cliente.com', '39', 'Masculino', 'Casado', '1.78', '72', 'San Rafael', 'Av. Ilaló', 'Av. Intervalles', 3, 1);
 
-INSERT INTO seguros (ciud_seguro, dia_seguro, mes_seguro, anio_seguro, monto_seguro, tiempo_seguro,id_emple,cargoemple, id_pers, id_tip_seg, id_pers_fac, id_cuent_Ban, id_estado) VALUES
-('Quito', '01', '06', '2025', '10000', '12 meses', 1,'agente' ,10, 1, 16, 16, 1),
-('Guayaquil', '15', '05', '2025', '5000', '6 meses', 1,'agente', 10, 2, 17, 17, 1),
-('Cuenca', '10', '04', '2025', '15000', '24 meses', 1,'agente', 10, 3, 18, 18, 1),
-('Samborondón', '05', '03', '2025', '20000', '36 meses', 1,'agente', 10, 4, 19, 19, 1),
-('Paute', '20', '02', '2025', '50000', '48 meses', 1,'agente', 10, 5,20, 20, 1);
+
+
+INSERT INTO tipo_seguro (nom_tip_seg, descrip_tip_seg, pago_tip_seg, suma_tip_seg, id_estado) VALUES
+('Seguro de Vida Básico', 'Cobertura por fallecimiento', 'Anual', '10000', 1),
+('Seguro Médico Premium', 'Cobertura total salud', 'Mensual', '5000', 1),
+('Seguro Vehicular Full', 'Daños totales y terceros', 'Mensual', '15000', 1),
+('Seguro Hogar Completo', 'Daños estructurales y contenido', 'Anual', '20000', 1),
+('Seguro de Vida Platinum', 'Cobertura máxima', 'Anual', '50000', 1);
 
 INSERT INTO seguro_bedeficio (id_tip_seg, id_beneficios) VALUES
 (1, 1), (1, 2), (1, 3),
@@ -310,13 +326,30 @@ INSERT INTO seguro_bedeficio (id_tip_seg, id_beneficios) VALUES
 (4, 10), (4, 11), (4, 12),
 (5, 1), (5, 2), (5, 3);
 
+INSERT INTO seguros (ciud_seguro, dia_seguro, mes_seguro, anio_seguro, monto_seguro, tiempo_seguro, id_pers, id_emple, id_tip_seg, id_pers_fac, id_cuent_Ban, id_estado) VALUES
+('Quito', '01', '06', '2025', '10000', '12 meses', 1, 1, 1, 1, 1, 1),
+('Guayaquil', '15', '05', '2025', '5000', '6 meses', 1, 2, 2, 2, 2, 1),
+('Cuenca', '10', '04', '2025', '15000', '24 meses', 1, 3, 3, 3, 3, 1),
+('Samborondón', '05', '03', '2025', '20000', '36 meses', 1, 4, 4, 4, 4, 1),
+('Paute', '20', '02', '2025', '50000', '48 meses', 1, 5, 5, 5, 5, 1);
+
+INSERT INTO validar_email (url_emal, token_val_email, id_pers) VALUES
+('url4', 'token4', 4);
+
+
 INSERT INTO agente (ced_agente, nom_agente, ape_agente, email_agente, dire_agente, tel_agente, id_estado) VALUES
 ('0101010001', 'Alberto', 'Reyes', 'alberto.reyes@agente.com', 'Av. Naciones Unidas', '0991000001', 1),
 ('0101010002', 'Sandra', 'Pérez', 'sandra.perez@agente.com', 'Av. La Prensa', '0991000002', 3);
 
+INSERT INTO token_agente (url_emal, token_val, id_agente) VALUES
+('urlA2', 'tokenA2', 2);
+
 INSERT INTO usuarios (users, pass, id_persona, id_rol) VALUES
 ('admin', 'admin', 0, 1),
-('sandra.perez@agente.com', 'p123', 2, 2),
-('carlos.lozano@cliente.com','c123', 1, 3),
-('luisa.salazar@cliente.com', 'c123', 2, 3),
-('fernando.castillo@cliente.com', 'c123', 3, 3);
+('alberto.reyes@agente.com', 'passagente1', 1, 2),
+('sandra.perez@agente.com', 'passagente1', 2, 2),
+('carlos.lozano@cliente.com',', 'passcliente1', 1, 3),
+('luisa.salazar@cliente.com', 'passcliente2', 2, 3),
+('fernando.castillo@cliente.com', 'passcliente3', 3, 3);
+
+
