@@ -1,113 +1,113 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import DataTable from "react-data-table-component";
-import ClientesFun from "../clientes/ClientesFun";
-import { FcClearFilters, FcSupport, FcFinePrint } from "react-icons/fc";
-import CargarTablas from "../cargando/CargarTablas";
-import InfoCard from "../cargando/InfoCards";
+import ReembolsoFun from "./ReembolsoFun";
+import { useNavigate } from "react-router-dom";
+import stylesmod from "../estilos/modalDependientes.module.css";
+import RechazoReembolso from "./RechazoReembolso";
+import swal from "sweetalert2";
+
 
 export function ReembolsosAdmin({ mostrarSeccion }) {
+    const [reembolso, setReembolso] = useState(null);
+    const [pdfUrl, setPdfUrl] = useState(null);
     const navigate = useNavigate();
-    const location = useLocation();
-    const user = location.state?.user; // accedemos al usuario
-    const [clientes, setClientes] = useState();
-    const [filtroCli, setFiltroCli] = useState();
-    const [loading, setLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const cerrarModal = () => setIsModalOpen(false);
+    const abrirModal = () => setIsModalOpen(true);
 
     useEffect(() => {
-        const traterClientes = async () => {
-            try {
-                const dataClientes = await ClientesFun.obtenerCliente(navigate);
-                setFiltroCli(dataClientes.rows);
-                setClientes(dataClientes.rows);
-            } catch (error) {
-                console.log("Ha ocurrido un error");
-            } finally {
-                setLoading(false)
+        const cargarDatos = async () => {
+            const revData = JSON.parse(localStorage.getItem("revisionReembolso"));
+            if (revData && revData.revision) {
+                setReembolso(revData.revision);
+                const rutaImagen = await ReembolsoFun.buscarArhivoReembolsoPDF(`${revData.revision.id_reemb}_${revData.revision.id_pers}_reembolso`, revData.revision.id_pers, navigate);
+                setPdfUrl(rutaImagen);
+                localStorage.removeItem("revisionReembolso");
             }
         }
-
-
-        traterClientes();
-
+        cargarDatos();
     }, []);
 
-    const columasClientes = [
-        { name: "Cedula/Pasaporte", selector: row => row.cedr_cli },
-        { name: "Nombre", selector: row => row.nom_cli },
-        { name: "Apellido", selector: row => row.ape_cli },
-        { name: "Telefono", selector: row => row.tel_pers },
-        { name: "Celular", selector: row => row.cel_pers },
-        { name: "Correo", selector: row => row.email_pers },
-        {
-            name: "Opciones", cell: (row, index) =>
-            (<div>
-                <FcFinePrint size={25}
-                    data-testid={`icono-cliente-${index}`}
-                    onClick={() => EditarCliente(row)} />
-            </div>
-            ), ignoreRowClick: true
-        },
-    ];
+    const manejarAccion = async (accion) => {
+        if (accion === 'aceptado') {
+            swal.fire({
+                title: "<label>Confirmacion</label>",
+                text: "Esta seguro de aceptar el reembolso dado una revision rigurosa",
+                showDenyButton: true,
+                denyButtonText: "No",
+                confirmButtonText: "Si"
+            }).then(async (respuesta) => {
+                if (respuesta.isConfirmed) {
+                    try {
+                        const descripcion_revision = `Se han revisado los datos proporcionados por el cliente 
+                        para validar el reembolso, verificando que cumplan con los requisitos establecidos y se da por aprovado 
+                        el mmismo.`;
+                        const res = await ReembolsoFun.aceptarRevisionReembolso({ descripcion_revision: descripcion_revision, id_reemb: reembolso.id_reemb }, navigate);
+                        if (res?.success) {
+                            swal.fire({
+                                title: "<label> Exito</label>",
+                                text: "Se ha aceptado el rembolso",
+                                timer: 3500,
+                            })
+                            mostrarSeccion("listaRembolso");
+                        }
 
-    const filtrarClientes = (e) => {
-        if (e.target.value !== '') {
-            const filtro = clientes.filter((a) =>
-                a.cedr_cli && a.cedr_cli.startsWith(e.target.value)
-            );
-            setFiltroCli(filtro);
+                    } catch (error) {
+                        swal.fire({
+                            title: "<label>Advertencia</label>",
+                            text: "Verifique los datos ",
+                            timer: 3500,
+                        });
+                    }
+                }
+            });
+
+        } else if (accion === 'rechazado') {
+            localStorage.setItem("revisionReembolso", JSON.stringify({
+                edit: true,
+                revision: reembolso
+            }));
+            abrirModal()
         }
     };
 
+    if (!reembolso) return <div>Cargando datos del reembolso...</div>;
 
-    const borrarFiltro = () => {
-        setFiltroCli(clientes);
-    }
-
-    const EditarCliente = (row) => {
-        localStorage.setItem("edit", JSON.stringify({
-            edit: true,
-            cliente: row
-        }));
-
-        mostrarSeccion("EditarCliente");
-
-    }
     return (
-        <div>
-            <form action="" method="get">
-                <div>
-                    <h2>Clientes </h2>
-                    <div>
-                        <label htmlFor=""> Buscar</label>
-                        <input type="text" id="buscar" name="buscar" placeholder="Ingrese numero de cedula" onChange={filtrarClientes} />
-                        <FcClearFilters size={25} onClick={borrarFiltro} />
-                        <div style={{ display: 'flex', justifyContent: 'flex-start', margin: '20px 0' }}>
-                            <InfoCard
-                                text="Nuevo Cliente"
-                                color="#00AEEF" // Color azul de la imagen
-                                onClick={() => mostrarSeccion('crearClientes')}
-                            />
-                            <InfoCard
-                                text="Validaciones pendientes"
-                                color="#4CAF50" // Color verde de la imagen
-                                onClick={() => mostrarSeccion('clientePendiente')}
-                            />
-                        </div>
-                    </div>
+        <div style={{ padding: "2rem" }}>
+            <h2>Revisión de Reembolso</h2>
+            <p><strong>Cliente:</strong> {reembolso.nombre}</p>
+            <p><strong>Cédula:</strong> {reembolso.cedr_cli}</p>
+            <p><strong>Motivo:</strong> {reembolso.motivo_reemb}</p>
+            <p><strong>Fecha:</strong> {reembolso.fecha_reemb}</p>
+            <p><strong>Tipo de Seguro:</strong> {reembolso.nom_tip_seg}</p>
+            <p><strong>Estado Actual:</strong> {reembolso.nom_estado}</p>
 
+            {pdfUrl && (
+                <div>
+                    <p><strong>Factura Adjunta:</strong></p>
+                    <embed
+                        src={pdfUrl}
+                        type="application/pdf"
+                        width="100%"
+                        height="400px"
+                    />
                 </div>
-                {loading ? (<CargarTablas />) :
-                    <DataTable
-                        pagination
-                        paginationPerPage={20}
-                        columns={columasClientes}
-                        data={filtroCli}
-                        noDataComponent="No ha selecionado ninguna actividad"
-                        persistTableHead >
-                    </DataTable>}
-            </form>
+            )}
+
+            <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>
+                <button onClick={() => manejarAccion("aceptado")}>Aceptado</button>
+                <button onClick={() => manejarAccion("rechazado")}>Rechazado</button>
+            </div>
+            {isModalOpen && (
+                <div className={stylesmod.overlay}>
+                    <div className={stylesmod.modal}>
+                        <button className={stylesmod.closeBtn} onClick={cerrarModal}>X</button>
+                        <RechazoReembolso cerrarModal={cerrarModal} />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
+
 export default ReembolsosAdmin;

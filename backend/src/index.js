@@ -31,10 +31,8 @@ app.use("/reembolso", reembolsoRoute);
 
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
-// Exporta la app para SuperTest
 module.exports = app;
 
-// Solo inicia el servidor si no está en modo prueba
 if (require.main === module) {
   app.listen(puerto, () => {
     console.log(`Servidor escuchando en http://localhost:${puerto}`);

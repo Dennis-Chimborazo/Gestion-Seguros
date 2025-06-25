@@ -91,32 +91,26 @@ router.get('/buscar/:subfolder', (req, res) => {
     });
 });
 
-router.get('/buscarReembolso/:subfolder', (req, res) => {
+router.get('/buscar-reembolso/:subfolder', (req, res) => {
     const subfolder = req.params.subfolder?.replace(/[^a-zA-Z0-9-_]/g, '') || 'default';
-    const tipo = req.query.tipo;
-    const dir = path.join(process.cwd(), 'uploads', 'cliente', subfolder);
+    const nombreBase = req.query.nombre; // debería ser algo como '1_1_reembolso'
+    const dir = path.join(process.cwd(), 'uploads', 'reembolso', subfolder);
 
     if (!fs.existsSync(dir)) {
-        console.log('No existe la carpeta');
         return res.status(404).json({ error: 'Carpeta no encontrada' });
     }
 
     fs.readdir(dir, (err, files) => {
         if (err) {
-            console.error('Error leyendo archivos:', err);
             return res.status(500).json({ error: 'Error leyendo archivos' });
         }
-        let archivosFiltrados = files;
-        if (tipo === 'imagen') {
-            archivosFiltrados = files.filter(f => /\.(jpg|jpeg|png|gif)$/i.test(f));
-        } else if (tipo === 'pdf') {
-            archivosFiltrados = files.filter(f => /\.pdf$/i.test(f));
+        const archivo = files.find(f => f.startsWith(nombreBase) && f.endsWith('.pdf'));
+
+        if (!archivo) {
+            return res.status(404).json({ error: 'Archivo no encontrado' });
         }
-        if (archivosFiltrados.length === 0) {
-            console.log('No se encontraron archivos del tipo especificado');
-            return res.status(404).json({ error: 'No se encontró archivo del tipo especificado' });
-        }
-        const url = `http://localhost:4000/uploads/reembolso/${subfolder}/${archivosFiltrados[0]}`;
+
+        const url = `http://localhost:4000/uploads/reembolso/${subfolder}/${archivo}`;
         res.json({ url });
     });
 });
