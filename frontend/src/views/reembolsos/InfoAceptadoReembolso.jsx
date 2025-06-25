@@ -11,11 +11,8 @@ export function InfoAceptadoReembolso({ cerrarModalAceptado }) {
       const data = JSON.parse(localStorage.getItem("revisionReembolso"));
       if (data && data.revision) {
         localStorage.removeItem("revisionReembolso");
-        const res = await ReembolsoFun.infoAceptadoReembolso(
-          data.revision.id_reemb,
-          navigate
-        );
-        setInfoRevision(res[0]); // Guardamos la respuesta en el estado
+        const res = await ReembolsoFun.infoAceptadoReembolso(data.revision.id_reemb, navigate);
+        setInfoRevision(res[0]); 
       }
     };
     valores();
