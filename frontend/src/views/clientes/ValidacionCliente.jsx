@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import ClientesFun from "./ClientesFun";
 import { FcClearFilters } from "react-icons/fc";
 import { TfiEmail } from "react-icons/tfi";
+import { FaSearch } from "react-icons/fa";
 import CargarTablas from "../cargando/CargarTablas";
 import ModalReenvioValidacion from "./ModalReenvioValidacion";
 import stylesmod from "../estilos/modalDependientes.module.css";
 import { SlRefresh } from "react-icons/sl";
+import "../estilos/ValidacionCliente.css";
 
 export function ValidacionCliente({ mostrarSeccion }) {
     const navigate = useNavigate();
@@ -16,8 +18,7 @@ export function ValidacionCliente({ mostrarSeccion }) {
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const cerrarModal = () => setIsModalOpen(false);
-    const abrirModal = () => setIsModalOpen(true);
-    const [formulario, setFormulario] = useState({})
+    const abrirModal = () => setIsModalOpen(true);    const [formulario] = useState({})
     useEffect(() => {
         const traterClientes = async () => {
             try {
@@ -31,7 +32,7 @@ export function ValidacionCliente({ mostrarSeccion }) {
             }
         }
         traterClientes();
-    }, []);
+    }, [navigate]);
 
     const columasClientes = [
         { name: "Cedula/Pasaporte", selector: row => row.cedr_cli },
@@ -47,15 +48,16 @@ export function ValidacionCliente({ mostrarSeccion }) {
                 return row.id_estado;
             }
         },
-        { name: "Correo", selector: row => row.email_pers },
-        {
+        { name: "Correo", selector: row => row.email_pers },        {
             name: "Reenviar Correo",
             cell: (row, index) => (
                 <div>
                     <TfiEmail
                         data-testid={`icono-correo-${index}`}
+                        className="email-icon"
                         size={25}
-                        onClick={() => reenviarCorreo(row)}/>
+                        onClick={() => reenviarCorreo(row)}
+                    />
                 </div>
             ),
             ignoreRowClick: true
@@ -88,25 +90,45 @@ export function ValidacionCliente({ mostrarSeccion }) {
             setFiltroCli(dataClientes.rows);
             setClientes(dataClientes.rows);
         } catch (error) {
-            console.log("Ha ocurrido un error");
-        } finally {
+            console.log("Ha ocurrido un error");        } finally {
             setLoading(false)
         }
     }
+    
     return (
-        <div>
-            <form action="" method="get">
-                <div>
-                    <h2>Vadicacion de cuenta Pendiente </h2>
-                    <div>
-                        <label htmlFor=""> Buscar</label>
-                        <input type="text" id="buscar" name="buscar" placeholder="Ingrese numero de cedula" onChange={filtrarClientes} />
-                        <FcClearFilters data-testid="btn-borrar-filtro" size={25} onClick={borrarFiltro} />
-                        <div>
-                            <label htmlFor="">Actualizar</label>
-                            <SlRefresh data-testid="btn-actualizar" size={18} onClick={refrescar} />
-
+        <div className="validacion-cliente-container">
+            <form action="" method="get" className="validacion-cliente-form">
+                <h2 className="validacion-cliente-title">Validación de Cuenta Pendiente</h2>
+                <div className="search-controls">
+                    <div className="search-group">
+                        <label className="search-label" htmlFor="buscar">Buscar por Cédula</label>
+                        <div className="search-input-container">
+                            <input 
+                                className="search-input"
+                                type="text" 
+                                id="buscar" 
+                                name="buscar" 
+                                placeholder="Ingrese número de cédula" 
+                                onChange={filtrarClientes} 
+                            />
+                            <FaSearch className="search-icon" />
                         </div>
+                    </div>
+                    <div className="control-buttons">
+                        <button 
+                            type="button" 
+                            className="clear-filter-btn"
+                            title="Limpiar filtros"
+                            onClick={borrarFiltro}>
+                            <FcClearFilters size={25} />
+                        </button>
+                        <button 
+                            type="button" 
+                            className="refresh-btn"
+                            title="Actualizar datos"
+                            onClick={refrescar}>
+                            <SlRefresh size={20} />
+                        </button>
                     </div>
                 </div>
                 {loading ? (<CargarTablas />) :
@@ -115,7 +137,7 @@ export function ValidacionCliente({ mostrarSeccion }) {
                         paginationPerPage={20}
                         columns={columasClientes}
                         data={filtroCli}
-                        noDataComponent="No ha selecionado ninguna actividad"
+                        noDataComponent="No hay clientes pendientes de validación"
                         persistTableHead
                     />}
             </form>

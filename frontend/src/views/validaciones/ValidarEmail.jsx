@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import styles from "../estilos/validarEmail.module.css";
+import "../estilos/ValidarEmail.css";
 import ClientesFun from "../clientes/ClientesFun";
 import CargarInf from "../cargando/CargarInf";
 import swal from "sweetalert2";
@@ -15,13 +15,11 @@ export function ValidarEmail() {
   const [success, setSuccess] = useState(false); // si todo sale bien
   const [loading, setLoading] = useState(true);
   const [formulario, setFormulario] = useState({ id_pers: '', user: '', pass: '', confirmPassword: '', passTemp: '' })
-
   useEffect(() => {
     const verificar = async () => {
       try {
         const res = await ClientesFun.validarTokenEmail({ url: id }, navigate);
-        console.log(res); // ✅ Agregado para test
-        console.log(res.data?.id_pers);
+        console.log(res)
         if (res?.success && res.data?.id_pers) {
           const resCli = await ClientesFun.buscarcliente(res.data.id_pers, navigate);
           setCliente({
@@ -32,7 +30,11 @@ export function ValidarEmail() {
             idvalid: res.idvalid,
             passTemp: res.data.pass
           });
-          setFormulario({ ...formulario, id_pers: resCli[0].id_pers, user: resCli[0].email_pers })
+          setFormulario(prevForm => ({ 
+            ...prevForm, 
+            id_pers: resCli[0].id_pers, 
+            user: resCli[0].email_pers 
+          }));
           setSuccess(true);
         } else {
           setError("Token inválido o expirado.");
@@ -115,44 +117,45 @@ export function ValidarEmail() {
       if (respuesta.isConfirmed) {navigate('/');}
     });
   }
-
   return (
-    <div className={styles.container}>
+    <div className="validar-email-container">
       <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-      <div className={styles.card}>
+      <div className="validar-email-card">
         {success ? (
           <>
-            <h2 className={styles.title}>🎉 ¡Gracias por registrarte en Seguros.SA!</h2>
-            <p className={styles.message}>
+            <h2 className="validar-email-title">🎉 ¡Gracias por registrarte en Seguros.SA!</h2>
+            <p className="validar-email-message">
               Bienvenido/a {cliente.nombre} {cliente.apellido}, tu cuenta ha sido creada con éxito.
               Ya estás a un paso de comenzar a disfrutar de todos los beneficios que ofrecemos.
             </p>
-            <p className={styles.message}>
+            <p className="validar-email-message">
               Esta validación garantiza la integridad de tu información y nos ayuda a brindarte una experiencia personalizada, segura y confiable.
             </p>
-            <p className={styles.message}>
+            <p className="validar-email-message">
               Para completar tu registro y validar tu identidad, ingresa una nueva contraseña.
               Su usuario por defecto es: {cliente.email_pers || ''}
             </p>
-            <label htmlFor="passTemp">Ingrese contraseña temporal</label>
-            <input type="text" id="passTemp" name="passTemp" data-testid="passTemp"  onChange={asignarValores} />
-            <label htmlFor="pass">Ingrese una contraseña</label>
-            <input type="text" id="pass" name="pass" data-testid="pass"  onChange={asignarValores} />
-            <label htmlFor="confirmPassword">Vuelva a escribir la contraseña</label>
-            <input type="text" id="confirmPassword" name="confirmPassword" data-testid="confirmpass" onChange={asignarValores} />
-            <div className={styles.message}>
-              <button className={styles.button} onClick={cancelarCuenta}>cancelar</button>
-              <button  className={styles.button}  data-testid="btn-validar-cuenta" onClick={preValidarCuenta}>Validar Cuenta</button>
-            </div >
+            <div className="validar-email-form">
+              <label htmlFor="passTemp">Ingrese contraseña temporal</label>
+              <input type="password" id="passTemp" name="passTemp" onChange={asignarValores} />
+              <label htmlFor="pass">Ingrese una contraseña</label>
+              <input type="password" id="pass" name="pass" onChange={asignarValores} />
+              <label htmlFor="confirmPassword">Vuelva a escribir la contraseña</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" onChange={asignarValores} />
+            </div>
+            <div className="validar-email-button-container">
+              <button className="validar-email-button cancel" onClick={cancelarCuenta}>Cancelar</button>
+              <button className="validar-email-button" onClick={preValidarCuenta}>Validar Cuenta</button>
+            </div>
           </>
         ) : (
           <>
-            <h2 className={styles.title}>⚠ Enlace inválido o expirado</h2>
-            <p className={styles.message}>{error}</p>
-            <p className={styles.message}>
+            <h2 className="validar-email-title">⚠ Enlace inválido o expirado</h2>
+            <p className="validar-email-message">{error}</p>
+            <p className="validar-email-message">
               Si crees que esto es un error o necesitas un nuevo enlace, contacta Seguros.SA soporte.
             </p>
-            <button className={styles.button} onClick={() => navigate("/")}> OK</button>
+            <button className="validar-email-button" onClick={() => navigate("/")}> OK</button>
           </>
         )}
       </div>

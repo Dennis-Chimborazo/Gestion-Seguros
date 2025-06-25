@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import styles from "../estilos/validarEmail.module.css";
+import "../estilos/ValidarEmail.css";
 import CargarInf from "../cargando/CargarInf";
 import swal from "sweetalert2";
 import GestionContratacionFun from "../gestionContratacion/GestionContratacionFun";
@@ -74,49 +74,50 @@ export function ValidarContratacionSeguro() {
           })
     }
   }
-
  return (
-  <div className={styles.container} data-testid="container">
-    <div className={styles.card} data-testid="card">
+  <div className="validar-email-container">
+    <div className="validar-email-card">
       {success ? (
         <>
-          <h2 className={styles.title}>🎉 ¡Validación de Contratación Exitosa!</h2>
+          <h2 className="validar-email-title">🎉 ¡Validación de Contratación Exitosa!</h2>
           
-          <p className={styles.message}>
+          <p className="validar-email-message">
             Estimado/a <strong>{cliente.nombre} {cliente.apellido}</strong>,
           </p>
           
-          <p className={styles.message}>
+          <p className="validar-email-message">
             Nos complace informarte que la contratación de tu seguro ha sido procesada correctamente. A continuación, te compartimos un resumen de tu póliza:
           </p>
 
-          <p className={styles.message}><strong>🪪 Cédula:</strong> {cliente.cedula}</p>
+          <p className="validar-email-message"><strong>🪪 Cédula:</strong> {cliente.cedula}</p>
 
-          <ul className={styles.message}>
+          <ul className="validar-email-message">
             <li><strong>💰 Monto asegurado:</strong> ${cliente.monto_seguro}</li>
             <li><strong>📆 Frecuencia de pago:</strong> {cliente.frecuencia}</li>
           </ul>
 
-          <p className={styles.message}>
+          <p className="validar-email-message">
             Esta validación confirma la autenticidad de tu información personal y contractual, y nos permite ofrecerte un servicio seguro, confiable y personalizado.
           </p>
 
-          <p className={styles.message}>
-            Para finalizar el proceso , haz clic en el siguiente botón:
+          <p className="validar-email-message">
+            Para finalizar el proceso, haz clic en el siguiente botón:
           </p>
 
-          <button type="button" className={styles.button} onClick={validarCuenta}>
-            Validar contratación
-          </button>
+          <div className="validar-email-button-container">
+            <button className="validar-email-button" onClick={validarCuenta}>
+              Validar contratación
+            </button>
+          </div>
         </>
       ) : (
         <>
-          <h2 className={styles.title}>⚠️ Enlace inválido o expirado</h2>
-          <p className={styles.message}>{error}</p>
-          <p className={styles.message}>
+          <h2 className="validar-email-title">⚠️ Enlace inválido o expirado</h2>
+          <p className="validar-email-message">{error}</p>
+          <p className="validar-email-message">
             Si consideras que esto es un error o deseas solicitar un nuevo enlace de validación, por favor comunícate con nuestro equipo de soporte de Seguros.SA.
           </p>
-          <button className={styles.button} onClick={() => navigate("/")}>Volver al inicio</button>
+          <button className="validar-email-button" onClick={() => navigate("/")}>Volver al inicio</button>
         </>
       )}
     </div>

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import ClientesFun from "./ClientesFun.js";
-import styles from '../estilos/cliente.module.css';
 import { FcClearFilters, FcSupport, FcFinePrint } from "react-icons/fc";
+import { FaSearch } from "react-icons/fa";
 import CargarTablas from "../cargando/CargarTablas";
 import InfoCard from "../cargando/InfoCards";
+import "../estilos/Cliente.css";
 import { FaUserEdit } from "react-icons/fa";
 import ClientesInformacion from "./ClientesInformacion.jsx";
 import stylesmod from "../estilos/modalDependientes.module.css";
@@ -48,9 +49,11 @@ export function Clientes({ mostrarSeccion }) {
       name: "Opciones", cell: (row, index) =>
       (<div>
         <FcFinePrint size={25}
+          className="option-icon"
           data-testid={`icono-cliente-${index}`}
           onClick={() => mostrarInformacionCliente(row)} />
         <FaUserEdit size={25}
+          className="option-icon"
           data-testid={`icono-cliente-${index}`}
           onClick={() => EditarCliente(row)} />
       </div>
@@ -71,68 +74,16 @@ export function Clientes({ mostrarSeccion }) {
     setFiltroCli(clientes);
   }
 
-  const EditarCliente = (row) => {
-    localStorage.setItem("edit", JSON.stringify({
-      edit: true,
-      cliente: row
-    }));
-    mostrarSeccion("EditarCliente");
-  }
+    const EditarCliente = (row) => {
+        localStorage.setItem("edit", JSON.stringify({
+            edit: true,
+            cliente: row
+          }));
+          
+        mostrarSeccion("EditarCliente");
 
-  const customStyles = {
-    header: {
-      style: {
-        minHeight: '56px',
-        fontSize: '15px',
-        fontWeight: 'bold',
-        color: '#ffffff',
-        backgroundColor: '#0077b6',
+    }
 
-      },
-    },
-    headRow: {
-      style: {
-        backgroundColor: '#0077b6',
-        borderTop: '1px solid #dddddd',
-
-      },
-    },
-    headCells: {
-      style: {
-        fontSize: '14px',
-        fontWeight: '600',
-        textTransform: 'capitalize',
-        paddingLeft: '8px',
-        paddingRight: '8px',
-        color: '#ffffff',
-      },
-    },
-    rows: {
-      style: {
-        backgroundColor: '#ffffff',
-        '&:nth-of-type(even)': {
-          backgroundColor: '#f9f9f9', // Color alternativo para filas pares
-        },
-        '&:hover': {
-          backgroundColor: '#ffe3e3', // Color al pasar el cursor
-        },
-      },
-    },
-    cells: {
-      style: {
-        paddingLeft: '8px',
-        paddingRight: '8px',
-      },
-    },
-    pagination: {
-      style: {
-        borderTop: '1px solid #dddddd',
-        backgroundColor: '#ffffff',
-        padding: '8px',
-      },
-
-    },
-  };
   const mostrarInformacionCliente = (row) => {
     localStorage.setItem("clientesInformacion", JSON.stringify({
       edit: true,
@@ -140,40 +91,69 @@ export function Clientes({ mostrarSeccion }) {
     }));
     abrirModal();
   }
-  return (
-    <div>
-      <form action="" method="get">
-        <div>
-          <h2>Clientes </h2>
-          <div>
-            <label htmlFor=""> Buscar</label>
-            <input type="text" id="buscar" name="buscar" placeholder="Ingrese numero de cedula" onChange={filtrarClientes} />
-            <FcClearFilters size={25} onClick={borrarFiltro} />
-            <div style={{ display: 'flex', justifyContent: 'flex-start', margin: '20px 0' }}>
-              <InfoCard
-                text="Nuevo Cliente"
-                color="#00AEEF" // Color azul de la imagen
-                onClick={() => mostrarSeccion('crearClientes')}
+
+  return(
+    <div className="cliente-container">
+      <div className="cliente-form">
+        <h1 className="cliente-title">Gestión de Clientes</h1>
+        
+        <div className="search-controls">
+          <div className="search-group">
+            <label className="search-label">Buscar Cliente</label>
+            <div className="search-input-container">
+              <input 
+                type="text" 
+                className="search-input"
+                placeholder="Ingrese número de cédula" 
+                onChange={filtrarClientes} 
               />
-              <InfoCard
-                text="Validaciones pendientes"
-                color="#4CAF50" // Color verde de la imagen
-                onClick={() => mostrarSeccion('clientePendiente')}
-              />
+              <FaSearch className="search-icon" />
             </div>
           </div>
-
+          
+          <div className="control-buttons">
+            <button 
+              type="button"
+              className="clear-filter-btn"
+              onClick={borrarFiltro}
+              title="Limpiar filtros"
+            >
+              <FcClearFilters size={25} />
+            </button>
+            
+            <div className="create-group">
+              <button 
+                type="button"
+                className="create-btn"
+                onClick={() => mostrarSeccion('crearClientes')}
+              >
+                Nuevo Cliente
+              </button>
+              <button 
+                type="button"
+                className="create-btn"
+                onClick={() => mostrarSeccion('clientePendiente')}
+              >
+                Validaciones Pendientes
+              </button>
+            </div>
+          </div>
         </div>
-        {loading ? (<CargarTablas />) :
+
+        {loading ? (
+          <CargarTablas />
+        ) : (
           <DataTable
             pagination
             paginationPerPage={20}
             columns={columasClientes}
             data={filtroCli}
-            noDataComponent="No ha selecionado ninguna actividad"
-            persistTableHead >
-          </DataTable>}
-      </form>
+            noDataComponent="No hay clientes para mostrar"
+            persistTableHead
+          />
+        )}
+      </div>
+      
       {isModalOpen && (
         <div className={stylesmod.overlay}>
           <div className={stylesmod.modal}>
@@ -185,4 +165,5 @@ export function Clientes({ mostrarSeccion }) {
     </div>
   );
 }
+
 export default Clientes;

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import ApiService from "../../services/ApiService";
 import styles from "../estilos/VentanaAdmin.module.css";
 import CrearClientes from "../clientes/CrearClientes";
 import Clientes from "../clientes/Clientes";
@@ -15,7 +14,8 @@ import Agentes from "../agentes/Agentes";
 import CrearAgentes from "../agentes/CrearAgentes";
 import AgentesPendientes from "../agentes/AgentesPendientes";
 import EditarAgente from "../agentes/EditarAgente";
-
+import ListReembolsosAdmin from "../reembolsos/ListReembolsosAdmin";
+import ReembolsosAdmin from "../reembolsos/ReembolsosAdmin";
 
 export function VentanaAdmin() {
   const navigate = useNavigate();
@@ -38,15 +38,14 @@ export function VentanaAdmin() {
 
   return (
     <div className={styles.container}>
-      <h2>Bienvenido {user?.nom_rol}</h2>
       <ul className={styles.menu}>
-        <li><a onClick={() => mostrarSeccion("agente")}>Agentes</a></li>
-        <li><a onClick={() => mostrarSeccion("clientes")}>Clientes</a></li>
-        <li><a onClick={() => mostrarSeccion("segurosAdmin")}>Seguros</a></li>
-        <li><a onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</a></li>
-        <li><a onClick={() => mostrarSeccion("seguros")}>Reembolso</a></li>
-        <li><a onClick={() => mostrarSeccion("reportes")}>Reportes</a></li>
-        <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
+        <li className={styles.welcomeHeader}><h2>Bienvenido {user?.nom_rol}</h2></li>
+        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("agente")}>Agentes</button></li>
+        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("clientes")}>Clientes</button></li>
+        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("segurosAdmin")}>Seguros</button></li>
+        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</button></li>
+        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("listaRembolso")}>Reembolso</button></li>
+        <li><button className={`${styles.menuButton} ${styles.logoutButton}`} onClick={cerrarSesion}>Cerrar sesión</button></li>
       </ul>
 
       <section className={styles.section}>
@@ -63,7 +62,8 @@ export function VentanaAdmin() {
         {seccionActiva === "crearAgentes" && <CrearAgentes mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "AgentePendiente" && <AgentesPendientes mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "EditarAgente" && <EditarAgente mostrarSeccion={mostrarSeccion} />}
-
+        {seccionActiva === "listaRembolso" && <ListReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "RevisionRembolso" && <ReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reportes" && <p>Sección de reportes</p>}
         {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
       </section>

@@ -8,16 +8,16 @@ class DataBase {
       return DataBase.instancia;
     }
 
-    this.client = new Client({
-      user: 'root',
-      host: 'dpg-d1bio0je5dus73em5fng-a.oregon-postgres.render.com',
-      database: 'gestionseguros',
-      password: 'qT0zrHI3ph9rIrx2RzvmezVr0qtp4Dp9',
-      port: 5432,
+this.client = new Client({
+      user: 'gestorseguros_user',
+      host: 'dpg-d1dsn3umcj7s73bf4dkg-a.oregon-postgres.render.com',
+      database: 'gestorseguros',
+      password: 'a5bTM4ZbC49Fc9K5ulaSGvNwCFlj7vKF',
+      port: 5432, 
       ssl: {
-        rejectUnauthorized: false // ⚠ Importante para Render
-      }
-    });
+      rejectUnauthorized: false
+      }
+    });
 
     this.#connect();
     DataBase.instancia = this;

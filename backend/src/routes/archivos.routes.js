@@ -21,8 +21,27 @@ const getDynamicStorage = () =>
         }
     });
 
+const getDynamicStorageReembolso = () =>
+    multer.diskStorage({
+        destination: (req, file, cb) => {
+            const subfolder = req.params.subfolder?.replace(/[^a-zA-Z0-9-_]/g, '') || 'default';
+            const dir = path.join('uploads/reembolso/', subfolder);
+
+            if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+            cb(null, dir);
+        },
+        filename: (req, file, cb) => {
+            const ext = path.extname(file.originalname);
+            const baseName = path.basename(file.originalname, ext).replace(/\s+/g);
+            const uniqueName = `${baseName}${ext}`;
+            cb(null, uniqueName);
+        }
+    });
+
+
 const uploadFoto = multer({ storage: getDynamicStorage() });
 const uploadPdf = multer({ storage: getDynamicStorage() });
+const uploadReembolso = multer({ storage: getDynamicStorageReembolso() });
 
 router.post('/foto-perfil/:subfolder', uploadFoto.single('profilePhoto'), (req, res) => {
     if (!req.file)
@@ -36,6 +55,11 @@ router.post('/cedula-pdf/:subfolder', uploadPdf.single('cedulaPdf'), (req, res) 
     res.json({ message: 'PDF de cédula subido correctamente', filename: req.file.filename });
 });
 
+router.post('/reembolso-pdf/:subfolder', uploadReembolso.single('reembolsoPDF'), (req, res) => {
+    if (!req.file)
+        return res.status(400).json({ error: 'No se recibió la foto de perfil' });
+    res.json({ message: 'Foto de perfil subida correctamente', filename: req.file.filename });
+});
 
 router.get('/buscar/:subfolder', (req, res) => {
     const subfolder = req.params.subfolder?.replace(/[^a-zA-Z0-9-_]/g, '') || 'default';
@@ -63,6 +87,30 @@ router.get('/buscar/:subfolder', (req, res) => {
             return res.status(404).json({ error: 'No se encontró archivo del tipo especificado' });
         }
         const url = `http://localhost:4000/uploads/cliente/${subfolder}/${archivosFiltrados[0]}`;
+        res.json({ url });
+    });
+});
+
+router.get('/buscar-reembolso/:subfolder', (req, res) => {
+    const subfolder = req.params.subfolder?.replace(/[^a-zA-Z0-9-_]/g, '') || 'default';
+    const nombreBase = req.query.nombre; // debería ser algo como '1_1_reembolso'
+    const dir = path.join(process.cwd(), 'uploads', 'reembolso', subfolder);
+
+    if (!fs.existsSync(dir)) {
+        return res.status(404).json({ error: 'Carpeta no encontrada' });
+    }
+
+    fs.readdir(dir, (err, files) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error leyendo archivos' });
+        }
+        const archivo = files.find(f => f.startsWith(nombreBase) && f.endsWith('.pdf'));
+
+        if (!archivo) {
+            return res.status(404).json({ error: 'Archivo no encontrado' });
+        }
+
+        const url = `http://localhost:4000/uploads/reembolso/${subfolder}/${archivo}`;
         res.json({ url });
     });
 });

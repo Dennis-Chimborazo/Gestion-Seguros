@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { FcClearFilters, FcFinePrint } from "react-icons/fc";
+import { FaSearch } from "react-icons/fa";
 import CargarTablas from "../cargando/CargarTablas";
-import InfoCard from "../cargando/InfoCards";
 import AgenteFun from "./AgenteFun";
 import { FaUserEdit } from "react-icons/fa";
+import "../estilos/Agentes.css";
 import stylesmod from "../estilos/modalDependientes.module.css";
 import AgenteInformacion from "./AgenteInformacion";
 
@@ -44,9 +45,11 @@ export function Agentes({ mostrarSeccion }) {
             name: "Opciones", cell: (row, index) =>
             (<div>
                 <FcFinePrint size={25}
+                    className="option-icon"
                     data-testid={`icono-cliente-${index}`}
                     onClick={() => mostrarInformacion(row)} />
                 <FaUserEdit size={25}
+                    className="option-icon"
                     data-testid={`icono-cliente-${index}`}
                     onClick={() => EditarAgente(row)} />
             </div>
@@ -64,9 +67,11 @@ export function Agentes({ mostrarSeccion }) {
     const filtrarClientes = (e) => {
         if (e.target.value !== '') {
             const filtro = clientes.filter((a) =>
-                a.cedr_cli && a.cedr_cli.startsWith(e.target.value)
+                a.ced_agente && a.ced_agente.startsWith(e.target.value)
             );
             setFiltroCli(filtro);
+        } else {
+            setFiltroCli(clientes);
         }
     };
 
@@ -83,39 +88,67 @@ export function Agentes({ mostrarSeccion }) {
     }
 
     return (
-        <div>
-            <form action="" method="get">
-                <div>
-                    <h2>Agentes </h2>
-                    <div>
-                        <label htmlFor="buscar"> Buscar</label>
-                        <input type="text" id="buscar" name="buscar" placeholder="Ingrese numero de cedula" onChange={filtrarClientes} />
-                        <FcClearFilters  data-testid="boton-borrar-filtro" size={25} onClick={borrarFiltro} />
-                        <div style={{ display: 'flex', justifyContent: 'flex-start', margin: '20px 0' }}>
-                            <InfoCard
-                                text="Nuevo Agente"
-                                color="#00AEEF" // Color azul de la imagen
-                                onClick={() => mostrarSeccion('crearAgentes')}
+        <div className="agentes-container">
+            <div className="agentes-form">
+                <h1 className="agentes-title">Gestión de Agentes</h1>
+                
+                <div className="search-controls">
+                    <div className="search-group">
+                        <label className="search-label">Buscar Agente</label>
+                        <div className="search-input-container">
+                            <input 
+                                type="text" 
+                                className="search-input"
+                                placeholder="Ingrese número de cédula" 
+                                onChange={filtrarClientes} 
                             />
-                            <InfoCard
-                                text="Validaciones pendientes"
-                                color="#4CAF50" // Color verde de la imagen
-                                onClick={() => mostrarSeccion('AgentePendiente')}
-                            />
+                            <FaSearch className="search-icon" />
                         </div>
                     </div>
-
+                    
+                    <div className="control-buttons">
+                        <button 
+                            type="button"
+                            className="clear-filter-btn"
+                            onClick={borrarFiltro}
+                            title="Limpiar filtros"
+                        >
+                            <FcClearFilters size={25} />
+                        </button>
+                        
+                        <div className="create-group">
+                            <button 
+                                type="button"
+                                className="create-btn"
+                                onClick={() => mostrarSeccion('crearAgentes')}
+                            >
+                                Nuevo Agente
+                            </button>
+                            <button 
+                                type="button"
+                                className="create-btn"
+                                onClick={() => mostrarSeccion('AgentePendiente')}
+                            >
+                                Validaciones Pendientes
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                {loading ? (<CargarTablas />) :
+
+                {loading ? (
+                    <CargarTablas />
+                ) : (
                     <DataTable
                         pagination
                         paginationPerPage={20}
                         columns={columasClientes}
                         data={filtroCli}
-                        noDataComponent="No ha selecionado ninguna actividad"
-                        persistTableHead >
-                    </DataTable>}
-            </form>
+                        noDataComponent="No hay agentes para mostrar"
+                        persistTableHead
+                    />
+                )}
+            </div>
+            
             {isModalOpen && (
                 <div className={stylesmod.overlay}>
                     <div className={stylesmod.modal}>
@@ -127,4 +160,5 @@ export function Agentes({ mostrarSeccion }) {
         </div>
     );
 }
+
 export default Agentes;

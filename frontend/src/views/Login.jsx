@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ApiService from "../services/ApiService.js";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
-import styles from "./estilos/login.module.css";
+import "./estilos/Login.css";
 import AgenteFun from "./agentes/AgenteFun.js";
 import ClientesFun from "./clientes/ClientesFun.js";
 
@@ -10,23 +10,27 @@ export function Login() {
   const navigate = useNavigate();
   const [formulario, setFormulario] = useState({ user: "", pass: "" });
 
-  const ingresar = async () => {
+  const ingresar = async (e) => {
+    e.preventDefault();
+    localStorage.clear();
     if (formulario.pass === "" || formulario.user === "") {
       toast.error("Complete todos los campos");
     } else {
       const res = await ApiService.login(formulario);
+      console.log(res.user.nom_rol)
       if (res.success) {
         localStorage.setItem("login", JSON.stringify({
           login: true,
           token: res.token,
-          user: res.user.id
+          user: res.user.id_persona,
+          rol: res.user.nom_rol
         }));
-        navigate("/" + res.user.nom_rol, { state: { user: res.user } });
+     navigate("/" + res.user.nom_rol, { state: { user: res.user } });
       } else {
         if (res.user.estado === 3) {
           if (res.user.nom_rol === 'agente') {
             try {
-              const resAgente = await AgenteFun.BuscarRutaValidacion({ id: res.user.id }, navigate);
+              const resAgente = await AgenteFun.BuscarRutaValidacion({ id: res.user.id_persona }, navigate);
               if (resAgente.success) {
                 navigate(`/validacionAgente/${resAgente.url}`);
               }
@@ -47,7 +51,7 @@ export function Login() {
             }
           } else {
              try {
-              const resCliente = await ClientesFun.BuscarRutaValidacion({ id: res.user.id }, navigate);
+              const resCliente = await ClientesFun.BuscarRutaValidacion({ id: res.user.id_persona }, navigate);
               if (resCliente.success) {
                 navigate(`/validacionEmail/${resCliente.url}`);
               }
@@ -78,14 +82,15 @@ export function Login() {
       ...formulario, [e.target.name]: e.target.value,
     });
   }
+  
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>Login</h1>
-        <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
+    <div className="login-container">
+      <div className="login-card">
+        <h1 className="login-title">Login</h1>
+        <form onSubmit={(e) => e.preventDefault()} className="login-form">
           <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
           <input
-            className={styles.input}
+            className="login-input"
             type="text"
             placeholder="Usuario"
             id="user"
@@ -94,7 +99,7 @@ export function Login() {
             onChange={darValores}
           />
           <input
-            className={styles.input}
+            className="login-input"
             type="password"
             placeholder="Contraseña"
             id="pass"
@@ -102,7 +107,7 @@ export function Login() {
             required
             onChange={darValores}
           />
-          <button className={styles.button} onClick={ingresar}>Ingresar</button>
+          <button className="login-button" onClick={ingresar}>Ingresar</button>
         </form>
       </div>
     </div>

@@ -1,0 +1,39 @@
+.infoCard {
+  width: 280px;
+  min-height: 180px;
+  background-color: #4CAF50;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.infoCard:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.infoCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoCardText {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+}
+
+.infoCardContent div {
+  font-size: 1rem;
+  word-wrap: break-word;
+}
