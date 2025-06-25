@@ -32,7 +32,6 @@ export function VentanaAgente() {
 
   return (
     <div className={styles.container}>
-      <h2>Bienvenido {user?.nom_rol}</h2>
       <ul className={styles.menu}>
         <li><button className={styles.menuButton} onClick={() => mostrarSeccion("clientes")}>Clientes</button></li>
         <li><button className={styles.menuButton} onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</button></li>

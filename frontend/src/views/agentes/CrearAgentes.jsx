@@ -56,93 +56,94 @@ export function CrearAgentes({ mostrarSeccion }) {
                 if (respuesta.isConfirmed) {
                     mostrarSeccion("agente")
                 }
-            });        } else {
+            });
+        } else {
             mostrarSeccion("agente")
         }
     }
-    
+
     return (
         <div className="crear-agentes-container">
             <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-            
+
             <form className="crear-agentes-form">
                 <h2 className="crear-agentes-title">Registrar Nuevo Agente</h2>
-                
+
                 <div className="form-campos">
                     <div className="form-group">
                         <label className="form-label" htmlFor="ced_agente">Cédula</label>
-                        <input 
-                            className="form-input" 
-                            type="text" 
-                            name="ced_agente" 
-                            id="ced_agente" 
-                            onChange={asignarValores} 
-                            placeholder="Ingrese la cédula" 
+                        <input
+                            className="form-input"
+                            type="text"
+                            name="ced_agente"
+                            id="ced_agente"
+                            onChange={asignarValores}
+                            placeholder="Ingrese la cédula"
                         />
                     </div>
-                    
+
                     <div className="form-group">
                         <label className="form-label" htmlFor="nom_agente">Nombres</label>
-                        <input 
-                            className="form-input" 
-                            type="text" 
-                            name="nom_agente" 
-                            id="nom_agente" 
-                            onChange={asignarValores} 
-                            placeholder="Ingrese los nombres" 
+                        <input
+                            className="form-input"
+                            type="text"
+                            name="nom_agente"
+                            id="nom_agente"
+                            onChange={asignarValores}
+                            placeholder="Ingrese los nombres"
                         />
                     </div>
-                    
+
                     <div className="form-group">
                         <label className="form-label" htmlFor="ape_agente">Apellidos</label>
-                        <input 
-                            className="form-input" 
-                            type="text" 
-                            name="ape_agente" 
-                            id="ape_agente" 
-                            onChange={asignarValores} 
-                            placeholder="Ingrese los apellidos" 
+                        <input
+                            className="form-input"
+                            type="text"
+                            name="ape_agente"
+                            id="ape_agente"
+                            onChange={asignarValores}
+                            placeholder="Ingrese los apellidos"
                         />
                     </div>
-                    
+
                     <div className="form-group">
                         <label className="form-label" htmlFor="tel_agente">Teléfono</label>
-                        <input 
-                            className="form-input" 
-                            type="tel" 
-                            name="tel_agente" 
-                            id="tel_agente" 
-                            onChange={asignarValores} 
-                            maxLength={10} 
-                            placeholder="Ingrese el teléfono" 
+                        <input
+                            className="form-input"
+                            type="tel"
+                            name="tel_agente"
+                            id="tel_agente"
+                            onChange={asignarValores}
+                            maxLength={10}
+                            placeholder="Ingrese el teléfono"
                         />
                     </div>
-                    
+
                     <div className="form-group">
                         <label className="form-label" htmlFor="email_agente">Correo</label>
-                        <input 
-                            className="form-input" 
-                            type="email" 
-                            name="email_agente" 
-                            id="email_agente" 
-                            onChange={asignarValores} 
-                            placeholder="Ingrese el correo electrónico" 
+                        <input
+                            className="form-input"
+                            type="email"
+                            name="email_agente"
+                            id="email_agente"
+                            onChange={asignarValores}
+                            placeholder="Ingrese el correo electrónico"
                         />
                     </div>
-                    
+
                     <div className="form-group">
                         <label className="form-label" htmlFor="dire_agente">Dirección</label>
-                        <input 
-                            className="form-input" 
-                            type="text" 
-                            name="dire_agente" 
-                            id="dire_agente" 
-                            onChange={asignarValores} 
-                            placeholder="Ingrese la dirección" 
+                        <input
+                            className="form-input"
+                            type="text"
+                            name="dire_agente"
+                            id="dire_agente"
+                            onChange={asignarValores}
+                            placeholder="Ingrese la dirección"
                         />
                     </div>
                 </div>
-                
+
                 <div className="form-actions">
                     <button type="button" className="btn-cancelar" onClick={cancelar}>Cancelar</button>
                     <button type="button" className="btn-crear" onClick={crearAgente}>Crear Agente</button>
