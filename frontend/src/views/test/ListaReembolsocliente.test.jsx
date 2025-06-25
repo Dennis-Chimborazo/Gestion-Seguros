@@ -111,4 +111,57 @@ describe('ListaReembolsoCliente - Unidad completa', () => {
         expect(screen.getByText('Seguro Médico')).toBeInTheDocument();
         expect(screen.getByText('Seguro Odontológico')).toBeInTheDocument();
     });
+    // Sección 6: No filtra si el input está vacío
+    it('no filtra si el input está vacío', async () => {
+        ReembolsoFun.buscarReembolsoCliente.mockResolvedValue(mockData);
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('Seguro Médico')).toBeInTheDocument();
+        });
+
+        const input = screen.getByPlaceholderText(/numero de reembolso/i);
+        fireEvent.change(input, { target: { value: '' } });
+
+        // No debería alterar los resultados visibles
+        expect(screen.getByText('Seguro Médico')).toBeInTheDocument();
+        expect(screen.getByText('Seguro Odontológico')).toBeInTheDocument();
+    });
+
+    // Sección 7: Simula error durante carga
+    it('maneja errores al cargar reembolsos', async () => {
+        const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
+        ReembolsoFun.buscarReembolsoCliente.mockRejectedValue(new Error('Error de red'));
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(consoleSpy).toHaveBeenCalledWith('Ha ocurrido un error');
+        });
+
+        consoleSpy.mockRestore();
+    });
+
+    // Sección 8: Valida estilos por clases CSS
+    it('tiene clases de estilo principales aplicadas', async () => {
+        ReembolsoFun.buscarReembolsoCliente.mockResolvedValue(mockData);
+
+        renderComponent();
+
+        const contenedor = await screen.findByText('Lista de Solicitudes');
+        expect(contenedor.closest('div')).toHaveClass('cliente-form');
+    });
+
+    // Sección 9: No renderiza tabla si no hay datos
+    it('muestra mensaje si no hay datos', async () => {
+        ReembolsoFun.buscarReembolsoCliente.mockResolvedValue([]);
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('No hay Solicitudes de Reembolsos para mostrar')).toBeInTheDocument();
+        });
+    });
+
 });
