@@ -55,7 +55,6 @@ export function ValidarContratacionSeguro() {
     e.preventDefault()
     try {
       const api = await GestionContratacionFun.activarContratacion(({id:cliente.idseguro, idvalid:cliente.idvalid}),navigate)
-      console.log(api)
       if (api) {
         swal.fire({
               title:"<label>Muchas Felicidades</label>",
