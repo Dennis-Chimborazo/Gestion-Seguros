@@ -1,7 +1,7 @@
 import axios from "axios";
 import swal from "sweetalert";
 
-const apiUrl = "https://gestion-seguros-backend.onrender.com/";
+const apiUrl = "192.168.0.1:3000";
 
 class ApiService {
 
