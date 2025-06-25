@@ -320,9 +320,6 @@ router.post("/validar-token-email", async (req, res) => {
 
 router.get("/buscarclienteID", async (req, res) => {
   const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
-console.log('hola mundo')
-console.log(id)
-
   try {
     const query = `SELECT * FROM cliente WHERE id_pers = $1`;
     const data = await database.query(query, [id]);

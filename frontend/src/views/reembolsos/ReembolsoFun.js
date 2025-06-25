@@ -20,6 +20,12 @@ class ReembolsoFun {
       const response = await ApiService.postArchive(`archivo/reembolso-pdf/${id}`, formulario, navigate);
       return response;
    }
+
+   static async buscarReembolsoCliente(id, navigate) {
+    const response = await ApiService.get("reembolso/buscar-reembolso-cliente", id, navigate);
+    return response;
+  }
+
 }
 
 export default ReembolsoFun;

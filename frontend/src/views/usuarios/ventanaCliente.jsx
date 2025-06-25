@@ -7,6 +7,7 @@ import ClientesArchivos from "../clientes/ClientesArchivos";
 import CargarArchivos from "../cargando/cargarArchivos";
 import ReembolsoCliente from "../reembolsos/ReembolsoCliente";
 import SeguroContrado from "../clientes/SeguroContrado";
+import ListaReembolsoCliente from "../reembolsos/ListaReembolsoCliente";
 
 export function VentanaCliente() {
   const navigate = useNavigate();
@@ -69,7 +70,9 @@ export function VentanaCliente() {
             <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
           ) : (<>
             <li><a onClick={() => mostrarSeccion("SegurosContratados")}>Seguros contratados</a></li>
-            <li><a onClick={() => mostrarSeccion("Reembolso")}>Reembolsos</a></li>
+            <li><a onClick={() => mostrarSeccion("SolictudReembolso")}>Solicitud de Reembolso</a></li>
+            <li><a onClick={() => mostrarSeccion("Reembolsos")}>Reembolsos</a></li>
+
 
             <li><a onClick={() => mostrarSeccion("Historial")}>Historial de pagos</a></li>
             <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
@@ -84,7 +87,8 @@ export function VentanaCliente() {
           <>
             <section >
               {seccionActiva === "SegurosContratados" && <SeguroContrado mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers} />}
-              {seccionActiva === "Reembolso" && <ReembolsoCliente mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers}  />}
+              {seccionActiva === "Reembolsos" && <ListaReembolsoCliente mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers} />}
+              {seccionActiva === "SolictudReembolso" && <ReembolsoCliente mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers}  />}
 
               {seccionActiva === "inicio" && <>
                 <div className={styles2.bienvenida}>

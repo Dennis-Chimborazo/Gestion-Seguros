@@ -3,8 +3,9 @@ import Select from "react-select";
 import ReembolsoFun from './ReembolsoFun';
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
+import swal from "sweetalert2";
 
-const ReembolsoCliente = ({ id }) => {
+const ReembolsoCliente = ({ id, mostrarSeccion }) => {
   const [reembolsoPdf, setReembolsoPdf] = useState(null);
   const [reenbolsoError, setReembolsoError] = useState('');
   const navigate = useNavigate();
@@ -26,11 +27,18 @@ const ReembolsoCliente = ({ id }) => {
       toast.error("Por favor, suba su factura en formato pdf.");
       return;
     } else {
-      console.log(formulario )
-      const res = await ReembolsoFun.enviarReembolso({motivo_reemb:formulario.motivo_reemb, id_pers:formulario.id_pers, id_seguro:formulario.id_seguro}, navigate);
+      console.log(formulario)
+      const res = await ReembolsoFun.enviarReembolso({ motivo_reemb: formulario.motivo_reemb, id_pers: formulario.id_pers, id_seguro: formulario.id_seguro }, navigate);
       const formDatareembo = new FormData();
       formDatareembo.append('reembolsoPDF', renombrarArchivo(reembolsoPdf, res.id_reemb, id));  // archivo
       await ReembolsoFun.guardarArhivoReembolso(formDatareembo, id, navigate)
+      swal.fire({
+        title: "<label>Exito</label>",
+        text: "Solicitud de reembolso enviada con éxito",
+        timer: 3500,
+      })
+      mostrarSeccion("Reembolsos")
+
     }
   }
 
@@ -68,14 +76,14 @@ const ReembolsoCliente = ({ id }) => {
       <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
       <div>
         <label htmlFor="">Motivo de reembolso</label>
-        <input type="text" id="motivo_reemb" name="motivo_reemb" placeholder="Motivo de reembolso"  onChange={(e)=> setFormulario({...formulario, motivo_reemb: e.target.value})} />
+        <input type="text" id="motivo_reemb" name="motivo_reemb" placeholder="Motivo de reembolso" onChange={(e) => setFormulario({ ...formulario, motivo_reemb: e.target.value })} />
         <Select
           options={Array.isArray(seguros) ? seguros.map((s) => ({
             value: s.id_seguro,
             label: s.nom_tip_seg,
           })) : []}
-          placeholder="Seleccione su seguro" 
-          onChange={seguroSeleccionado}/>
+          placeholder="Seleccione su seguro"
+          onChange={seguroSeleccionado} />
         <div>
           <div >
             <input
