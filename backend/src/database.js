@@ -22,7 +22,7 @@ const { Client } = pkg;
     this.client = new Client({
       user: 'kevin',
       host: 'localhost',
-      database: 'seguros',
+      database: 'gestorSeguros',
       password: 'root',
       port: 5432, 
     });
