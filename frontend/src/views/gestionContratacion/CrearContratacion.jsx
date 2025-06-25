@@ -36,7 +36,7 @@ export function CrearContratacion({ mostrarSeccion }) {
 
     const [nuevoSeguro, setNuevoSeguro] = useState({
         ciud_seguro: '', dia_seguro: '', mes_seguro: '',
-        anio_seguro: '', monto_seguro: '', tiempo_seguro: '', id_pers: '', id_tip_seg: '', id_emple: '', email_pers: ''
+        anio_seguro: '', monto_seguro: '', tiempo_seguro: '', id_pers: '', id_tip_seg: '', email_pers: ''
     })
 
     const [personaFac, setPersonaFac] = useState({
@@ -183,7 +183,8 @@ export function CrearContratacion({ mostrarSeccion }) {
                     id_pers: nuevoSeguro.id_pers,
                     id_cuent_Ban: cuentaBan.id_cuent_Ban,
                     id_pers_fac: personFac.id_pers_fac,
-                    id_agente: login.user,
+                    id_persona: login.user,
+                    tipo_persona: login.rol,
                     monto_seguro: nuevoSeguro.monto_seguro,
                     tiempo_seguro: nuevoSeguro.tiempo_seguro,
                     id_tip_seg: nuevoSeguro.id_tip_seg
@@ -195,20 +196,16 @@ export function CrearContratacion({ mostrarSeccion }) {
                 }));
                 await GestionContratacionFun.guardarDependientes(dependientesConSeguro, navigate);
                 const url = crearCadenaRandom();
-                const email = { to: nuevoSeguro.email_pers, token: url };
-                const token = { id_seguro: idSeduro.id_seguro, url: url, id_pers: nuevoSeguro.id_pers };
                 await Promise.all([
-                    GestionContratacionFun.enviarValidacionEmailGestCont(email, navigate),
-                    GestionContratacionFun.generarTokenContratacion(token, navigate)
+                    GestionContratacionFun.enviarValidacionEmailGestCont({ to: nuevoSeguro.email_pers, token: url }, navigate),
+                    GestionContratacionFun.generarTokenContratacion({ id_seguro: idSeduro.id_seguro, url: url, id_pers: nuevoSeguro.id_pers }, navigate)
                 ]);
                 swal.fire({
                     title: "<label>Éxito</label>",
                     text: "Nueva contratación del seguro. Pendiente a validación de cliente",
                     timer: 3500,
                 });
-
                 mostrarSeccion("GestionContratacion");
-
             } catch (error) {
                 console.error(error); // Útil para debugging
                 swal.fire({
@@ -227,19 +224,21 @@ export function CrearContratacion({ mostrarSeccion }) {
                     if (listDependientes.length >= 1) {
                             return true;
                     } else {
-                        toast.error("Debe de asignar minimo un dependiente⚠️");
+                        toast.error("Debe de asignar minimo un dependiente");
                         return false;
                     }
                 } else {
-                    toast.error("Datos de Tarjeta de Crédito estan incompletos ⚠️");
+                    toast.error("Datos de Tarjeta de Crédito estan incompletos ");
                     return false;
                 }
             } else {
-                toast.error("faltan campos en Datos de tarjeta de credito ⚠️");
+                toast.error("faltan campos en Datos de tarjeta de credito ");
                 return false;
             }
         } else {
-            toast.error("Datos de encuentran incompletos⚠️");
+        console.log("llega control else")
+
+            toast.error("Datos de encuentran incompletos");
             return false;
         }
     }

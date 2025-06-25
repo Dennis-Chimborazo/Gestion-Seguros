@@ -140,15 +140,15 @@ CREATE TABLE seguros (
   anio_seguro VARCHAR(100) NOT NULL,
   monto_seguro VARCHAR(100) NOT NULL,
   tiempo_seguro VARCHAR(100) NOT NULL,
+  id_persona INTEGER,
+  tipo_persona VARCHAR(100) NOT NULL,
   id_pers INTEGER,
-  id_agente INTEGER,
   id_tip_seg INTEGER,
   id_pers_fac INTEGER,
   id_cuent_Ban INTEGER,
   id_estado INTEGER,
   FOREIGN KEY (id_estado) REFERENCES estado(id_estado),
   FOREIGN KEY (id_pers) REFERENCES cliente(id_pers),
-  FOREIGN KEY (id_agente) REFERENCES agente(id_agente),
   FOREIGN KEY (id_tip_seg) REFERENCES tipo_seguro(id_tip_seg),
   FOREIGN KEY (id_pers_fac) REFERENCES persona_fac(id_pers_fac),
   FOREIGN KEY (id_cuent_Ban) REFERENCES cuenta_banco(id_cuent_Ban)
@@ -197,6 +197,12 @@ CREATE TABLE token_agente (
   FOREIGN KEY (id_agente) REFERENCES agente(id_agente)
 );
 
+CREATE TABLE validar_contratacion(
+  id_val_contra SERIAL PRIMARY KEY,
+  url_contra VARCHAR(20) NOT NULL,
+  token_val_contra VARCHAR(512) NOT NULL
+);
+
 -- País
 INSERT INTO pais (nom_pais) VALUES ('Ecuador');
 
@@ -212,11 +218,11 @@ INSERT INTO ciudad (nom_ciud, id_provin) VALUES
 
 -- Estados
 INSERT INTO estado (nom_estado) VALUES 
-('Activo'), ('Desactivado'), ('Pendiente'), ('Preactivo');
+('activo'), ('inactivo'), ('pendiente'), ('preactivo');
 
 -- Roles
 INSERT INTO roles (nom_rol) VALUES 
-('Admin'), ('Agente'), ('Cliente');
+('admin'), ('agente'), ('cliente');
 
 -- Categorías
 INSERT INTO categoria (nom_categoria) VALUES 
@@ -258,11 +264,11 @@ INSERT INTO beneficios (nom_beneficios, id_categoria) VALUES
 
 -- Tipo de seguros
 INSERT INTO tipo_seguro (nom_tip_seg, descrip_tip_seg, pago_tip_seg, suma_tip_seg, id_estado) VALUES
-('Seguro de Vida Básico', 'Cobertura por fallecimiento', 'Anual', '10000', 1),
-('Seguro Médico Premium', 'Cobertura total salud', 'Mensual', '5000', 1),
-('Seguro Vehicular Full', 'Daños totales y terceros', 'Mensual', '15000', 1),
-('Seguro Hogar Completo', 'Daños estructurales y contenido', 'Anual', '20000', 1),
-('Seguro de Vida Platinum', 'Cobertura máxima', 'Anual', '50000', 1);
+('Seguro de Vida Básico', 'Cobertura por fallecimiento', '10000', '10000', 1),
+('Seguro Médico Premium', 'Cobertura total salud', '20000', '5000', 1),
+('Seguro Vehicular Full', 'Daños totales y terceros', '34555', '15000', 1),
+('Seguro Hogar Completo', 'Daños estructurales y contenido', '534234', '20000', 1),
+('Seguro de Vida Platinum', 'Cobertura máxima', '123456', '50000', 1);
 
 -- Relación seguro-beneficio
 INSERT INTO seguro_bedeficio (id_tip_seg, id_beneficios) VALUES
@@ -271,7 +277,6 @@ INSERT INTO seguro_bedeficio (id_tip_seg, id_beneficios) VALUES
 (3, 7), (3, 8), (3, 9),
 (4, 10), (4, 11), (4, 12),
 (5, 1), (5, 2), (5, 3);
-
 
 -- Usuarios
 INSERT INTO usuarios (users, pass, id_persona, id_rol) VALUES

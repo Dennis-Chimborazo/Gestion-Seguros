@@ -20,32 +20,6 @@ router.get("/listar", async (req, res) => {
   }
 });
 
-router.post("/save", async (req, res) => {
-  const formulario = req.body;
-
-  try {
-    const data = await database.query(`
-        INSERT INTO seguros (
-          ciud_seguro, dia_seguro, mes_seguro, anio_seguro, firma_seguro, id_pers
-        ) VALUES (
-          $1, $2, $3, $4, $5, $6
-        )
-      `, [
-      formulario.ciud_seguro,
-      formulario.dia_seguro,
-      formulario.mes_seguro,
-      formulario.anio_seguro,
-      formulario.firma_seguro,
-      formulario.id_pers
-    ]);
-
-    res.json({ message: "Seguro guardado exitosamente", data });
-  } catch (error) {
-    console.error("Error al guardar seguro:", error);
-    res.status(500).json({ message: "Error al guardar seguro", error });
-  }
-});
-
 router.post("/personafac/save", async (req, res) => {
   const formulario = req.body;
 
@@ -130,14 +104,15 @@ router.post("/saveSeguro", async (req, res) => {
               anio_seguro,
               monto_seguro,
               tiempo_seguro,
+              id_persona,
+              tipo_persona,
               id_pers,
-              id_agente,
               id_tip_seg,
               id_pers_fac,
               id_cuent_Ban,
               id_estado
             ) VALUES (
-              $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+              $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13
             ) RETURNING id_seguro
           `, [
       formulario.ciud_seguro,
@@ -146,8 +121,9 @@ router.post("/saveSeguro", async (req, res) => {
       formulario.anio_seguro,
       formulario.monto_seguro,
       formulario.tiempo_seguro,
+      formulario.id_persona,
+      formulario.tipo_persona,
       formulario.id_pers,
-      formulario.id_agente,
       formulario.id_tip_seg,
       formulario.id_pers_fac,
       formulario.id_cuent_Ban,
@@ -279,12 +255,6 @@ router.post("/validar-token-contr", async (req, res) => {
 
 router.put("/activar-seguro", async (req, res) => {
   const { id, idvalid } = req.body;
-  console.log('---> val')
-  console.log(id)
-  console.log(idvalid)
-  console.log('---> val')
-
-
   const estadoActivo = '1';
 
   if (!id || !idvalid) {
@@ -341,7 +311,7 @@ router.get("/seguros-clientes", async (req, res) => {
     }
     const query = `SELECT s.id_seguro,s.monto_seguro, s.tiempo_seguro,tp.nom_tip_seg, 
                   (s.dia_seguro || '/' || s.mes_seguro || '/' || s.anio_seguro) AS fecha,
-                  COUNT(sf.id_tip_seg) AS numBeneficios
+                  COUNT(sf.id_tip_seg) AS numBeneficios,s.id_estado
                   FROM public.seguros s
                   INNER JOIN tipo_seguro tp ON tp.id_tip_seg = s.id_tip_seg
                   INNER JOIN seguro_bedeficio sf ON sf.id_tip_seg = tp.id_tip_seg
@@ -364,7 +334,7 @@ router.get("/reembolso-seguros-clientes", async (req, res) => {
     const query = `SELECT s.id_seguro,tp.nom_tip_seg
                   FROM public.seguros s
                   INNER JOIN tipo_seguro tp ON tp.id_tip_seg = s.id_tip_seg
-                  WHERE s.id_pers = $1`;
+                  WHERE s.id_pers = $1 and s.id_estado = 1`;
     const values = [id_pers];
     const data = await database.query(query, values);
     res.json(data.rows);

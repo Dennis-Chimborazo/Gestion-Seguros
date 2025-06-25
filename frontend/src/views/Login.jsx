@@ -17,13 +17,15 @@ export function Login() {
       toast.error("Complete todos los campos");
     } else {
       const res = await ApiService.login(formulario);
+      console.log(res.user.nom_rol)
       if (res.success) {
         localStorage.setItem("login", JSON.stringify({
           login: true,
           token: res.token,
-          user: res.user.id_persona
+          user: res.user.id_persona,
+          rol: res.user.nom_rol
         }));
-        navigate("/" + res.user.nom_rol, { state: { user: res.user } });
+     navigate("/" + res.user.nom_rol, { state: { user: res.user } });
       } else {
         if (res.user.estado === 3) {
           if (res.user.nom_rol === 'agente') {

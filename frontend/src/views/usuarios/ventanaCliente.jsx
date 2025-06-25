@@ -25,8 +25,7 @@ export function VentanaCliente() {
       const res = await ClientesFun.buscarcliente(login.user, navigate);
       setcliente(res);
       setEstado(res[0].id_estado);
-      setNombres(res[0].nom_cli + ' ' + res[0].ape_cli);
-
+      setNombres(res[0]?.nom_cli + ' ' + res[0]?.ape_cli);
       if (res[0].id_estado === 1) {
         setLoadingFoto(true); // empieza carga
         try {
@@ -63,7 +62,8 @@ export function VentanaCliente() {
             fotoPerfil && <img src={fotoPerfil} alt="Imagen perfil" />
           )} </>
         ) : (<></>)}
-        <label>{nombres || ''}</label>
+        <p> {nombres || "NO HAY NOMBRE"}</p>
+
         <ul>
           {estado === 4 ? (
             <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
