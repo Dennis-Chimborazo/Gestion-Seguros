@@ -2,5 +2,5 @@ projectKey=FrontPruebas
 serverUrl=http://localhost:9000
 serverVersion=25.6.0.109173
 dashboardUrl=http://localhost:9000/dashboard?id=FrontPruebas
-ceTaskId=23dec3a9-08ef-45e9-8270-95d97a2b0c86
-ceTaskUrl=http://localhost:9000/api/ce/task?id=23dec3a9-08ef-45e9-8270-95d97a2b0c86
+ceTaskId=6d514420-597a-4ed3-b10c-fdb83a7b98f4
+ceTaskUrl=http://localhost:9000/api/ce/task?id=6d514420-597a-4ed3-b10c-fdb83a7b98f4
