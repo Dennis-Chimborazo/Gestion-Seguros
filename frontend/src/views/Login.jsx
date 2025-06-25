@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ApiService from "../services/ApiService.js";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
-import styles from "./estilos/login.module.css";
+import "./estilos/Login.css";
 import AgenteFun from "./agentes/AgenteFun.js";
 import ClientesFun from "./clientes/ClientesFun.js";
 
@@ -78,14 +78,15 @@ export function Login() {
       ...formulario, [e.target.name]: e.target.value,
     });
   }
+  
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>Login</h1>
-        <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
+    <div className="login-container">
+      <div className="login-card">
+        <h1 className="login-title">Login</h1>
+        <form onSubmit={(e) => e.preventDefault()} className="login-form">
           <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
           <input
-            className={styles.input}
+            className="login-input"
             type="text"
             placeholder="Usuario"
             id="user"
@@ -94,7 +95,7 @@ export function Login() {
             onChange={darValores}
           />
           <input
-            className={styles.input}
+            className="login-input"
             type="password"
             placeholder="Contraseña"
             id="pass"
@@ -102,7 +103,7 @@ export function Login() {
             required
             onChange={darValores}
           />
-          <button className={styles.button} onClick={ingresar}>Ingresar</button>
+          <button className="login-button" onClick={ingresar}>Ingresar</button>
         </form>
       </div>
     </div>

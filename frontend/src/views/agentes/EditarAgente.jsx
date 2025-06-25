@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert2";
 import AgenteFun from "./AgenteFun";
-import UsuariosFun from "../usuarios/UsuariosFun";
 import { toast, Toaster } from "sonner";
+import "../estilos/EditarAgente.css";
 
 export function EditarAgente({ mostrarSeccion }) {
     const navigate = useNavigate();
@@ -23,11 +23,11 @@ export function EditarAgente({ mostrarSeccion }) {
     }, []);
 
     const asignarValores = (e) => {
-        setFormularioEdit({ ...formularioEdit, [e.target.name]: e.target.value })
-    }
+        setFormularioEdit({ ...formularioEdit, [e.target.name]: e.target.value });
+    };
 
     const editarDatosAgente = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (Object.values(formularioEdit).every(valor => valor !== '')) {
             if (verificacionCambios()) {
                 swal.fire({
@@ -38,109 +38,96 @@ export function EditarAgente({ mostrarSeccion }) {
                     confirmButtonText: "Si"
                 }).then(async (respuesta) => {
                     if (respuesta.isConfirmed) {
-                        if (formulario.ced_agente !== formularioEdit.ced_agente || formulario.email_agente !== formularioEdit.email_agente) {
-                            
-                            let res = await UsuariosFun.verificarUsuario({ users: formularioEdit.email_agente, cedula: formularioEdit.ced_agente }, navigate);
-                            if (res.existe) {
-                                toast.error(res.message);
-                            } else {
-                                try {
-                                    await AgenteFun.actualizarAgente(formularioEdit, navigate);
-                                    swal.fire({
-                                        title: "<label>Exito</label>",
-                                        text: "Informacion del agente actualizada",
-                                        timer: 3500,
-                                    })
-                                    mostrarSeccion("agente")
-                                } catch (error) {
-                                    swal.fire({
-                                        title: "<label>Advertencia</label>",
-                                        text: "Verifique los datos ingresados",
-                                        timer: 3500,
-                                    })
-                                }
-                            }
-                        } else {
-                            try {
-                                await AgenteFun.actualizarAgente(formularioEdit, navigate);
-                                swal.fire({
-                                    title: "<label>Exito</label>",
-                                    text: "Informacion del agente actualizada",
-                                    timer: 3500,
-                                })
-                                mostrarSeccion("agente")
-                            } catch (error) {
-                                swal.fire({
-                                    title: "<label>Advertencia</label>",
-                                    text: "Verifique los datos ingresados",
-                                    timer: 3500,
-                                })
-                            }
+                        try {
+                            await AgenteFun.actualizarAgente(formularioEdit, navigate);
+                            swal.fire({
+                                title: "<label>Exito</label>",
+                                text: "Informacion del agente actualizada",
+                                timer: 3500,
+                            });
+                            mostrarSeccion("agente");
+                        } catch (error) {
+                            swal.fire({
+                                title: "<label>Advertencia</label>",
+                                text: "Verifique los datos ingresados",
+                                timer: 3500,
+                            });
                         }
                     }
                 });
             } else {
-                toast.error("No se aplicado ningun cambio ");
+                toast.error("No se aplicado ningun cambio");
             }
         } else {
-            toast.error("Faltan campos por llenar ");
+            toast.error("Faltan campos por llenar");
         }
-    }
+    };
 
     const verificacionCambios = () => {
         const keysActual = Object.keys(formulario);
-        let huboCambios = false;
-        for (let key of keysActual) {
-            const actual = String(formulario[key] ?? '');
-            const original = String(formularioEdit[key] ?? '');
-            if (actual !== original) {
-                huboCambios = true;
-            }
-        }
-        return huboCambios;
+        return keysActual.some(key => formulario[key] !== formularioEdit[key]);
     };
 
     const cancelar = () => {
-        if (verificacionCambios()) {
-            swal.fire({
-                title: "⚠️ <label>Advertencia</label>",
-                text: "Desea descartar los cambios realizados",
-                showDenyButton: true,
-                denyButtonText: "No",
-                confirmButtonText: "Si"
-            }).then(async (respuesta) => {
-                if (respuesta.isConfirmed) {
-                    mostrarSeccion("agente")
-                }
-            });
-        } else {
-            mostrarSeccion("agente")
-        }
-    }
+        mostrarSeccion("agente");
+    };
 
     return (
-        <div>
+        <div className="editar-agente-container">
             <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-            <div>
-                <label htmlFor=""> cedula</label>
-                <input type="text" name="ced_agente" id="ced_agente" onChange={asignarValores} value={formularioEdit?.ced_agente || ''} />
-                <label htmlFor=""> Nombres</label>
-                <input type="text" name="nom_agente" id="nom_agente" onChange={asignarValores} value={formularioEdit?.nom_agente || ''} />
-                <label htmlFor=""> Apellidos</label>
-                <input type="text" name="ape_agente" id="ape_agente" onChange={asignarValores} value={formularioEdit?.ape_agente || ''} />
-                <label htmlFor=""> Telefono</label>
-                <input type="tel" name="tel_agente" id="tel_agente" onChange={asignarValores} maxLength={10} value={formularioEdit?.tel_agente || ''} />
-                <label htmlFor=""> Correo</label>
-                <input type="text" name="email_agente" id="email_agente" onChange={asignarValores} value={formularioEdit?.email_agente || ''} />
-                <label htmlFor=""> Direccion</label>
-                <input type="text" name="dire_agente" id="dire_agente" onChange={asignarValores} value={formularioEdit?.dire_agente || ''} />
-            </div>
-            <div>
-                <button onClick={cancelar}>Cancelar</button>
-                <button onClick={editarDatosAgente}>Editar</button>
+            <div className="editar-agente-form">
+                <div className="editar-agente-header">
+                    <h3 className="editar-agente-title">Editar Agente</h3>
+                </div>
+
+                <div className="form-section">
+                    <h4 className="form-section-title">Información Personal</h4>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="ced_agente">Cédula/Pasaporte</label>
+                            <input className="form-input" type="text" name="ced_agente" id="ced_agente" onChange={asignarValores} value={formularioEdit?.ced_agente || ''} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="nom_agente">Nombres</label>
+                            <input className="form-input" type="text" name="nom_agente" id="nom_agente" onChange={asignarValores} value={formularioEdit?.nom_agente || ''} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="ape_agente">Apellidos</label>
+                            <input className="form-input" type="text" name="ape_agente" id="ape_agente" onChange={asignarValores} value={formularioEdit?.ape_agente || ''} />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="form-section">
+                    <h4 className="form-section-title">Información de Contacto</h4>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="tel_agente">Teléfono</label>
+                            <input className="form-input" type="tel" name="tel_agente" id="tel_agente" onChange={asignarValores} value={formularioEdit?.tel_agente || ''} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="email_agente">Correo Electrónico</label>
+                            <input className="form-input" type="email" name="email_agente" id="email_agente" onChange={asignarValores} value={formularioEdit?.email_agente || ''} />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="form-section">
+                    <h4 className="form-section-title">Dirección</h4>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="dire_agente">Dirección</label>
+                            <input className="form-input" type="text" name="dire_agente" id="dire_agente" onChange={asignarValores} value={formularioEdit?.dire_agente || ''} />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="actions-container">
+                    <button className="btn-cancelar" onClick={cancelar}>Cancelar</button>
+                    <button className="btn-guardar" onClick={editarDatosAgente}>Guardar Cambios</button>
+                </div>
             </div>
         </div>
-
     );
 }
 export default EditarAgente;

@@ -8,6 +8,7 @@ const { Client } = pkg;
       return DataBase.instancia;
     }
 
+
    this.client = new Client({
       user: 'postgres',
       host: 'localhost',
