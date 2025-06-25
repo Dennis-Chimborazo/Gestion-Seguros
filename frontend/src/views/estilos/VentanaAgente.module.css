@@ -1,0 +1,135 @@
+/* Contenedor principal */
+.container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Menú del sidebar */
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    min-height: 100vh;
+    width: 280px;
+    box-shadow: none;
+    border-right: none;
+}
+
+/* Estilo del sidebar */
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: none;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+/* Estilos para el header de bienvenida */
+.welcomeHeader {
+    padding: 2rem 1.5rem 1.5rem;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 0;
+}
+
+.welcomeHeader h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(249, 248, 248, 0.1);
+}
+
+/* Estilos para los nuevos botones del menú */
+.menuButton {
+    display: block;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    color: #2d3748;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-bottom: 1px solid rgba(103, 126, 234, 0.1);
+    position: relative;
+    font-family: inherit;
+}
+
+.menuButton:hover {
+    background: linear-gradient(45deg, rgba(103, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    color: #667eea;
+    transform: translateX(8px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+}
+
+.menuButton:hover::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+}
+
+.menuButton:focus {
+    outline: none;
+    background: rgba(103, 126, 234, 0.05);
+}
+
+.menuButton:active {
+    transform: translateX(4px);
+}
+
+/* Logout especial */
+.logoutButton {
+    color: #e53e3e !important;
+    margin-top: auto;
+    border-top: 2px solid rgba(229, 62, 62, 0.2) !important;
+    border-bottom: none !important;
+    font-weight: 600;
+}
+
+.logoutButton:hover {
+    background: rgba(229, 62, 62, 0.1) !important;
+    color: #c53030 !important;
+    box-shadow: 0 4px 15px rgba(229, 62, 62, 0.2) !important;
+}
+
+.logoutButton:hover::before {
+    background: linear-gradient(45deg, #e53e3e, #c53030) !important;
+}
+
+/* Contenido principal */
+.section {
+    flex: 1;
+    height: 100vh;
+    /* Asegura altura de la ventana */
+    overflow-y: auto;
+    /* Permite scroll solo en contenido */
+    padding: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* Responsive */
