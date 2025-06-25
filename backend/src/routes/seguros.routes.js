@@ -254,10 +254,10 @@ router.post("/validar-token-contr", async (req, res) => {
 });
 
 router.put("/activar-seguro", async (req, res) => {
-  const { id, idvalid } = req.body;
+  const { id } = req.body;
   const estadoActivo = '1';
 
-  if (!id || !idvalid) {
+  if (!id ) {
     return res.status(400).json({ error: "Faltan datos requeridos (id o idvalid)." });
   }
   try {
@@ -270,11 +270,6 @@ router.put("/activar-seguro", async (req, res) => {
     if (updateResult.rowCount === 0) {
       return res.status(404).json({ error: "contratacion no encontrada no encontrado." });
     }
-
-    await database.query(
-      "DELETE FROM validar_contratacion WHERE id_val_contra = $1",
-      [idvalid]
-    );
 
     res.status(200).json({ message: "Contrato de seguro valiado correctamente." });
 

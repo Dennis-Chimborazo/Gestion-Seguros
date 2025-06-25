@@ -7,7 +7,6 @@ class DataBase {
     if (DataBase.instancia) {
       return DataBase.instancia;
     }
-
     this.client = new Client({
       user: 'gestorseguros_user',
       host: 'dpg-d1dsn3umcj7s73bf4dkg-a.oregon-postgres.render.com',
