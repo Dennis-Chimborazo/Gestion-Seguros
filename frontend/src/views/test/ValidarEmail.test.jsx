@@ -208,7 +208,7 @@ describe('ValidarEmail', () => {
 
   await waitFor(() => {
     const botonValidar = screen.getByText(/validar cuenta/i);
-    expect(botonValidar).toHaveClass('button');
+    expect(botonValidar).toHaveClass('validar-email-button');
   });
 });
 
@@ -291,7 +291,7 @@ describe('ValidarEmail', () => {
       await waitFor(() => {
         const botonOK = screen.getByText('OK');
         expect(botonOK).toBeInTheDocument();
-        expect(botonOK).toHaveClass('button');
+        expect(botonOK).toHaveClass('validar-email-button');
       });
     });
   });
@@ -597,18 +597,18 @@ describe('ValidarEmail', () => {
  
       await waitFor(() => {
         const titulo = screen.getByText('🎉 ¡Gracias por registrarte en Seguros.SA!');
-        expect(titulo).toHaveClass('title');
+        expect(titulo).toHaveClass('validar-email-title');
  
         const mensaje1 = screen.getByText(/Bienvenido\/a/);
         const mensaje2 = screen.getByText(/Esta validación garantiza/);
         const mensaje3 = screen.getByText(/Para completar tu registro/);
  
-        expect(mensaje1).toHaveClass('message');
-        expect(mensaje2).toHaveClass('message');
-        expect(mensaje3).toHaveClass('message');
+        expect(mensaje1).toHaveClass('validar-email-message');
+        expect(mensaje2).toHaveClass('validar-email-message');
+        expect(mensaje3).toHaveClass('validar-email-message');
  
         const boton = screen.getByTestId('btn-validar-cuenta');
-        expect(boton).toHaveClass('button');
+        expect(boton).toHaveClass('validar-email-button');
       });
     });
  
@@ -622,15 +622,15 @@ describe('ValidarEmail', () => {
  
       await waitFor(() => {
         const titulo = screen.getByText('⚠ Enlace inválido o expirado');
-        expect(titulo).toHaveClass('title');
+        expect(titulo).toHaveClass('validar-email-title');
  
         const mensajes = screen.getAllByText(/El enlace ya expiró|Si crees que esto/);
         mensajes.forEach(mensaje => {
-          expect(mensaje).toHaveClass('message');
+          expect(mensaje).toHaveClass('validar-email-message');
         });
  
         const boton = screen.getByText('OK');
-        expect(boton).toHaveClass('button');
+        expect(boton).toHaveClass('validar-email-button');
       });
     });
  
@@ -640,10 +640,10 @@ describe('ValidarEmail', () => {
       await waitFor(() => {
         const titulo = screen.getByText('🎉 ¡Gracias por registrarte en Seguros.SA!');
         const card = titulo.closest('div');
-        expect(card).toHaveClass('card');
+        expect(card).toHaveClass('validar-email-card');
  
         const container = card.parentElement;
-        expect(container).toHaveClass('container');
+        expect(container).toHaveClass('validar-email-container');
       });
     });
   });

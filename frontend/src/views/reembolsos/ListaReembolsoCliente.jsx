@@ -42,6 +42,7 @@ export function ListaReembolsoCliente({ id, mostrarSeccion }) {
     ];
 
     const filtrarClientes = (e) => {
+        if (!Reembolsos) return; 
         if (e.target.value !== '') {
             const filtro = Reembolsos.filter((a) =>
                 a.cedr_cli && a.cedr_cli.startsWith(e.target.value)

@@ -34,7 +34,6 @@ export function CrearAgentes({ mostrarSeccion }) {
         try {
             if (Object.values(formulario).every(valor => valor !== '')) {
                 let resVerif = await UsuariosFun.verificarDatosUsuario({ users: formulario.email_agente, cedula: formulario.ced_agente }, navigate);
-                let resVerif = await UsuariosFun.verificarDatosUsuario({ users: formulario.email_agente, cedula: formulario.ced_agente }, navigate);
                 if (resVerif.existe) {
                     toast.error(resVerif.message);
                 } else {
@@ -55,7 +54,6 @@ export function CrearAgentes({ mostrarSeccion }) {
                 }
             }
         } catch (error) {
-            console.error("Error inesperado al crear agente:", error);
             toast.error("Error servidor");
         }
     }
@@ -107,6 +105,7 @@ export function CrearAgentes({ mostrarSeccion }) {
                             id="ced_agente" 
                             onChange={asignarValores} 
                             placeholder="Ingrese la cédula" 
+                            value={formulario.ced_agente}  
                         />
                     </div>
                     
@@ -119,6 +118,7 @@ export function CrearAgentes({ mostrarSeccion }) {
                             id="nom_agente" 
                             onChange={asignarValores} 
                             placeholder="Ingrese los nombres" 
+                            value={formulario.nom_agente}
                         />
                     </div>
                     
@@ -131,6 +131,7 @@ export function CrearAgentes({ mostrarSeccion }) {
                             id="ape_agente" 
                             onChange={asignarValores} 
                             placeholder="Ingrese los apellidos" 
+                            value={formulario.ape_agente}
                         />
                     </div>
                     
@@ -144,6 +145,7 @@ export function CrearAgentes({ mostrarSeccion }) {
                             onChange={asignarValores} 
                             maxLength={10} 
                             placeholder="Ingrese el teléfono" 
+                             value={formulario.tel_agente}
                         />
                     </div>
                     
@@ -156,6 +158,7 @@ export function CrearAgentes({ mostrarSeccion }) {
                             id="email_agente" 
                             onChange={asignarValores} 
                             placeholder="Ingrese el correo electrónico" 
+                            value={formulario.email_agente}
                         />
                     </div>
                     
@@ -168,6 +171,7 @@ export function CrearAgentes({ mostrarSeccion }) {
                             id="dire_agente" 
                             onChange={asignarValores} 
                             placeholder="Ingrese la dirección" 
+                            value={formulario.dire_agente}
                         />
                     </div>
                 </div>

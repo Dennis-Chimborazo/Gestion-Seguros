@@ -12,7 +12,7 @@ const { Client } = pkg;
    this.client = new Client({
       user: 'postgres',
       host: 'localhost',
-      database: 'gestionPruebas',
+      database: 'gestionpruebas',
       password: 'admin',
       port: 5432, 
     });

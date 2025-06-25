@@ -86,7 +86,7 @@ router.get('/buscar/:subfolder', (req, res) => {
             console.log('No se encontraron archivos del tipo especificado');
             return res.status(404).json({ error: 'No se encontró archivo del tipo especificado' });
         }
-        const url = `http://localhost:4000/uploads/cliente/${subfolder}/${archivosFiltrados[0]}`;
+        const url = `https://gestion-seguros.onrender.com/uploads/cliente/${subfolder}/${archivosFiltrados[0]}`;
         res.json({ url });
     });
 });
@@ -116,7 +116,7 @@ router.get('/buscarReembolso/:subfolder', (req, res) => {
             console.log('No se encontraron archivos del tipo especificado');
             return res.status(404).json({ error: 'No se encontró archivo del tipo especificado' });
         }
-        const url = `http://localhost:4000/uploads/reembolso/${subfolder}/${archivosFiltrados[0]}`;
+        const url = `https://gestion-seguros.onrender.com/uploads/reembolso/${subfolder}/${archivosFiltrados[0]}`;
         res.json({ url });
     });
 });

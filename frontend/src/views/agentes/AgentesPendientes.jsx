@@ -114,6 +114,7 @@ export function AgentesPendientes({ mostrarSeccion }) {
                             <button 
                                 type="button" 
                                 className="clear-filter-btn" 
+                                data-testid="clear-filtro"
                                 onClick={borrarFiltro}
                                 title="Limpiar filtro"
                             >
@@ -124,6 +125,7 @@ export function AgentesPendientes({ mostrarSeccion }) {
                                 className="refresh-btn" 
                                 onClick={refrescar}
                                 title="Actualizar datos"
+                                data-testid="btn-actualizar"
                             >
                                 <SlRefresh size={20} />
                             </button>

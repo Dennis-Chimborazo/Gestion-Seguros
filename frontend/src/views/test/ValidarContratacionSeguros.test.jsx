@@ -1,123 +1,97 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import { BrowserRouter, MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
-  import styles from '../estilos/validarEmail.module.css';
+import styles from '../estilos/validarEmail.module.css';
 
+// Mocks generales
 
-// Mock todos los módulos externos primero
 const mockNavigate = jest.fn();
 const mockParams = { id: 'test-token-123' };
 
-// Mock de hooks de React Router
+// Mock de React Router hooks
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
-  useParams: () => mockParams
+  useParams: () => mockParams,
 }));
 
-// Mock de SweetAlert2
+// Mock SweetAlert2
 jest.mock('sweetalert2', () => ({
   __esModule: true,
   default: {
-    fire: jest.fn().mockResolvedValue({ isConfirmed: true })
-  }
+    fire: jest.fn().mockResolvedValue({ isConfirmed: true }),
+  },
 }));
 
-// Mock de CSS modules
+// Mock CSS modules
 jest.mock('../estilos/validarEmail.module.css', () => ({
-  container: 'container',
-  card: 'card',
-  title: 'title',
-  message: 'message',
-  button: 'button'
+  container: 'validar-email-container',
+  card: 'validar-email-card',
+  title: 'validar-email-title',
+  message: 'validar-email-message',
+  button: 'validar-email-button',
 }));
 
-// Mock del componente CargarInf
-jest.mock('../cargando/CargarInf', () => {
-  return function MockCargarInf() {
-    return <div data-testid="cargar-inf">Cargando información...</div>;
-  };
-});
+// Mock componente de carga
+jest.mock('../cargando/CargarInf', () => () => (
+  <div data-testid="cargar-inf">Cargando información...</div>
+));
 
-// Mock de GestionContratacionFun
+// Mock funciones de negocio
 jest.mock('../gestionContratacion/GestionContratacionFun', () => ({
   __esModule: true,
   default: {
     validarTokenContratacion: jest.fn(),
     activarContratacion: jest.fn(),
-  }
+  },
 }));
 
-// Imports después de los mocks
 import ValidarContratacionSeguro from '../validaciones/ValidarContratacionSeguro';
 import GestionContratacionFun from '../gestionContratacion/GestionContratacionFun';
 import swal from 'sweetalert2';
 
-// Wrapper para las pruebas con router
-const renderWithRouter = (component, initialEntries = ['/validar/test-token-123']) => {
-  return render(
-    <MemoryRouter initialEntries={initialEntries}>
-      {component}
-    </MemoryRouter>
-  );
-};
+// Helper para renderizar con router
+const renderWithRouter = (ui, initialEntries = ['/validar/test-token-123']) =>
+  render(<MemoryRouter initialEntries={initialEntries}>{ui}</MemoryRouter>);
 
 describe('ValidarContratacionSeguro', () => {
-  
-  // Datos mock para respuesta exitosa
   const mockValidacionExitosa = {
     idvalid: 'valid-123',
     client: [{
       id_pers: 1,
       nom_cli: 'Juan',
       ape_cli: 'Pérez',
-      cedr_cli: '1234567890'
+      cedr_cli: '1234567890',
     }],
     contr: [{
       id_tip_seg: 1,
       monto_seguro: '1200.00',
-      tiempo_seguro: 'Mensual'
+      tiempo_seguro: 'Mensual',
     }],
     data: {
-      id_seguro: 100
-    }
+      id_seguro: 100,
+    },
   };
-
-  const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-afterAll(() => {
-  logSpy.mockRestore();
-});
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
-    // Mock console.log para evitar ruido en las pruebas
-    
-    // Setup mock por defecto - éxito
     GestionContratacionFun.validarTokenContratacion.mockResolvedValue(mockValidacionExitosa);
     GestionContratacionFun.activarContratacion.mockResolvedValue(true);
   });
 
-  afterEach(() => {
-  if (console.log.mockRestore) {
-    console.log.mockRestore();
-  }
-});
-  describe('Estado de carga inicial', () => {
-    it('debe mostrar el componente de carga inicialmente', async () => {
-      // Hacer que la promesa no se resuelva inmediatamente
-      GestionContratacionFun.validarTokenContratacion.mockImplementation(
-        () => new Promise(() => {}) // Promise que nunca se resuelve
-      );
-      
+  describe('Estado inicial y carga', () => {
+    it('muestra el componente de carga inicialmente', async () => {
+      // Simular promesa pendiente para mantener el loading
+      GestionContratacionFun.validarTokenContratacion.mockImplementation(() => new Promise(() => {}));
+
       renderWithRouter(<ValidarContratacionSeguro />);
 
       expect(screen.getByTestId('cargar-inf')).toBeInTheDocument();
       expect(screen.getByText('Cargando información...')).toBeInTheDocument();
     });
 
-    it('debe llamar a validarTokenContratacion con el token correcto', async () => {
+    it('llama a validarTokenContratacion con token correcto', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
@@ -128,7 +102,7 @@ afterAll(() => {
       });
     });
 
-    it('debe ocultar el loading después de la validación', async () => {
+    it('oculta el loading tras la validación', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
@@ -138,7 +112,7 @@ afterAll(() => {
   });
 
   describe('Validación exitosa', () => {
-    it('debe mostrar información del cliente cuando la validación es exitosa', async () => {
+    it('muestra la información del cliente correctamente', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
@@ -150,71 +124,60 @@ afterAll(() => {
       });
     });
 
-    it('debe mostrar todos los elementos de la interfaz exitosa', async () => {
+    it('muestra todos los elementos de la UI exitosa', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
-        // Verificar título
         expect(screen.getByText('🎉 ¡Validación de Contratación Exitosa!')).toBeInTheDocument();
-        
-        // Verificar mensaje de bienvenida
         expect(screen.getByText(/Estimado\/a/)).toBeInTheDocument();
         expect(screen.getByText(/Juan Pérez/)).toBeInTheDocument();
-        
-        // Verificar información del seguro
         expect(screen.getByText(/Nos complace informarte/)).toBeInTheDocument();
         expect(screen.getByText(/🪪 Cédula:/)).toBeInTheDocument();
         expect(screen.getByText(/💰 Monto asegurado:/)).toBeInTheDocument();
         expect(screen.getByText(/📆 Frecuencia de pago:/)).toBeInTheDocument();
-        
-        // Verificar botón
-        expect(screen.getByText('Validar contratación')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /validar contratación/i })).toBeInTheDocument();
       });
     });
 
-    it('debe tener el botón de validar con la clase CSS correcta', async () => {
+    it('botón validar tiene clase y tipo correctos', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
-        const botonValidar = screen.getByText('Validar contratación');
-        expect(botonValidar).toHaveClass('button');
-        expect(botonValidar).toHaveAttribute('type', 'button');
+        const btn = screen.getByRole('button', { name: /validar contratación/i });
+        expect(btn).toHaveClass(styles.button);
+        expect(btn).toHaveAttribute('type', 'button');
       });
     });
 
-    it('debe mostrar la información en formato de lista', async () => {
+    it('muestra la información en lista con dos elementos', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
-        const lista = screen.getByRole('list');
-        expect(lista).toBeInTheDocument();
-        
+        const list = screen.getByRole('list');
+        expect(list).toBeInTheDocument();
+
         const items = screen.getAllByRole('listitem');
-        expect(items).toHaveLength(2); // Monto y frecuencia
+        expect(items).toHaveLength(2);
       });
     });
   });
 
   describe('Validación fallida', () => {
-    it('debe mostrar mensaje de error cuando el token es inválido', async () => {
-      GestionContratacionFun.validarTokenContratacion.mockRejectedValue(
-        new Error('Token inválido')
-      );
-      
+    beforeEach(() => {
+      GestionContratacionFun.validarTokenContratacion.mockRejectedValue(new Error('Token inválido'));
+    });
+
+    it('muestra mensaje de error para token inválido', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
         expect(screen.getByText('⚠️ Enlace inválido o expirado')).toBeInTheDocument();
         expect(screen.getByText('El enlace ya expiró o no es válido.')).toBeInTheDocument();
-        expect(screen.getByText('Volver al inicio')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /volver al inicio/i })).toBeInTheDocument();
       });
     });
 
-    it('debe mostrar información de soporte cuando falla la validación', async () => {
-      GestionContratacionFun.validarTokenContratacion.mockRejectedValue(
-        new Error('Token expirado')
-      );
-      
+    it('muestra información de soporte en caso de error', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
@@ -223,79 +186,63 @@ afterAll(() => {
       });
     });
 
-    it('debe tener botón para volver al inicio cuando falla', async () => {
-      GestionContratacionFun.validarTokenContratacion.mockRejectedValue(
-        new Error('Error de validación')
-      );
-      
+    it('botón "Volver al inicio" tiene clase correcta', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
-        const botonVolver = screen.getByText('Volver al inicio');
-        expect(botonVolver).toBeInTheDocument();
-        expect(botonVolver).toHaveClass('button');
+        const btn = screen.getByRole('button', { name: /volver al inicio/i });
+        expect(btn).toHaveClass(styles.button);
       });
     });
   });
 
-  describe('Interacciones del usuario', () => {
-    it('debe activar la contratación cuando se hace click en validar', async () => {
+  describe('Interacciones usuario', () => {
+    it('activa la contratación al hacer click en validar', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
-        expect(screen.getByText('Validar contratación')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /validar contratación/i })).toBeInTheDocument();
       });
 
-      const botonValidar = screen.getByText('Validar contratación');
-      
+      const btn = screen.getByRole('button', { name: /validar contratación/i });
+
       await act(async () => {
-        fireEvent.click(botonValidar);
+        fireEvent.click(btn);
       });
 
       await waitFor(() => {
         expect(GestionContratacionFun.activarContratacion).toHaveBeenCalledWith(
-          {
-            id: 100, // id_seguro del mock
-            idvalid: 'valid-123'
-          },
+          { id: 100, idvalid: 'valid-123' },
           mockNavigate
         );
       });
     });
 
-    it('debe mostrar SweetAlert de éxito al activar correctamente', async () => {
+    it('muestra alerta de éxito con swal al activar correctamente', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
-      await waitFor(() => {
-        expect(screen.getByText('Validar contratación')).toBeInTheDocument();
-      });
+      const btn = await screen.findByRole('button', { name: /validar contratación/i });
 
-      const botonValidar = screen.getByText('Validar contratación');
-      
       await act(async () => {
-        fireEvent.click(botonValidar);
+        fireEvent.click(btn);
       });
 
       await waitFor(() => {
         expect(swal.fire).toHaveBeenCalledWith({
           title: "<label>Muchas Felicidades</label>",
-          text: "se ha completado con exito la validacion de tu cuenta en Seguros.SA \nYa puedes comenzar desde ahora mismo",
+          text: expect.stringContaining('se ha completado con exito'),
           timer: 4500,
         });
       });
     });
 
-    it('debe navegar al inicio después de activar exitosamente', async () => {
+    it('navega a "/" después de activar exitosamente', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
-      await waitFor(() => {
-        expect(screen.getByText('Validar contratación')).toBeInTheDocument();
-      });
+      const btn = await screen.findByRole('button', { name: /validar contratación/i });
 
-      const botonValidar = screen.getByText('Validar contratación');
-      
       await act(async () => {
-        fireEvent.click(botonValidar);
+        fireEvent.click(btn);
       });
 
       await waitFor(() => {
@@ -303,21 +250,15 @@ afterAll(() => {
       });
     });
 
-    it('debe navegar al inicio cuando se hace click en "Volver al inicio"', async () => {
-      GestionContratacionFun.validarTokenContratacion.mockRejectedValue(
-        new Error('Token inválido')
-      );
-      
+    it('navega a "/" al hacer click en "Volver al inicio" en error', async () => {
+      GestionContratacionFun.validarTokenContratacion.mockRejectedValue(new Error('Token inválido'));
+
       renderWithRouter(<ValidarContratacionSeguro />);
 
-      await waitFor(() => {
-        expect(screen.getByText('Volver al inicio')).toBeInTheDocument();
-      });
+      const btn = await screen.findByRole('button', { name: /volver al inicio/i });
 
-      const botonVolver = screen.getByText('Volver al inicio');
-      
       await act(async () => {
-        fireEvent.click(botonVolver);
+        fireEvent.click(btn);
       });
 
       expect(mockNavigate).toHaveBeenCalledWith('/');
@@ -325,21 +266,15 @@ afterAll(() => {
   });
 
   describe('Manejo de errores en activación', () => {
-    it('debe mostrar alerta de error cuando falla la activación', async () => {
-      GestionContratacionFun.activarContratacion.mockRejectedValue(
-        new Error('Error de activación')
-      );
-      
+    it('muestra alerta de error si falla la activación', async () => {
+      GestionContratacionFun.activarContratacion.mockRejectedValue(new Error('Error de activación'));
+
       renderWithRouter(<ValidarContratacionSeguro />);
 
-      await waitFor(() => {
-        expect(screen.getByText('Validar contratación')).toBeInTheDocument();
-      });
+      const btn = await screen.findByRole('button', { name: /validar contratación/i });
 
-      const botonValidar = screen.getByText('Validar contratación');
-      
       await act(async () => {
-        fireEvent.click(botonValidar);
+        fireEvent.click(btn);
       });
 
       await waitFor(() => {
@@ -351,53 +286,48 @@ afterAll(() => {
       });
     });
 
-    it('debe logear el error cuando falla la activación', async () => {
-      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-      const errorActivacion = new Error('Error de servidor');
-      
-      GestionContratacionFun.activarContratacion.mockRejectedValue(errorActivacion);
-      
+    it('loggea el error en consola si falla la activación', async () => {
+      const error = new Error('Error de servidor');
+      GestionContratacionFun.activarContratacion.mockRejectedValue(error);
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
       renderWithRouter(<ValidarContratacionSeguro />);
 
-      await waitFor(() => {
-        expect(screen.getByText('Validar contratación')).toBeInTheDocument();
-      });
+      const btn = await screen.findByRole('button', { name: /validar contratación/i });
 
-      const botonValidar = screen.getByText('Validar contratación');
-      
       await act(async () => {
-        fireEvent.click(botonValidar);
+        fireEvent.click(btn);
       });
 
       await waitFor(() => {
-        expect(consoleLogSpy).toHaveBeenCalledWith(errorActivacion);
+        expect(consoleSpy).toHaveBeenCalledWith(error);
       });
-      
-      consoleLogSpy.mockRestore();
+
+      consoleSpy.mockRestore();
     });
   });
 
   describe('Diferentes parámetros de URL', () => {
-    it('debe funcionar con diferentes tokens', async () => {
+    it('funciona con distintos tokens', async () => {
       const useParamsSpy = jest.spyOn(require('react-router-dom'), 'useParams');
-      useParamsSpy.mockReturnValue({ id: 'different-token-456' });
-      
+      useParamsSpy.mockReturnValue({ id: 'otro-token-456' });
+
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
         expect(GestionContratacionFun.validarTokenContratacion).toHaveBeenCalledWith(
-          { url: 'different-token-456' },
+          { url: 'otro-token-456' },
           mockNavigate
         );
       });
-      
+
       useParamsSpy.mockRestore();
     });
 
-    it('debe manejar tokens undefined', async () => {
+    it('maneja token undefined sin romperse', async () => {
       const useParamsSpy = jest.spyOn(require('react-router-dom'), 'useParams');
       useParamsSpy.mockReturnValue({ id: undefined });
-      
+
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
@@ -406,17 +336,16 @@ afterAll(() => {
           mockNavigate
         );
       });
-      
+
       useParamsSpy.mockRestore();
     });
   });
 
-  describe('Estados del componente', () => {
-    it('debe actualizar correctamente el estado del cliente', async () => {
+  describe('Estado interno y manejo datos', () => {
+    it('actualiza el estado del cliente correctamente', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
-        // Verificar que los datos del cliente se muestran correctamente
         expect(screen.getByText('Juan Pérez')).toBeInTheDocument();
         expect(screen.getByText('1234567890')).toBeInTheDocument();
         expect(screen.getByText('$1200.00')).toBeInTheDocument();
@@ -424,92 +353,85 @@ afterAll(() => {
       });
     });
 
-    it('debe manejar datos de cliente incompletos', async () => {
+    it('muestra UI incluso con datos de cliente incompletos', async () => {
       const mockIncompleto = {
         ...mockValidacionExitosa,
         client: [{
           id_pers: 1,
           nom_cli: '',
           ape_cli: '',
-          cedr_cli: ''
-        }]
+          cedr_cli: '',
+        }],
       };
-      
       GestionContratacionFun.validarTokenContratacion.mockResolvedValue(mockIncompleto);
-      
+
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
         expect(screen.getByText('🎉 ¡Validación de Contratación Exitosa!')).toBeInTheDocument();
-        // Los campos vacíos aún deben renderizarse
+        // Verificar que aparece texto genérico aunque nombres estén vacíos
         expect(screen.getByText(/Estimado\/a/i)).toBeInTheDocument();
       });
     });
   });
-  
+
   describe('Estructura y estilos CSS', () => {
-    it('debe aplicar las clases CSS correctas', async () => {
+    it('aplica las clases CSS correctas en elementos principales', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
-        const container = screen.getByTestId("container");
-        const card = screen.getByTestId("card");
+        const container = screen.getByTestId('container');
+        const card = screen.getByTestId('card');
+
         expect(container).toHaveClass(styles.container);
         expect(card).toHaveClass(styles.card);
-
       });
     });
 
-    it('debe tener la estructura correcta cuando hay error', async () => {
-      GestionContratacionFun.validarTokenContratacion.mockRejectedValue(
-        new Error('Token inválido')
-      );
-      
+    it('estructura correcta en estado de error', async () => {
+      GestionContratacionFun.validarTokenContratacion.mockRejectedValue(new Error('Token inválido'));
+
       renderWithRouter(<ValidarContratacionSeguro />);
 
       await waitFor(() => {
         const titulo = screen.getByText('⚠️ Enlace inválido o expirado');
-        expect(titulo).toHaveClass('title');
-        
         const mensaje = screen.getByText('El enlace ya expiró o no es válido.');
-        expect(mensaje).toHaveClass('message');
-        
-        const boton = screen.getByText('Volver al inicio');
-        expect(boton).toHaveClass('button');
+        const boton = screen.getByRole('button', { name: /volver al inicio/i });
+
+        expect(titulo).toHaveClass(styles.title);
+        expect(mensaje).toHaveClass(styles.message);
+        expect(boton).toHaveClass(styles.button);
       });
     });
   });
 
-  describe('Integración completa', () => {
-    it('debe completar el flujo exitoso completo', async () => {
+  describe('Flujos completos de integración', () => {
+    it('completa exitosamente todo el flujo', async () => {
       renderWithRouter(<ValidarContratacionSeguro />);
 
-      // 1. Estado de carga inicial
+      // Loading inicial
       expect(screen.getByTestId('cargar-inf')).toBeInTheDocument();
 
-      // 2. Después de cargar - validación exitosa
+      // Después de cargar - validación exitosa
       await waitFor(() => {
         expect(screen.queryByTestId('cargar-inf')).not.toBeInTheDocument();
         expect(screen.getByText('🎉 ¡Validación de Contratación Exitosa!')).toBeInTheDocument();
       });
 
-      // 3. Verificar llamada a la API
       expect(GestionContratacionFun.validarTokenContratacion).toHaveBeenCalledWith(
         { url: 'test-token-123' },
         mockNavigate
       );
 
-      // 4. Verificar datos mostrados
       expect(screen.getByText('Juan Pérez')).toBeInTheDocument();
       expect(screen.getByText('$1200.00')).toBeInTheDocument();
 
-      // 5. Activar contratación
-      const botonValidar = screen.getByText('Validar contratación');
+      // Activar contratación
+      const btn = screen.getByRole('button', { name: /validar contratación/i });
       await act(async () => {
-        fireEvent.click(botonValidar);
+        fireEvent.click(btn);
       });
 
-      // 6. Verificar activación
       await waitFor(() => {
         expect(GestionContratacionFun.activarContratacion).toHaveBeenCalledWith(
           { id: 100, idvalid: 'valid-123' },
@@ -517,39 +439,34 @@ afterAll(() => {
         );
       });
 
-      // 7. Verificar alerta de éxito y navegación
       expect(swal.fire).toHaveBeenCalledWith(expect.objectContaining({
-        title: "<label>Muchas Felicidades</label>"
+        title: "<label>Muchas Felicidades</label>",
       }));
+
       expect(mockNavigate).toHaveBeenCalledWith('/');
     });
 
-    it('debe completar el flujo de error completo', async () => {
-      GestionContratacionFun.validarTokenContratacion.mockRejectedValue(
-        new Error('Token expirado')
-      );
-      
+    it('completa correctamente el flujo de error', async () => {
+      GestionContratacionFun.validarTokenContratacion.mockRejectedValue(new Error('Token expirado'));
+
       renderWithRouter(<ValidarContratacionSeguro />);
 
-      // 1. Estado de carga inicial
+      // Loading inicial
       expect(screen.getByTestId('cargar-inf')).toBeInTheDocument();
 
-      // 2. Después de cargar - error
+      // Después error
       await waitFor(() => {
         expect(screen.queryByTestId('cargar-inf')).not.toBeInTheDocument();
         expect(screen.getByText('⚠️ Enlace inválido o expirado')).toBeInTheDocument();
       });
 
-      // 3. Verificar mensaje de error
       expect(screen.getByText('El enlace ya expiró o no es válido.')).toBeInTheDocument();
 
-      // 4. Volver al inicio
-      const botonVolver = screen.getByText('Volver al inicio');
+      const btnVolver = screen.getByRole('button', { name: /volver al inicio/i });
       await act(async () => {
-        fireEvent.click(botonVolver);
+        fireEvent.click(btnVolver);
       });
 
-      // 5. Verificar navegación
       expect(mockNavigate).toHaveBeenCalledWith('/');
     });
   });

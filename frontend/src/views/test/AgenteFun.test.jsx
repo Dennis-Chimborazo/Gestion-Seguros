@@ -22,15 +22,16 @@ describe('AgenteFun', () => {
             expect(result).toEqual(mockResponse);
         });
 
-        it('buscarAgente debería llamar ApiService.get correctamente', async () => {
+        it('buscarAgente debería llamar ApiService.getNull correctamente', async () => {
             const id = 10;
             const mockResponse = { id: 10, nombre: 'Luis' };
-            ApiService.get.mockResolvedValue(mockResponse);
+            ApiService.getNull.mockResolvedValue(mockResponse);
 
             const result = await AgenteFun.buscarAgente(id, mockNavigate);
-            expect(ApiService.get).toHaveBeenCalledWith('agente/buscar-agente', id, mockNavigate);
+            expect(ApiService.getNull).toHaveBeenCalledWith('agente/buscar-agente', id, mockNavigate);
             expect(result).toEqual(mockResponse);
         });
+
 
         it('actualizarAgente debería llamar ApiService.put con formulario', async () => {
             const form = { id: 1, nombre: 'Actualizado' };
@@ -160,21 +161,22 @@ describe('AgenteFun', () => {
         });
     });
 
-  // 🔗 6. PRUEBA DE INTEGRACIÓN FUNCIONAL
-  describe('Integración entre funciones y backend simulado', () => {
-    it('guardarAgente + buscarAgente flujo combinado', async () => {
-      const form = { nombre: 'Lucía', email: 'lucia@email.com' };
-      const guardado = { id: 101, ...form };
+    // 🔗 6. PRUEBA DE INTEGRACIÓN FUNCIONAL
+    describe('Integración entre funciones y backend simulado', () => {
+        it('guardarAgente + buscarAgente flujo combinado', async () => {
+            const form = { nombre: 'Lucía', email: 'lucia@email.com' };
+            const guardado = { id: 101, ...form };
 
-      ApiService.post.mockResolvedValue(guardado);
-      ApiService.get.mockResolvedValue(guardado);
+            ApiService.post.mockResolvedValue(guardado);
+            ApiService.getNull.mockResolvedValue(guardado); // ✅ usar getNull
 
-      const guardar = await AgenteFun.guardarAgente(form, mockNavigate);
-      const buscar = await AgenteFun.buscarAgente(guardar.id, mockNavigate);
+            const guardar = await AgenteFun.guardarAgente(form, mockNavigate);
+            const buscar = await AgenteFun.buscarAgente(guardar.id, mockNavigate);
 
-      expect(guardar).toEqual(buscar);
-      expect(ApiService.post).toHaveBeenCalledTimes(1);
-      expect(ApiService.get).toHaveBeenCalledWith('agente/buscar-agente', guardar.id, mockNavigate);
+            expect(guardar).toEqual(buscar); // ✅ ambos devuelven el mismo objeto simulado
+            expect(ApiService.post).toHaveBeenCalledTimes(1);
+            expect(ApiService.getNull).toHaveBeenCalledWith('agente/buscar-agente', guardar.id, mockNavigate); // ✅
+        });
+
     });
-  });
 });

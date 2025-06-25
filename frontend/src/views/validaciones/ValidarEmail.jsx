@@ -139,15 +139,15 @@ export function ValidarEmail() {
             </p>
             <div className="validar-email-form">
               <label htmlFor="passTemp">Ingrese contraseña temporal</label>
-              <input type="password" id="passTemp" name="passTemp" onChange={asignarValores} />
+              <input type="password" id="passTemp" name="passTemp" data-testid="passTemp" onChange={asignarValores} />
               <label htmlFor="pass">Ingrese una contraseña</label>
-              <input type="password" id="pass" name="pass" onChange={asignarValores} />
+              <input type="password" id="pass" name="pass" data-testid="pass" onChange={asignarValores} />
               <label htmlFor="confirmPassword">Vuelva a escribir la contraseña</label>
-              <input type="password" id="confirmPassword" name="confirmPassword" onChange={asignarValores} />
+              <input type="password" id="confirmPassword" name="confirmPassword" data-testid="confirmpass" onChange={asignarValores} />
             </div>
             <div className="validar-email-button-container">
               <button className="validar-email-button cancel" onClick={cancelarCuenta}>Cancelar</button>
-              <button className="validar-email-button" onClick={preValidarCuenta}>Validar Cuenta</button>
+              <button className="validar-email-button" data-testid="btn-validar-cuenta" onClick={preValidarCuenta}>Validar Cuenta</button>
             </div>
           </>
         ) : (
