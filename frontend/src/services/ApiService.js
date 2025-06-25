@@ -50,10 +50,22 @@ class ApiService {
   static async get(getApi, id, navigate) {
     const tokenInfo = JSON.parse(localStorage.getItem("login"));
     const token = tokenInfo ? tokenInfo.token : "";
+    console.log(`${apiUrl}${getApi}?id=${id}`)
     const response = await axios.get(`${apiUrl}${getApi}?id=${id}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return Array.isArray(response.data) ? response.data : [];
+  }
+
+    static async getNull(getApi, id, navigate) {
+    console.log(`${apiUrl}${getApi}?id=${id}`)
+    const response = await axios.get(`${apiUrl}${getApi}?id=${id}`, {
+      headers: {
+        "Content-Type": "application/json",
       },
     });
 

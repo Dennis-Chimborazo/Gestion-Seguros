@@ -1,0 +1,69 @@
+-- Insert data into estado table
+INSERT INTO estado (nom_estado) VALUES ('Activo'), ('Inactivo');
+
+-- Insert data into pais table
+INSERT INTO pais (nom_pais) VALUES ('Ecuador'), ('Colombia');
+
+-- Insert data into provincia table
+INSERT INTO provincia (nom_provin, id_pais) VALUES ('Pichincha', 1), ('Guayas', 1);
+
+-- Insert data into ciudad table
+INSERT INTO ciudad (nom_ciud, id_provin) VALUES ('Quito', 1), ('Guayaquil', 2);
+
+-- Insert data into cliente table
+INSERT INTO cliente (cedr_cli, tipo_cedr_cli, nacion_cli, nom_cli, ape_cli, fecha_naci_cli, lugar_naci_cli, tel_pers, cel_pers, email_pers, edad_pers, sexo_cli, estado_civil_pers, estatura_cli, peso_cli, parroq_cli, calle_princ_pers, calle_secun_pers, id_ciud, id_estado) 
+VALUES ('1234567890', 'Cédula', 'Ecuatoriana', 'Juan', 'Perez', '01-01-1990', 'Quito', '022345678', '0998765432', 'juan.perez@example.com', '33', 'Masculino', 'Soltero', '175', '70', 'Centro', 'Av. Amazonas', 'Av. Colon', 1, 1);
+
+-- Insert data into roles table
+INSERT INTO roles (nom_rol) VALUES ('Admin'), ('User');
+
+-- Insert data into usuarios table
+INSERT INTO usuarios (users, pass, id_persona, id_rol) VALUES ('admin', 'password123', 1, 1);
+
+-- Insert data into empleado table
+INSERT INTO empleado (ced_emple, nom_emple, email_emple, firma_emple) VALUES ('0987654321', 'Maria Lopez', 'maria.lopez@example.com', 'FirmaMaria');
+
+-- Insert data into excl_empresa table
+INSERT INTO excl_empresa (ciud_excl_empresa, dia_excl_empresa, mes_excl_empresa, anio_excl_empresa, firma_excl_empresa, nombre_excl_empresa, cargo_excl_empresa) 
+VALUES ('Quito', '01', 'Enero', '2025', 'FirmaEmpresa', 'Empresa XYZ', 'Gerente');
+
+-- Insert data into persona_fac table
+INSERT INTO persona_fac (cedr_pers_fac, razon_pers_fac, tipo_pers_fac, nacion_pers_fac, nom_pers_fac, ape_pers_fac, tel_pers_fac, cel_pers_fac, email_pers_fac, direc_pers_fac, parent_pers_fac) 
+VALUES ('1234567890', 'Razon Social', 'Cédula', 'Ecuatoriana', 'Carlos', 'Gomez', '022345678', '0998765432', 'carlos.gomez@example.com', 'Av. Amazonas', 'Padre');
+
+-- Insert data into cuenta_banco table
+INSERT INTO cuenta_banco (tipo_cuent_Ban, nom_cuent_Ban, mun_cuent_Ban) VALUES ('Ahorros', 'Banco Pichincha', 'Quito');
+
+-- Insert data into salud table
+INSERT INTO salud (discapci_salud, diagnos_salud, fecha_ini_salud, fecha_fin_salud) VALUES ('Ninguna', 'Sin diagnóstico', '01-01-2020', '01-01-2025');
+
+-- Insert data into categoria table
+INSERT INTO categoria (nom_categoria) VALUES ('Salud'), ('Vida');
+
+-- Insert data into beneficios table
+INSERT INTO beneficios (nom_beneficios, id_categoria) VALUES ('Cobertura médica', 1), ('Cobertura de vida', 2);
+
+-- Insert data into tipo_seguro table
+INSERT INTO tipo_seguro (nom_tip_seg, descrip_tip_seg, pago_tip_seg, suma_tip_seg, id_estado) 
+VALUES ('Seguro de Salud', 'Cobertura completa', 'Mensual', '10000', 1);
+
+-- Insert data into seguros table
+INSERT INTO seguros (ciud_seguro, dia_seguro, mes_seguro, anio_seguro, monto_seguro, tiempo_seguro, id_pers, id_emple, id_tip_seg, id_pers_fac, id_cuent_Ban, id_estado) 
+VALUES ('Quito', '01', 'Enero', '2025', '500', '1 año', 1, 1, 1, 1, 1, 1);
+
+-- Insert data into dependientes table
+INSERT INTO dependientes (cedr_depen, tipo_cedr_depen, nom_depen, ape_depen, fecha_naci_depen, parent_depen, discap_depen, cond_depen, fecha_fin_cond, fecha_ini_cond, id_seguro) 
+VALUES ('1234567890', 'Cédula', 'Ana', 'Perez', '01-01-2010', 'Hija', 'Ninguna', 'Sin condiciones', '01-01-2025', '01-01-2020', 1);
+
+-- Insert data into seguro_bedeficio table
+INSERT INTO seguro_bedeficio (id_tip_seg, id_beneficios) VALUES (1, 1);
+
+-- Insert data into validar_email table
+INSERT INTO validar_email (url_emal, token_val_email, id_pers) VALUES ('http://example.com', 'token123', 1);
+
+-- Insert data into agente table
+INSERT INTO agente (ced_agente, nom_agente, ape_agente, email_agente, dire_agente, tel_agente, id_estado) 
+VALUES ('0987654321', 'Luis', 'Martinez', 'luis.martinez@example.com', 'Av. Colon', '022345678', 1);
+
+-- Insert data into token_agente table
+INSERT INTO token_agente (url_emal, token_val, id_agente) VALUES ('http://example.com', 'token456', 1);
