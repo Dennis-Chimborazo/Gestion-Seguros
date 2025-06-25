@@ -42,6 +42,11 @@ class SegurosAdminFun {
       const response =  await ApiService.put("tiposeguro/desactivar",formulario,navigate);
       return response;
    }
+
+    static async buscarInformacionBenCateg(id,navigate){
+      const response =  await ApiService.get("seguro/informacion-ben-categ",id,navigate);
+      return response;
+   }
   
 }
     export default SegurosAdminFun;

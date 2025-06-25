@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import styles from "../estilos/validarEmail.module.css";
-import ClientesFun from "../clientes/ClientesFun";
+import "../estilos/ValidarEmail.css";
 import CargarInf from "../cargando/CargarInf";
 import swal from "sweetalert2";
 import UsuariosFun from "../usuarios/UsuariosFun";
@@ -21,6 +20,7 @@ export function ValidarAgente() {
         const verificar = async () => {
             try {
                 const res = await AgenteFun.validarTokenEmail({ url: id }, navigate);
+                console.log(res)
                 if (res?.success && res.data?.id_pers) {
                     const resCli = await AgenteFun.buscarAgente(res.data.id_pers, navigate);
                     setAgente({
@@ -30,7 +30,7 @@ export function ValidarAgente() {
                         idvalid: res.idvalid,
                         passtemp: res.data.pass
                     });
-                    setFormulario({ ...formulario, id_pers: res.data.id_pers, user: resCli[0].email_agente })
+                    setFormulario(prevForm => ({ ...prevForm, id_pers: res.data.id_pers, user: resCli[0].email_agente }))
                     setSuccess(true);
                 } else {
                     setError("Token inválido o expirado.");
@@ -115,44 +115,46 @@ export function ValidarAgente() {
 
 
     return (
-        <div className={styles.container}>
+        <div className="validar-email-container">
             <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-            <div className={styles.card}>
+            <div className="validar-email-card">
                 {success ? (
                     <>
-                        <h2 className={styles.title}>🎉 ¡Bienvenido a Seguros.SA!</h2>
-                        <p className={styles.message}>
+                        <h2 className="validar-email-title">🎉 ¡Bienvenido a Seguros.SA!</h2>
+                        <p className="validar-email-message">
                             {agente.nombre} {agente.apellido}, tu cuenta ha sido creada con éxito.
                         </p>
-                        <p className={styles.message}>
+                        <p className="validar-email-message">
                             Para completar tu registro y validar tu identidad, ingresa una nueva contraseña.
                         </p>
-                        <p className={styles.message}>
+                        <p className="validar-email-message">
                             Tu usuario por defecto es: {formulario.user || ''}
                         </p>
 
-                        <label htmlFor="passtemp">Contraseña temporal</label>
-                        <input type="text" id="passtemp" name="passtemp" onChange={asignarValores} />
+                        <div className="validar-email-form">
+                            <label htmlFor="passtemp">Contraseña temporal</label>
+                            <input type="password" id="passtemp" name="passtemp" onChange={asignarValores} />
 
-                        <label htmlFor="pass"> Nueva Contraseña </label>
-                        <input type="text" id="pass" name="pass" onChange={asignarValores} />
+                            <label htmlFor="pass">Nueva Contraseña</label>
+                            <input type="password" id="pass" name="pass" onChange={asignarValores} />
 
-                        <label htmlFor="confirmPassword">Confirme contraseña</label>
-                        <input type="text" id="confirmPassword" name="confirmPassword" onChange={asignarValores} />
+                            <label htmlFor="confirmPassword">Confirme contraseña</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" onChange={asignarValores} />
+                        </div>
 
-                        <div className={styles.message}>
-                            <button className={styles.button} onClick={cancelarCuenta}>Cancelar</button>
-                            <button className={styles.button} onClick={validarCuenta}>Validar cuenta</button>
+                        <div className="validar-email-button-container">
+                            <button className="validar-email-button cancel" onClick={cancelarCuenta}>Cancelar</button>
+                            <button className="validar-email-button" onClick={validarCuenta}>Validar cuenta</button>
                         </div>
                     </>
                 ) : (
                     <>
-                        <h2 className={styles.title}>⚠ Enlace inválido o expirado</h2>
-                        <p className={styles.message}>{error}</p>
-                        <p className={styles.message}>
+                        <h2 className="validar-email-title">⚠ Enlace inválido o expirado</h2>
+                        <p className="validar-email-message">{error}</p>
+                        <p className="validar-email-message">
                             Si crees que esto es un error o necesitas un nuevo enlace, contacta a soporte de Seguros.SA.
                         </p>
-                        <button className={styles.button} onClick={() => navigate("/")}>OK</button>
+                        <button className="validar-email-button" onClick={() => navigate("/")}>OK</button>
                     </>
                 )}
             </div>

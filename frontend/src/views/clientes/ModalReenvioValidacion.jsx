@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Toaster, toast } from "sonner";
 import ClientesFun from "./ClientesFun";
 import swal from "sweetalert2";
-import { Await, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import Utilidades from "../../services/Utilidades";
 import UsuariosFun from "../usuarios/UsuariosFun";
 
-export function ModalReenvioValidacion({ cerrarModal, mostrarSeccion }) {
+export function ModalReenvioValidacion({ cerrarModal }) {
   const navigate = useNavigate();
   const [formulario, setFormulario] = useState({ email: '', newEmail: '', id_pers: '' })
   const [actualizarCorreo, setActualizarCorreo] = useState(false);

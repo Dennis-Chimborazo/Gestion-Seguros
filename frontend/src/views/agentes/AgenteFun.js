@@ -40,7 +40,7 @@ class AgenteFun {
    }
 
    static async buscarAgente(id, navigate) {
-      const response = await ApiService.get("agente/buscar-agente", id, navigate);
+      const response = await ApiService.getNull("agente/buscar-agente", id, navigate);
       return response;
    }
    static async activarCuentaAgente(id, navigate) {

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import styles from '../estilos/cliente.module.css'; // Importa los estilos
 import ClientesFun from "./ClientesFun";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +6,7 @@ import { Toaster, toast } from "sonner";
 import swal from "sweetalert2";
 import Utilidades from "../../services/Utilidades";
 import UsuariosFun from "../usuarios/UsuariosFun";
+import '../estilos/CrearClientes.css';
 
 export function CrearClientes({ mostrarSeccion }) {
     const [pais, setPais] = useState([]);
@@ -19,17 +19,16 @@ export function CrearClientes({ mostrarSeccion }) {
         cedr_cli: '', tipo_cedr_cli: '', nacion_cli: '',
         nom_cli: '', ape_cli: '', fecha_naci_cli: '', lugar_naci_cli: '', tel_pers: '',
         cel_pers: '', email_pers: '', edad_pers: '', sexo_cli: '', estado_civil_pers: '',
-        estatura_cli: '', peso_cli: '', parroq_cli: '', calle_princ_pers: '',
-        calle_secun_pers: '', id_ciud: ''
+        estatura_cli: '', peso_cli: '', parroq_cli: '', calle_princ_pers: '',        calle_secun_pers: '', id_ciud: ''
     })
-
+    
     useEffect(() => {
         const cargarPais = async () => {
             const apiPais = await ClientesFun.traerPaises(navigate);
             setPais(apiPais.rows)
         }
         cargarPais();
-    }, []);
+    }, [navigate]);
 
     const cargarProvincia = async (val) => {
         setSelectedProvincia(null);
@@ -77,11 +76,9 @@ export function CrearClientes({ mostrarSeccion }) {
         document.getElementById("unionLibre").checked = false;
         document.getElementById(id).checked = true;
         setFormulario({ ...formulario, estado_civil_pers: document.getElementById(id).id })
-    };
-
-    const chechkTipoPeso = (event) => {
+    };    const chechkTipoPeso = (event) => {
         const peso = document.getElementById("peso_cli").value;
-        if (peso == '') {
+        if (peso === '') {
             toast.error("Ingrese el peso ");
             document.getElementById("lb").checked = false;
             document.getElementById("kg").checked = false;
@@ -93,12 +90,11 @@ export function CrearClientes({ mostrarSeccion }) {
             const medida = " " + document.getElementById(id).id;
             setFormulario({ ...formulario, peso_cli: (peso + medida) })
         }
-
     };
 
     const textPeso = (e) => {
         let peso = e.target.value;
-        if (peso == '') {
+        if (peso === '') {
             document.getElementById("lb").checked = false;
             document.getElementById("kg").checked = false;
             setFormulario({ ...formulario, peso_cli: '' })
@@ -150,180 +146,371 @@ export function CrearClientes({ mostrarSeccion }) {
             });
         } else {mostrarSeccion("clientes")}
     };
-
-
     return (
-        <div className={styles.container}> {/* Aplica el contenedor principal */}
+        <div className="crear-clientes-container">
             <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-            <h3>Nuevo cliente</h3>
-            <div className={styles.formRow}> {/* Filas para agrupar elementos */}
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Apellidos </label>
-                    <input type="text" name="ape_cli" id="ape_cli" placeholder="Ingrese los apellidos" onChange={agregarClaveFormulario} />
-                </div>
+            
+            <div className="crear-clientes-form">
+                <h2 className="crear-clientes-title">Registro de Nuevo Cliente</h2>
+                
+                <div className="form-section personal-info-section">
+                    <h3 className="form-section-title">Información Personal</h3>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="nom_cli">Nombres</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="nom_cli" 
+                                id="nom_cli" 
+                                placeholder="Ingrese los nombres" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
 
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Nombre (s) </label>
-                    <input type="text" name="nom_cli" id="nom_cli" placeholder="Ingrese los nombres" onChange={agregarClaveFormulario} />
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="ape_cli">Apellidos</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="ape_cli" 
+                                id="ape_cli" 
+                                placeholder="Ingrese los apellidos" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="nacion_cli">Nacionalidad</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="nacion_cli" 
+                                id="nacion_cli" 
+                                placeholder="Ingrese la nacionalidad" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="id-type-group">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="idType">Tipo de identificación</label>
+                            <div className="checkbox-group">
+                                <div className="checkbox-item">
+                                    <input 
+                                        className="checkbox-input"
+                                        type="checkbox" 
+                                        id="cedula" 
+                                        name="cedula" 
+                                        onChange={chechkTipoIdentificacion}
+                                    />
+                                    <label className="checkbox-label" htmlFor="cedula">Cédula</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input 
+                                        className="checkbox-input"
+                                        type="checkbox" 
+                                        id="pasaporte" 
+                                        name="pasaporte" 
+                                        onChange={chechkTipoIdentificacion} 
+                                    />
+                                    <label className="checkbox-label" htmlFor="pasaporte">Pasaporte</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="cedr_cli">Número de Identificación</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="cedr_cli" 
+                                id="cedr_cli" 
+                                placeholder="Ingrese número de identificación" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="fecha_naci_cli">Fecha de Nacimiento</label>
+                            <input 
+                                className="form-input" 
+                                type="date" 
+                                name="fecha_naci_cli" 
+                                id="fecha_naci_cli" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="lugar_naci_cli">Lugar de Nacimiento</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="lugar_naci_cli" 
+                                id="lugar_naci_cli" 
+                                placeholder="Ingrese lugar de nacimiento" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="edad_pers">Edad</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="edad_pers" 
+                                id="edad_pers" 
+                                placeholder="Ingrese la edad" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label className="form-label">Sexo</label>
+                            <div className="checkbox-group">
+                                <div className="checkbox-item">
+                                    <input 
+                                        className="checkbox-input"
+                                        type="checkbox" 
+                                        id="masculino" 
+                                        name="masculino" 
+                                        onChange={chechkSexo} 
+                                    />
+                                    <label className="checkbox-label" htmlFor="masculino">Masculino</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input 
+                                        className="checkbox-input"
+                                        type="checkbox" 
+                                        id="femenino" 
+                                        name="femenino" 
+                                        onChange={chechkSexo} 
+                                    />
+                                    <label className="checkbox-label" htmlFor="femenino">Femenino</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label">Estado Civil</label>
+                            <div className="checkbox-group">
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="soltero" onChange={chechkEstadoCivil} />
+                                    <label className="checkbox-label" htmlFor="soltero">Soltero</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="casado" onChange={chechkEstadoCivil} />
+                                    <label className="checkbox-label" htmlFor="casado">Casado</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="divorciado" onChange={chechkEstadoCivil} />
+                                    <label className="checkbox-label" htmlFor="divorciado">Divorciado</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="viudo" onChange={chechkEstadoCivil} />
+                                    <label className="checkbox-label" htmlFor="viudo">Viudo</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="unionLibre" onChange={chechkEstadoCivil} />
+                                    <label className="checkbox-label" htmlFor="unionLibre">Unión Libre</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="estatura_cli">Estatura (cm)</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="estatura_cli" 
+                                id="estatura_cli" 
+                                placeholder="Ingrese la altura en cm" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="peso_cli">Peso</label>
+                            <div className="form-row">
+                                <input 
+                                    className="form-input" 
+                                    type="text" 
+                                    name="peso_cli" 
+                                    id="peso_cli" 
+                                    placeholder="Ingrese el peso" 
+                                    onChange={textPeso} 
+                                    style={{flex: 2}}
+                                />
+                                <div className="checkbox-group" style={{flex: 1, marginLeft: '10px'}}>
+                                    <div className="checkbox-item">
+                                        <input className="checkbox-input" type="checkbox" id="lb" onChange={chechkTipoPeso} />
+                                        <label className="checkbox-label" htmlFor="lb">Lb</label>
+                                    </div>
+                                    <div className="checkbox-item">
+                                        <input className="checkbox-input" type="checkbox" id="kg" onChange={chechkTipoPeso} />
+                                        <label className="checkbox-label" htmlFor="kg">kg</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="form-section contact-info-section">
+                    <h3 className="form-section-title">Información de Contacto</h3>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="tel_pers">Teléfono fijo</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="tel_pers" 
+                                id="tel_pers" 
+                                placeholder="Ingrese teléfono convencional/fijo" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="cel_pers">Teléfono celular</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="cel_pers" 
+                                id="cel_pers" 
+                                placeholder="Ingrese número de celular" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="email_pers">Correo electrónico</label>
+                            <input 
+                                className="form-input" 
+                                type="email" 
+                                name="email_pers" 
+                                id="email_pers" 
+                                placeholder="Ingrese correo electrónico" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="form-section location-info-section">
+                    <h3 className="form-section-title">Dirección</h3>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label">País</label>
+                            <Select
+                                className="react-select"
+                                classNamePrefix="react-select"
+                                options={Array.isArray(pais) ? pais.map((r) => ({
+                                    value: r.id_pais,
+                                    label: r.nom_pais,
+                                })) : []}
+                                placeholder="Seleccione el país"
+                                onChange={(e) => {
+                                    cargarProvincia(e);
+                                    setFormulario({ ...formulario, id_ciud: '' });
+                                }}
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label className="form-label">Provincia</label>
+                            <Select
+                                className="react-select"
+                                classNamePrefix="react-select"
+                                options={Array.isArray(provincia) ? provincia.map((r) => ({
+                                    value: r.id_provin,
+                                    label: r.nom_provin,
+                                })) : []}
+                                placeholder="Seleccione la provincia"
+                                onChange={(e) => {
+                                    setSelectedProvincia(e);
+                                    cargarCiudad(e);
+                                    setFormulario({ ...formulario, id_ciud: '' });
+                                }}
+                                value={selectedProvincia}
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label className="form-label">Ciudad</label>
+                            <Select
+                                className="react-select"
+                                classNamePrefix="react-select"
+                                options={Array.isArray(ciudad) ? ciudad.map((r) => ({
+                                    value: r.id_ciud,
+                                    label: r.nom_ciud,
+                                })) : []}
+                                placeholder="Seleccione la ciudad"
+                                onChange={(e) => {
+                                    setSelectedCiudad(e);
+                                    setFormulario({ ...formulario, id_ciud: e.value });
+                                }}
+                                value={selectedCiudad}
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="parroq_cli">Parroquia</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="parroq_cli" 
+                                id="parroq_cli" 
+                                placeholder="Ingrese la parroquia" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="calle_princ_pers">Calle Principal</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="calle_princ_pers" 
+                                id="calle_princ_pers" 
+                                placeholder="Ingrese la calle principal" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="calle_secun_pers">Calle Secundaria</label>
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="calle_secun_pers" 
+                                id="calle_secun_pers" 
+                                placeholder="Ingrese la calle secundaria" 
+                                onChange={agregarClaveFormulario} 
+                            />
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="actions-container">
+                    <button className="btn-cancelar" onClick={cancelar}>Cancelar</button>
+                    <button className="btn-guardar" onClick={guardarCliente}>Guardar Cliente</button>
                 </div>
             </div>
-
-            <div className={styles.formGroup}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Nacionalidad </label>
-                    <input type="text" name="nacion_cli" id="nacion_cli" placeholder="Ingrese la nacionalidad" onChange={agregarClaveFormulario} />
-                </div>
-
-            </div >
-            <div className={styles.identificationGroup}>
-                <div className={styles.formGroupType}>
-                    <label htmlFor="idType">Tipo de identificación</label>
-                    <div className={styles.identificationType}>
-                        <input type="checkbox" id="cedula" name="cedula" onChange={chechkTipoIdentificacion} />
-                        <label htmlFor="cedula">Cédula</label>
-                        <input type="checkbox" id="pasaporte" name="pasaporte" onChange={chechkTipoIdentificacion} />
-                        <label htmlFor="pasaporte">Pasaporte</label>
-                    </div>
-                </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="cedr_cli">Número de Identificación</label>
-
-                    <input type="text" name="cedr_cli" id="cedr_cli" placeholder="Ingrese ID" onChange={agregarClaveFormulario} />
-                </div>
-            </div>
-            <div className={styles.formRow}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Fecha de Nacimiento </label>
-                    <div className={styles.dateGroup}>
-                        <input type="date" name="fecha_naci_cli" id="fecha_naci_cli" onChange={agregarClaveFormulario} />
-                    </div>
-                </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Lugar de Nacimiento </label>
-                    <input type="text" name="lugar_naci_cli" id="lugar_naci_cli" placeholder="Ingrese lugar de Nacimiento" onChange={agregarClaveFormulario} />
-                </div>
-            </div>
-
-            <div className={styles.formRow}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Teléfono fijo </label>
-
-                    <input type="text" name="tel_pers" id="tel_pers" placeholder="Ingrese telefono convencional/fijo" onChange={agregarClaveFormulario} />
-                </div >
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Celular </label>
-                    <div className={styles.dateGroup}>
-                        <input type="text" name="cel_pers" id="cel_pers" placeholder="Ingrese numero de Celular" onChange={agregarClaveFormulario} />
-                    </div>
-                </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Correo electrónico </label>
-                    <div className={styles.dateGroup}>
-                        <input type="text" name="email_pers" id="email_pers" placeholder="Ingrese correo electronico" onChange={agregarClaveFormulario} />
-                    </div>
-                </div>
-            </div >
-
-            <div className={styles.formRow}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Edad</label>
-                    <div className={styles.inputEdad}>
-                        <input type="text" name="edad_pers" id="edad_pers" placeholder="Ingrese la edad" onChange={agregarClaveFormulario} />
-                    </div>
-                </div >
-                <div className={styles.miscGroup}>
-                    <div className={styles.sexGroup}>
-                        <label htmlFor="">Sexo:</label>
-                        <input type="checkbox" id="masculino" name="masculino" onChange={chechkSexo} /> <label htmlFor="masculino">M</label>
-                        <input type="checkbox" id="femenino" name="femenino" onChange={chechkSexo} /> <label htmlFor="femenino">F</label>
-                    </div>
-                    <div className={styles.civilStatusGroup}>
-                        <label htmlFor="">Estado Civil:</label>
-                        <input type="checkbox" id="soltero" onChange={chechkEstadoCivil} /> <label htmlFor="soltero">Soltero</label>
-                        <input type="checkbox" id="divorciado" onChange={chechkEstadoCivil} /> <label htmlFor="divorciado">Divorciado</label>
-                        <input type="checkbox" id="viudo" onChange={chechkEstadoCivil} /> <label htmlFor="viudo">Viudo</label>
-                        <input type="checkbox" id="casado" onChange={chechkEstadoCivil} /> <label htmlFor="casado">Casado</label>
-                        <input type="checkbox" id="unionLibre" onChange={chechkEstadoCivil} /> <label htmlFor="unionLibre">U/Libre</label>
-                    </div>
-                </div>
-                <div className={styles.formRow}>
-                    <div className={styles.heightGroup}>
-                        <label htmlFor="">Estatura: </label>
-                        <input type="text" name="estatura_cli" id="estatura_cli" placeholder="Ingrese la altura" onChange={agregarClaveFormulario} /> <label htmlFor="">cm</label>
-                    </div>
-                    <div className={styles.weightGroup}>
-                        <label htmlFor="">Peso: </label>
-                        <input type="text" name="peso_cli" id="peso_cli" placeholder="Ingrese el peso" onChange={textPeso} />
-                        <input type="checkbox" id="lb" onChange={chechkTipoPeso} /> <label htmlFor="libras">Lb</label>
-                        <input type="checkbox" id="kg" onChange={chechkTipoPeso} /> <label htmlFor="kilogramos">kg </label>
-                    </div>
-                </div>
-            </div >
-            <div className={styles.formRow}> {/* Filas para agrupar elementos */}
-                <div className={styles["locationGroup"]}>
-                    <label htmlFor="">País</label>
-
-                    <Select
-                        options={Array.isArray(pais) ? pais.map((r) => ({
-                            value: r.id_pais,
-                            label: r.nom_pais,
-                        })) : []} // Si `pais` no es un array, pasaré un array vacío
-                        placeholder="Seleccione el pais"
-                        onChange={(e) => {
-                            cargarProvincia(e);
-                            setFormulario({ ...formulario, id_ciud: '' });
-                        }}
-                    />
-                    <label htmlFor="">Provincia</label>
-                    <Select
-                        options={Array.isArray(provincia) ? provincia.map((r) => ({
-                            value: r.id_provin,
-                            label: r.nom_provin,
-                        })) : []} // Si `pais` no es un array, pasaré un array vacío
-                        placeholder="Seleccione la provincia"
-                        onChange={(e) => {
-                            setSelectedProvincia(e);
-                            cargarCiudad(e);
-                            setFormulario({ ...formulario, id_ciud: '' });
-                        }}
-                        value={selectedProvincia}
-                    />
-                    <label htmlFor="">Ciudad</label>
-                    <Select
-                        options={Array.isArray(ciudad) ? ciudad.map((r) => ({
-                            value: r.id_ciud,
-                            label: r.nom_ciud,
-                        })) : []}
-                        placeholder="Seleccione la ciudad"
-                        onChange={(e) => {
-                            setSelectedCiudad(e);
-                            setFormulario({ ...formulario, id_ciud: e.value });
-                        }}
-                        value={selectedCiudad}
-                    />
-                </div >
-                <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                        <label htmlFor="">Parroquia </label>
-                        <input type="text" name="parroq_cli" id="parroq_cli" placeholder="Ingrese la parroquia" onChange={agregarClaveFormulario} />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label htmlFor="">Calle Principal </label>
-                        <input type="text" name="calle_princ_pers" id="calle_princ_pers" placeholder="Ingrese la calle Principal" onChange={agregarClaveFormulario} />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label htmlFor="">Calle Secundaria </label>
-                        <input type="text" name="calle_secun_pers" id="calle_secun_pers" placeholder="Ingrese la calle Secundaria" onChange={agregarClaveFormulario} />
-                    </div>
-                </div>
-            </div >
-            <div>
-                <div className={styles.buttonGroup}>
-                    <button className={styles.btnGuardar} onClick={guardarCliente}>Guardar</button>
-                    <button className={styles.btnCancelar} onClick={cancelar}>Cancelar</button>
-                </div>
-            </div>
-        </div >
+        </div>
     );
 }
 

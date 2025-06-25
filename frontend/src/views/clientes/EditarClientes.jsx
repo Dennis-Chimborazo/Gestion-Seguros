@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from '../estilos/cliente.module.css'; // Importa los estilos
+import '../estilos/EditarClientes.css'; // Importa los estilos personalizados
 import ClientesFun from "./ClientesFun";
 import Select from "react-select";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -120,371 +120,498 @@ export function EditarClientes({ mostrarSeccion }) {
                 email_pers: editData.cliente.email_pers,
                 edad_pers: editData.cliente.edad_pers,
                 estatura_cli: editData.cliente.estatura_cli,
-                peso_cli: editData.cliente.peso_cli,
+                peso_cli: tipoPeso[0] + ' ' + tipoPeso[1],
                 parroq_cli: editData.cliente.parroq_cli,
                 calle_princ_pers: editData.cliente.calle_princ_pers,
                 calle_secun_pers: editData.cliente.calle_secun_pers,
                 sexo_cli: editData.cliente.sexo_cli,
                 peso_cli: editData.cliente.peso_cli,
                 estado_civil_pers: editData.cliente.estado_civil_pers,
-                id_ciud: editData.cliente.id_ciud
+                id_ciud: editData.cliente.id_ciud,
             });
-
-        }
-        const activarChecks = (id) => {
-            document.getElementById(id).checked = true;
         }
         cargarPais();
     }, []);
 
-    const cargarProvincia = async (val) => {
-        setSelectedProvincia(null);
-        setSelectedCiudad(null);
-        setProvincia([]);
-        setCiudad([]);
-        const apiProvincia = await ClientesFun.traerProvincias(val.value, navigate);
-        setProvincia(apiProvincia);
-    }
+    const activarChecks = (value) => {
+        const cedula = document.getElementById("cedula");
+        const pasaporte = document.getElementById("pasaporte");
+        const femenino = document.getElementById("femenino");
+        const masculino = document.getElementById("masculino");
+        const soltero = document.getElementById("soltero/a");
+        const casado = document.getElementById("casado/a");
+        const divorciado = document.getElementById("divorciado/a");
+        const viudo = document.getElementById("viudo/a");
+        const kg = document.getElementById("kg");
+        const lb = document.getElementById("lb");
 
-    const cargarCiudad = async (val) => {
-        setSelectedCiudad(null);
-        setCiudad([]);
-        const apiCiudad = await ClientesFun.traerCiudades(val.value, navigate);
-        setCiudad(apiCiudad);
-    }
-    const agregarClaveFormulario = (e) => {
-        setFormulario({ ...formulario, [e.target.name]: e.target.value })
-
-    }
-
-    const chechkSexo = (event) => {
-        const { id } = event.target;
-        document.getElementById("masculino").checked = false;
-        document.getElementById("femenino").checked = false;
-        document.getElementById(id).checked = true;
-
-        setFormulario({ ...formulario, sexo_cli: document.getElementById(id).name })
-    };
-
-    const chechkTipoIdentificacion = (event) => {
-        const { id } = event.target;
-        document.getElementById("cedula").checked = false;
-        document.getElementById("pasaporte").checked = false;
-        document.getElementById(id).checked = true;
-        console.log(document.getElementById(id).id)
-        setFormulario({ ...formulario, tipo_cedr_cli: document.getElementById(id).id })
-    };
-
-    const chechkEstadoCivil = (event) => {
-        const { id } = event.target;
-        document.getElementById("soltero").checked = false;
-        document.getElementById("divorciado").checked = false;
-        document.getElementById("viudo").checked = false;
-        document.getElementById("casado").checked = false;
-        document.getElementById("unionLibre").checked = false;
-        document.getElementById(id).checked = true;
-        setFormulario({ ...formulario, estado_civil_pers: document.getElementById(id).id })
-
-
-    };
-
-    const chechkTipoPeso = (event) => {
-        const peso = document.getElementById("peso_cli").value;
-        if (peso == '') {
-            toast.error("Ingrese el peso ");
-            document.getElementById("lb").checked = false;
-            document.getElementById("kg").checked = false;
-        } else {
-            const { id } = event.target;
-            document.getElementById("lb").checked = false;
-            document.getElementById("kg").checked = false;
-            document.getElementById(id).checked = true;
-            const medida = " " + document.getElementById(id).id;
-            setFormulario({ ...formulario, peso_cli: (peso + medida) })
-        }
-
-    };
-
-    const textPeso = (e) => {
-        let peso = e.target.value;
-        if (peso == '') {
-            document.getElementById("lb").checked = false;
-            document.getElementById("kg").checked = false;
-            setFormulario({ ...formulario, peso_cli: '' })
-        }
-    }
-
-    const cambiarEstadoCliente = async () => {
-        swal.fire({
-            title: "⚠️ <label>Advertencia</label>",
-            text: "Desea desactivar al cliente ",
-            showDenyButton: true,
-            denyButtonText: "No",
-            confirmButtonText: "Si"
-        }).then(async (respuesta) => {
-            if (respuesta.isConfirmed) {
-                const act = await ClientesFun.actualizarEstadoCliente(formulario, nacion_cli)
-                swal.fire({
-                    title: "<label>Exito</label>",
-                    text: "Cliente desactivado",
-                    timer: 3500,
-                })
-                mostrarSeccion("clientes")
-            }
-        });
-    }
-
-    const guardarCliente = async()=>{
-        const verf=verificacionCambios();
-        if (!verf) {
-            toast.error("No se ha realizado  ningun cambio");
-        } else {
-            if (Object.values(formulario).every(valor => valor !== '')) {
-                swal.fire({
-                title:"<label>Confirmacion</label>",
-                text:"Desea aplicar los cambios",
-                showDenyButton:true,
-                denyButtonText:"No",
-                confirmButtonText:"Si"
-            }).then(async(respuesta)=>{
-                if (respuesta.isConfirmed) {
-                    const res= await ClientesFun.actualizarCliente(formulario,navigate);
-                    if (res) {
-                        swal.fire({
-                                title:"<label>Exito</label>",
-                                text:"Informacion del cliente acrualizada",
-                                timer:3500})
-
-                    mostrarSeccion("clientes")
-                    }
+        switch (value) {
+            case "cedula":
+                if (cedula) {
+                    cedula.checked = true;
                 }
-            });
-              } else {
-                 toast.error("Faltan campos por llenar ⚠️");
-              } 
-          }
-
-    }
-
-    const verificacionCambios = () => {
-        const keysActual = Object.keys(formulario);
-        let huboCambios = false;
-
-        for (let key of keysActual) {
-            const actual = String(formulario[key] ?? '');
-            const original = String(formularioEdit[key] ?? '');
-            if (actual !== original) {
-                huboCambios = true;
-            }
+                setFormulario({ ...formulario, tipo_cedr_cli: value })
+                break;
+            case "pasaporte":
+                if (pasaporte) {
+                    pasaporte.checked = true;
+                }
+                setFormulario({ ...formulario, tipo_cedr_cli: value })
+                break;
+            case "femenino":
+                if (femenino) {
+                    femenino.checked = true;
+                }
+                setFormulario({ ...formulario, sexo_cli: value })
+                break;
+            case "masculino":
+                if (masculino) {
+                    masculino.checked = true;
+                }
+                setFormulario({ ...formulario, sexo_cli: value })
+                break;
+            case "kg":
+                if (kg) {
+                    kg.checked = true;
+                }
+                break;
+            case "lb":
+                if (lb) {
+                    lb.checked = true;
+                }
+                break;
+            case "soltero/a":
+                if (soltero) {
+                    soltero.checked = true;
+                }
+                setFormulario({ ...formulario, estado_civil_pers: value })
+                break;
+            case "casado/a":
+                if (casado) {
+                    casado.checked = true;
+                }
+                setFormulario({ ...formulario, estado_civil_pers: value })
+                break;
+            case "divorciado/a":
+                if (divorciado) {
+                    divorciado.checked = true;
+                }
+                setFormulario({ ...formulario, estado_civil_pers: value })
+                break;
+            case "viudo/a":
+                if (viudo) {
+                    viudo.checked = true;
+                }
+                setFormulario({ ...formulario, estado_civil_pers: value })
+                break;
         }
-
-        return huboCambios;
     };
 
+    const agregarClaveFormulario = (e) => {
+        setFormulario({
+            ...formulario,
+            [e.target.name]: e.target.value
+        })
+    };
+
+    const chechkTipoIdentificacion = (e) => {
+        if (e.target.checked) {
+            const name = e.target.name;
+            setFormulario({
+                ...formulario,
+                tipo_cedr_cli: name
+            })
+            if (name === "cedula") {
+                document.getElementById("cedula").setAttribute("checked", "");
+                document.getElementById("pasaporte").removeAttribute("checked");
+                document.getElementById("pasaporte").checked = false;
+            } else if (name === "pasaporte") {
+                document.getElementById("pasaporte").setAttribute("checked", "");
+                document.getElementById("cedula").removeAttribute("checked");
+                document.getElementById("cedula").checked = false;
+            }
+        }
+    };
+
+    const chechkSexo = (e) => {
+        if (e.target.checked) {
+            const name = e.target.name;
+            setFormulario({
+                ...formulario,
+                sexo_cli: name
+            })
+            if (name === "masculino") {
+                document.getElementById("masculino").setAttribute("checked", "");
+                document.getElementById("femenino").removeAttribute("checked");
+                document.getElementById("femenino").checked = false;
+            } else if (name === "femenino") {
+                document.getElementById("femenino").setAttribute("checked", "");
+                document.getElementById("masculino").removeAttribute("checked");
+                document.getElementById("masculino").checked = false;
+            }
+        }
+    };
+
+    const chechkEstadoCivil = (e) => {
+        if (e.target.checked) {
+            const name = e.target.name;
+            setFormulario({
+                ...formulario,
+                estado_civil_pers: name
+            })
+            if (name === "soltero/a") {
+                document.getElementById("soltero/a").setAttribute("checked", "");
+                document.getElementById("casado/a").removeAttribute("checked");
+                document.getElementById("divorciado/a").removeAttribute("checked");
+                document.getElementById("viudo/a").removeAttribute("checked");
+
+                document.getElementById("casado/a").checked = false;
+                document.getElementById("divorciado/a").checked = false;
+                document.getElementById("viudo/a").checked = false;
+            } else if (name === "casado/a") {
+                document.getElementById("casado/a").setAttribute("checked", "");
+                document.getElementById("soltero/a").removeAttribute("checked");
+                document.getElementById("divorciado/a").removeAttribute("checked");
+                document.getElementById("viudo/a").removeAttribute("checked");
+
+                document.getElementById("soltero/a").checked = false;
+                document.getElementById("divorciado/a").checked = false;
+                document.getElementById("viudo/a").checked = false;
+            } else if (name === "divorciado/a") {
+                document.getElementById("divorciado/a").setAttribute("checked", "");
+                document.getElementById("soltero/a").removeAttribute("checked");
+                document.getElementById("casado/a").removeAttribute("checked");
+                document.getElementById("viudo/a").removeAttribute("checked");
+
+                document.getElementById("casado/a").checked = false;
+                document.getElementById("soltero/a").checked = false;
+                document.getElementById("viudo/a").checked = false;
+            } else if (name === "viudo/a") {
+                document.getElementById("viudo/a").setAttribute("checked", "");
+                document.getElementById("soltero/a").removeAttribute("checked");
+                document.getElementById("casado/a").removeAttribute("checked");
+                document.getElementById("divorciado/a").removeAttribute("checked");
+
+                document.getElementById("casado/a").checked = false;
+                document.getElementById("divorciado/a").checked = false;
+                document.getElementById("soltero/a").checked = false;
+            }
+        }
+    };
+
+    const chechkPeso = (e) => {
+        if (e.target.checked) {
+            const name = e.target.name;
+            if (name === "kg") {
+                document.getElementById("kg").setAttribute("checked", "");
+                document.getElementById("lb").removeAttribute("checked");
+                document.getElementById("lb").checked = false;
+            } else if (name === "lb") {
+                document.getElementById("lb").setAttribute("checked", "");
+                document.getElementById("kg").removeAttribute("checked");
+                document.getElementById("kg").checked = false;
+            }
+        }
+    };
+
+    const guardarCliente = async () => {
+        if (formulario.id_ciud === '') {
+            formulario.id_ciud = selectedCiudad.value;
+        }
+        if (formulario.tipo_cedr_cli === '') {
+            swal.fire('Error', 'Seleccione un tipo de documento', 'error');
+            return;
+        }
+        if (formulario.sexo_cli === '') {
+            swal.fire('Error', 'Seleccione un tipo de sexo', 'error');
+            return;
+        }
+        if (formulario.estado_civil_pers === '') {
+            swal.fire('Error', 'Seleccione un estado civil', 'error');
+            return;
+        }
+
+        let tipoPeso = '';
+        if (document.getElementById("kg").checked) {
+            tipoPeso = 'kg';
+        } else {
+            tipoPeso = 'lb';
+        }
+        formulario.peso_cli = peso_cli + " " + tipoPeso;
+
+        const response = await ClientesFun.editarCliente(formulario, navigate);
+
+        if (response.message === "success") {
+            toast.success('Cliente editado con éxito');
+            setTimeout(function () {
+                mostrarSeccion('clientes');
+            }, 3000)
+
+        } else {
+            swal.fire('Error', 'Error al editar cliente', 'error');
+        }
+    }
 
     const cancelar = () => {
-        if (verificacionCambios) {
-            swal.fire({
-                title: "⚠️ <label>Advertencia</label>",
-                text: "Desea descartar los cambios realizados",
-                showDenyButton: true,
-                denyButtonText: "No",
-                confirmButtonText: "Si"
-            }).then(respuesta => {
-                if (respuesta.isConfirmed) {
-                    mostrarSeccion("clientes")
-                }
-            });
+        mostrarSeccion("clientes")
+    };
+
+    const cambiarEstadoCliente = async () => {
+        const response = await ClientesFun.cambiarEstadoCliente(formulario.id_pers, navigate);
+        if (response.message === "success") {
+            toast.success('Estado de cliente cambiado con éxito');
+            setTimeout(function () {
+                mostrarSeccion('clientes');
+            }, 3000)
+
         } else {
+            swal.fire('Error', 'Error al editar cliente', 'error');
             mostrarSeccion("clientes")
         }
     };
 
-
-
     return (
-        <div className={styles.container}> {/* Aplica el contenedor principal */}
+        <div className="editar-clientes-container">
             <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-            <div>
-                <h3>Editar Cliente</h3>
-                <button className={styles.btnGuardar} onClick={cambiarEstadoCliente}>Desactivación</button> </div>
-            <div className={styles.formRow}> {/* Filas para agrupar elementos */}
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Apellidos </label>
-                    <input type="text" name="ape_cli" id="ape_cli" placeholder="Ingrese los apellidos"
-                        onChange={(e) => { agregarClaveFormulario(e); setApe_cli(e.target.value) }} value={ape_cli} />
+            <div className="editar-clientes-form">
+                <div className="editar-clientes-header">
+                    <h3 className="editar-clientes-title">Editar Cliente</h3>
+                    <button className="btn-desactivar" onClick={cambiarEstadoCliente}>Desactivar Cliente</button>
                 </div>
+                
+                {/* Sección de Información Personal */}
+                <div className="form-section personal-info-section">
+                    <h4 className="form-section-title">Información Personal</h4>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="ape_cli">Apellidos</label>
+                            <input className="form-input" type="text" name="ape_cli" id="ape_cli" placeholder="Ingrese los apellidos"
+                                onChange={(e) => { agregarClaveFormulario(e); setApe_cli(e.target.value) }} value={ape_cli} />
+                        </div>
 
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Nombre (s) </label>
-                    <input type="text" name="nom_cli" id="nom_cli" placeholder="Ingrese los nombres"
-                        onChange={(e) => { agregarClaveFormulario(e); setNom_cli(e.target.value) }} value={nom_cli} />
-                </div>
-            </div>
-            <div className={styles.formGroup}>
-                <label htmlFor="">Nacionalidad </label>
-                <input type="text" name="nacion_cli" id="nacion_cli" placeholder="Ingrese la nacionalidad"
-                    onChange={(e) => { agregarClaveFormulario(e); setNacion_cli(e.target.value) }} value={nacion_cli} />
-            </div>
-            <div className={styles.identificationGroup}>
-                <div className={styles.formGroupType}>
-                    <label htmlFor="idType">Tipo de identificación</label>
-                    <div className={styles.identificationType}>
-                        <input type="checkbox" id="cedula" name="cedula" onChange={chechkTipoIdentificacion} />
-                        <label htmlFor="cedula">Cédula</label>
-                        <input type="checkbox" id="pasaporte" name="pasaporte" onChange={chechkTipoIdentificacion} />
-                        <label htmlFor="pasaporte">Pasaporte</label>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="nom_cli">Nombre(s)</label>
+                            <input className="form-input" type="text" name="nom_cli" id="nom_cli" placeholder="Ingrese los nombres"
+                                onChange={(e) => { agregarClaveFormulario(e); setNom_cli(e.target.value) }} value={nom_cli} />
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="nacion_cli">Nacionalidad</label>
+                        <input className="form-input" type="text" name="nacion_cli" id="nacion_cli" placeholder="Ingrese la nacionalidad"
+                            onChange={(e) => { agregarClaveFormulario(e); setNacion_cli(e.target.value) }} value={nacion_cli} />
+                    </div>
+                    <div className="id-type-group">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="idType">Tipo de identificación</label>
+                            <div className="checkbox-group">
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="cedula" name="cedula" onChange={chechkTipoIdentificacion} />
+                                    <label className="checkbox-label" htmlFor="cedula">Cédula</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="pasaporte" name="pasaporte" onChange={chechkTipoIdentificacion} />
+                                    <label className="checkbox-label" htmlFor="pasaporte">Pasaporte</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="cedr_cli">Número de Identificación</label>
+                            <input className="form-input" type="text" name="cedr_cli" id="cedr_cli" placeholder="Ingrese ID"
+                                onChange={(e) => { agregarClaveFormulario(e); }} value={cedr_cli} />
+                        </div>
+                    </div>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="fecha_naci_cli">Fecha de Nacimiento</label>
+                            <input className="form-input" type="date" name="fecha_naci_cli" id="fecha_naci_cli"
+                                onChange={(e) => { agregarClaveFormulario(e); setFecha_naci_cli(e.target.value) }} value={fecha_naci_cli} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="lugar_naci_cli">Lugar de Nacimiento</label>
+                            <input className="form-input" type="text" name="lugar_naci_cli" id="lugar_naci_cli" placeholder="Ingrese lugar de Nacimiento"
+                                onChange={(e) => { agregarClaveFormulario(e); setLugar_naci_cli(e.target.value) }} value={lugar_naci_cli} />
+                        </div>
                     </div>
                 </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Número de Identificación </label>
-                    <input type="text" name="cedr_cli" id="cedr_cli" placeholder="Ingrese ID"
-                     onChange={(e)=>{agregarClaveFormulario(e); }} value={cedr_cli}/>
+                
+                {/* Sección de Información de Contacto */}
+                <div className="form-section contact-info-section">
+                    <h4 className="form-section-title">Información de Contacto</h4>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="tel_pers">Teléfono fijo</label>
+                            <input className="form-input" type="text" name="tel_pers" id="tel_pers" placeholder="Ingrese teléfono convencional/fijo"
+                                onChange={(e) => { agregarClaveFormulario(e); setTel_pers(e.target.value) }} value={tel_pers} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="cel_pers">Celular</label>
+                            <input className="form-input" type="text" name="cel_pers" id="cel_pers" placeholder="Ingrese número de Celular"
+                                onChange={(e) => { agregarClaveFormulario(e); setCel_pers(e.target.value) }} value={cel_pers} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="email_pers">Correo Electrónico</label>
+                            <input className="form-input" type="text" name="email_pers" id="email_pers" placeholder="Ingrese correo electrónico"
+                                onChange={(e) => { agregarClaveFormulario(e); setEmail_pers(e.target.value) }} value={email_pers} />
+                        </div>
+                    </div>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="edad_pers">Edad</label>
+                            <input className="form-input" type="text" name="edad_pers" id="edad_pers" placeholder="Ingrese la edad"
+                                onChange={(e) => { agregarClaveFormulario(e); setEdad_pers(e.target.value) }} value={edad_pers} />
+                        </div>
 
-                </div>
-            </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="sexo">Sexo</label>
+                            <div className="checkbox-group">
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="masculino" name="masculino" onChange={chechkSexo} />
+                                    <label className="checkbox-label" htmlFor="masculino">Masculino</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="femenino" name="femenino" onChange={chechkSexo} />
+                                    <label className="checkbox-label" htmlFor="femenino">Femenino</label>
+                                </div>
+                            </div>
+                        </div>
 
-            <div className={styles.formRow}>
-
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Fecha de Nacimiento </label>
-                    <div className={styles.dateGroup}>
-                        <input type="date" name="fecha_naci_cli" id="fecha_naci_cli"
-                            onChange={(e) => { agregarClaveFormulario(e); setFecha_naci_cli(e.target.value) }} value={fecha_naci_cli} />
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="estadoCivil">Estado Civil</label>
+                            <div className="checkbox-group">
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="soltero/a" name="soltero/a" onChange={chechkEstadoCivil} />
+                                    <label className="checkbox-label" htmlFor="soltero/a">Soltero/a</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="casado/a" name="casado/a" onChange={chechkEstadoCivil} />
+                                    <label className="checkbox-label" htmlFor="casado/a">Casado/a</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="divorciado/a" name="divorciado/a" onChange={chechkEstadoCivil} />
+                                    <label className="checkbox-label" htmlFor="divorciado/a">Divorciado/a</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="viudo/a" name="viudo/a" onChange={chechkEstadoCivil} />
+                                    <label className="checkbox-label" htmlFor="viudo/a">Viudo/a</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="estatura_cli">Estatura (m)</label>
+                            <input className="form-input" type="text" name="estatura_cli" id="estatura_cli" placeholder="Ingrese la estatura"
+                                onChange={(e) => { agregarClaveFormulario(e); setEstatura_cli(e.target.value) }} value={estatura_cli} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="peso_cli">Peso</label>
+                            <input className="form-input" type="text" name="peso_cli" id="peso_cli" placeholder="Ingrese el peso"
+                                onChange={(e) => { agregarClaveFormulario(e); setPeso_cli(e.target.value) }} value={peso_cli} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="tipoPeso">Tipo de Peso</label>
+                            <div className="checkbox-group">
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="kg" name="kg" onChange={chechkPeso} />
+                                    <label className="checkbox-label" htmlFor="kg">Kg</label>
+                                </div>
+                                <div className="checkbox-item">
+                                    <input className="checkbox-input" type="checkbox" id="lb" name="lb" onChange={chechkPeso} />
+                                    <label className="checkbox-label" htmlFor="lb">Lb</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Lugar de Nacimiento </label>
-                    <input type="text" name="lugar_naci_cli" id="lugar_naci_cli" placeholder="Ingrese lugar de Nacimiento"
-                        onChange={(e) => { agregarClaveFormulario(e); setLugar_naci_cli(e.target.value) }} value={lugar_naci_cli} />
-                </div>
-            </div>
+                
+                {/* Sección de Localización */}
+                <div className="form-section location-info-section">
+                    <h4 className="form-section-title">Información de Ubicación</h4>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="pais">País</label>
+                            <Select
+                                className="react-select"
+                                classNamePrefix="react-select"
+                                options={Array.isArray(pais) ? pais.map((r) => ({
+                                    value: r.id_pais,
+                                    label: r.nom_pais,
+                                })) : []}
+                                placeholder="Seleccione el país"
+                                onChange={async (e) => {
+                                    setSelectedPais(e);
+                                    setSelectedProvincia(null);
+                                    setSelectedCiudad(null);
+                                    const provincias = await ClientesFun.traerProvincias(e.value, navigate);
+                                    setProvincia(provincias);
+                                }}
+                                value={selectedPais}
+                            />
+                        </div>
 
-            <div className={styles.formRow}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Teléfono fijo </label>
-                    <input type="text" name="tel_pers" id="tel_pers" placeholder="Ingrese telefono convencional/fijo"
-                        onChange={(e) => { agregarClaveFormulario(e); setTel_pers(e.target.value) }} value={tel_pers} />
-                </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Celular </label>
-                    <div className={styles.dateGroup}>
-                        <input type="text" name="cel_pers" id="cel_pers" placeholder="Ingrese numero de Celular"
-                            onChange={(e) => { agregarClaveFormulario(e); setCel_pers(e.target.value) }} value={cel_pers} />
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="provincia">Provincia</label>
+                            <Select
+                                className="react-select"
+                                classNamePrefix="react-select"
+                                options={Array.isArray(provincia) ? provincia.map((r) => ({
+                                    value: r.id_provin,
+                                    label: r.nom_provin,
+                                })) : []}
+                                placeholder="Seleccione la provincia"
+                                onChange={async (e) => {
+                                    setSelectedProvincia(e);
+                                    setSelectedCiudad(null);
+                                    const ciudades = await ClientesFun.traerCiudades(e.value, navigate);
+                                    setCiudad(ciudades);
+                                }}
+                                value={selectedProvincia}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="ciudad">Ciudad</label>
+                            <Select
+                                className="react-select"
+                                classNamePrefix="react-select"
+                                options={Array.isArray(ciudad) ? ciudad.map((r) => ({
+                                    value: r.id_ciud,
+                                    label: r.nom_ciud,
+                                })) : []}
+                                placeholder="Seleccione la ciudad"
+                                onChange={(e) => {
+                                    setSelectedCiudad(e);
+                                    setFormulario({ ...formulario, id_ciud: e.value });
+                                }}
+                                value={selectedCiudad}
+                            />
+                        </div>
+                    </div>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="parroq_cli">Parroquia</label>
+                            <input className="form-input" type="text" name="parroq_cli" id="parroq_cli" placeholder="Ingrese la parroquia"
+                                onChange={(e) => { agregarClaveFormulario(e); setParroq_cli(e.target.value) }} value={parroq_cli} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="calle_princ_pers">Calle Principal</label>
+                            <input className="form-input" type="text" name="calle_princ_pers" id="calle_princ_pers" placeholder="Ingrese la calle Principal"
+                                onChange={(e) => { agregarClaveFormulario(e); setCalle_princ_pers(e.target.value) }} value={calle_princ_pers} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="calle_secun_pers">Calle Secundaria</label>
+                            <input className="form-input" type="text" name="calle_secun_pers" id="calle_secun_pers" placeholder="Ingrese la calle Secundaria"
+                                onChange={(e) => { agregarClaveFormulario(e); setCalle_secun_pers(e.target.value) }} value={calle_secun_pers} />
+                        </div>
                     </div>
                 </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Correo Electrónico </label>
-                    <div className={styles.dateGroup}>
-                        <input type="text" name="email_pers" id="email_pers" placeholder="Ingrese correo electronico"
-                            onChange={(e) => { agregarClaveFormulario(e); setEmail_pers(e.target.value) }} value={email_pers} />
-                    </div>
+                
+                {/* Botones de acción */}
+                <div className="actions-container">
+                    <button className="btn-cancelar" onClick={cancelar}>Cancelar</button>
+                    <button className="btn-guardar" onClick={guardarCliente}>Guardar Cambios</button>
                 </div>
             </div>
-
-            <div className={styles.formRow}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Edad</label>
-                    <input type="text" name="edad_pers" id="edad_pers" placeholder="Ingrese la edad"
-                        onChange={(e) => { agregarClaveFormulario(e); setEdad_pers(e.target.value) }} value={edad_pers} />
-                </div>
-                <div className={styles.sexGroup}>
-                    <label htmlFor="">Sexo:</label>
-                    <input type="checkbox" id="masculino" name="masculino" onChange={chechkSexo} /> <label htmlFor="masculino">M</label>
-                    <input type="checkbox" id="femenino" name="femenino" onChange={chechkSexo} /> <label htmlFor="femenino">F</label>
-                </div>
-                <div className={styles.civilStatusGroup}>
-                    <label htmlFor="">Estado Civil:</label>
-                    <input type="checkbox" id="soltero" onChange={chechkEstadoCivil} /> <label htmlFor="soltero">Soltero</label>
-                    <input type="checkbox" id="divorciado" onChange={chechkEstadoCivil} /> <label htmlFor="divorciado">Divorciado</label>
-                    <input type="checkbox" id="viudo" onChange={chechkEstadoCivil} /> <label htmlFor="viudo">Viudo</label>
-                    <input type="checkbox" id="casado" onChange={chechkEstadoCivil} /> <label htmlFor="casado">Casado</label>
-                    <input type="checkbox" id="unionLibre" onChange={chechkEstadoCivil} /> <label htmlFor="unionLibre">U/Libre</label>
-                </div>
-            </div>
-            <div className={styles.formRow}>
-                <div className={styles.heightGroup}>
-                    <label htmlFor="">Estatura: </label>
-                    <input type="text" name="estatura_cli" id="estatura_cli" placeholder="Ingrese la altura"
-                        onChange={(e) => { agregarClaveFormulario(e); setEstatura_cli(e.target.value) }} value={estatura_cli} /> <label htmlFor="">cm</label>
-                </div>
-                <div className={styles.weightGroup}>
-                    <label htmlFor="">Peso: </label>
-                    <input type="text" name="peso_cli" id="peso_cli" placeholder="Ingrese el peso"
-                        onChange={(e) => { textPeso(e); setPeso_cli(e.target.value) }} value={peso_cli} />
-                    <input type="checkbox" id="lb" onChange={chechkTipoPeso} /> <label htmlFor="libras">Lb</label>
-                    <input type="checkbox" id="kg" onChange={chechkTipoPeso} /> <label htmlFor="kilogramos">kg </label>
-                </div>
-            </div>
-            <div className={styles.formRow}> {/* Filas para agrupar elementos */}
-                <div className={styles.locationGroup}>
-                        <label htmlFor="">País</label>
-                        <Select
-                            options={Array.isArray(pais) ? pais.map((r) => ({
-                                value: r.id_pais,
-                                label: r.nom_pais,
-                            })) : []} // Si `pais` no es un array, pasaré un array vacío
-                            placeholder="Seleccione el pais"
-                            onChange={(e) => {
-                                setSelectedPais(e);
-                                cargarProvincia(e);
-                                setFormulario({ ...formulario, id_ciud: '' });
-                            }}
-                            value={selectedPais}
-                        />
-                        <label htmlFor="">Provincia</label>
-                        <Select
-                            options={Array.isArray(provincia) ? provincia.map((r) => ({
-                                value: r.id_provin,
-                                label: r.nom_provin,
-                            })) : []} // Si `pais` no es un array, pasaré un array vacío
-                            placeholder="Seleccione la provincia"
-                            onChange={(e) => {
-                                setSelectedProvincia(e);
-                                cargarCiudad(e);
-                                setFormulario({ ...formulario, id_ciud: '' });
-                            }}
-                            value={selectedProvincia}
-                        />
-                        <label htmlFor="">Ciudad</label>
-                        <Select
-                            options={Array.isArray(ciudad) ? ciudad.map((r) => ({
-                                value: r.id_ciud,
-                                label: r.nom_ciud,
-                            })) : []}
-                            placeholder="Seleccione la ciudad"
-                            onChange={(e) => {
-                                setSelectedCiudad(e);
-                                setFormulario({ ...formulario, id_ciud: e.value });
-                            }}
-                            value={selectedCiudad}
-                        />
-                </div>
-
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Parroquia </label>
-                    <input type="text" name="parroq_cli" id="parroq_cli" placeholder="Ingrese la parroquia"
-                        onChange={(e) => { agregarClaveFormulario(e); setParroq_cli(e.target.value) }} value={parroq_cli} />
-                </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Calle Principal </label>
-                    <input type="text" name="calle_princ_pers" id="calle_princ_pers" placeholder="Ingrese la calle Principal"
-                        onChange={(e) => { agregarClaveFormulario(e); setCalle_princ_pers(e.target.value) }} value={calle_princ_pers} />
-                </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="">Calle Secundaria </label>
-                    <input type="text" name="calle_secun_pers" id="calle_secun_pers" placeholder="Ingrese la calle Secundaria"
-                        onChange={(e) => { agregarClaveFormulario(e); setCalle_secun_pers(e.target.value) }} value={calle_secun_pers} />
-                </div>
-            </div>
-            <div>
-                <div className={styles.buttonGroup}>
-                    <button className={styles.btnGuardar} onClick={guardarCliente}>Editar </button>
-                    <button className={styles.btnCancelar} onClick={cancelar}> Cancelar</button>
-                </div>
-            </div>
-
-
         </div>
     );
 }

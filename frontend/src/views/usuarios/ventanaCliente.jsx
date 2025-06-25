@@ -6,6 +6,8 @@ import ClientesFun from "../clientes/ClientesFun";
 import ClientesArchivos from "../clientes/ClientesArchivos";
 import CargarArchivos from "../cargando/cargarArchivos";
 import ReembolsoCliente from "../reembolsos/ReembolsoCliente";
+import SeguroContrado from "../clientes/SeguroContrado";
+import ListaReembolsoCliente from "../reembolsos/ListaReembolsoCliente";
 
 export function VentanaCliente() {
   const navigate = useNavigate();
@@ -25,8 +27,7 @@ export function VentanaCliente() {
       const res = await ClientesFun.buscarcliente(login.user, navigate);
       setcliente(res);
       setEstado(res[0].id_estado);
-      setNombres(res[0].nom_cli + ' ' + res[0].ape_cli);
-
+      setNombres(res[0]?.nom_cli + ' ' + res[0]?.ape_cli);
       if (res[0].id_estado === 1) {
         setLoadingFoto(true); // empieza carga
         try {
@@ -63,12 +64,17 @@ export function VentanaCliente() {
             fotoPerfil && <img src={fotoPerfil} alt="Imagen perfil" />
           )} </>
         ) : (<></>)}
-        <label>{nombres || ''}</label>
+        <p> {nombres || "NO HAY NOMBRE"}</p>
+
         <ul>
           {estado === 4 ? (
             <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
           ) : (<>
-            <li><a onClick={() => mostrarSeccion("Reembolso")}>Reembolsos</a></li>
+            <li><a onClick={() => mostrarSeccion("SegurosContratados")}>Seguros contratados</a></li>
+            <li><a onClick={() => mostrarSeccion("SolictudReembolso")}>Solicitud de Reembolso</a></li>
+            <li><a onClick={() => mostrarSeccion("Reembolsos")}>Reembolsos</a></li>
+
+
             <li><a onClick={() => mostrarSeccion("Historial")}>Historial de pagos</a></li>
             <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
           </>)}
@@ -81,7 +87,10 @@ export function VentanaCliente() {
         ) : (
           <>
             <section >
-              {seccionActiva === "Reembolso" && <ReembolsoCliente mostrarSeccion={mostrarSeccion} />}
+              {seccionActiva === "SegurosContratados" && <SeguroContrado mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers} />}
+              {seccionActiva === "Reembolsos" && <ListaReembolsoCliente mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers} />}
+              {seccionActiva === "SolictudReembolso" && <ReembolsoCliente mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers}  />}
+
               {seccionActiva === "inicio" && <>
                 <div className={styles2.bienvenida}>
                   <h1>Bienvenido a <span className={styles.nombreEmpresa}>Seguros.SA</span></h1>
