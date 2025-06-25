@@ -8,6 +8,7 @@ const { Client } = pkg;
       return DataBase.instancia;
     }
 
+<<<<<<< css-emergente
   //  this.client = new Client({
   //     user: 'admin',
   //     host: 'dpg-d0j12bd6ubrc73cko57g-a.oregon-postgres.render.com',
@@ -24,8 +25,18 @@ const { Client } = pkg;
       host: 'localhost',
       database: 'gestorSeguros',
       password: 'root',
+=======
+this.client = new Client({
+      user: 'gestorseguros_user',
+      host: 'dpg-d1dsn3umcj7s73bf4dkg-a.oregon-postgres.render.com',
+      database: 'gestorseguros',
+      password: 'a5bTM4ZbC49Fc9K5ulaSGvNwCFlj7vKF',
+>>>>>>> developPrueba
       port: 5432, 
-    });
+      ssl: {
+      rejectUnauthorized: false
+      }
+    });
 
     this.#connect(); 
     DataBase.instancia=this;

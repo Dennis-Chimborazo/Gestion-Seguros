@@ -20,6 +20,7 @@ export function ValidarAgente() {
         const verificar = async () => {
             try {
                 const res = await AgenteFun.validarTokenEmail({ url: id }, navigate);
+                console.log(res)
                 if (res?.success && res.data?.id_pers) {
                     const resCli = await AgenteFun.buscarAgente(res.data.id_pers, navigate);
                     setAgente({

@@ -7,6 +7,8 @@ import EditarClientes from "../clientes/EditarClientes";
 import GestionContratacion from "../gestionContratacion/gestionContratacion";
 import CrearContratacion from "../gestionContratacion/CrearContratacion";
 import ValidacionCliente from "../clientes/ValidacionCliente";
+import ListReembolsosAdmin from "../reembolsos/ListReembolsosAdmin";
+import ReembolsosAdmin from "../reembolsos/ReembolsosAdmin";
 
 export function VentanaAgente() {
   const navigate = useNavigate();
@@ -48,6 +50,7 @@ export function VentanaAgente() {
         <li>
           <button className={`${styles.menuButton} ${styles.logoutButton}`} onClick={cerrarSesion}>Cerrar sesión</button>
         </li>
+
       </ul>
 
       <section className={styles.section}>
@@ -57,7 +60,8 @@ export function VentanaAgente() {
         {seccionActiva === "GestionContratacion" && <GestionContratacion mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "CrearContratacion" && <CrearContratacion mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "clientePendiente" && <ValidacionCliente mostrarSeccion={mostrarSeccion} />}
-
+        {seccionActiva === "listaRembolso" && <ListReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "RevisionRembolso" && <ReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reportes" && <p>Sección de reportes</p>}
         {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
       </section>

@@ -1,75 +1,16 @@
-CREATE TABLE cliente (
-  id_pers SERIAL PRIMARY KEY,
-  cedr_cli VARCHAR(15) NOT NULL,
-  tipo_cedr_cli VARCHAR(20) NOT NULL,
-  nacion_cli VARCHAR(30) NOT NULL,
-  nom_cli VARCHAR(100) NOT NULL,
-  ape_cli VARCHAR(100) NOT NULL,
-  fecha_naci_cli VARCHAR(12) NOT NULL,
-  lugar_naci_cli VARCHAR(100) NOT NULL,
-  tel_pers VARCHAR(10),
-  cel_pers VARCHAR(10),
-  email_pers VARCHAR(60) NOT NULL,
-  edad_pers VARCHAR(20) NOT NULL,
-  sexo_cli VARCHAR(20) NOT NULL,
-  estado_civil_pers VARCHAR(30) NOT NULL,
-  estatura_cli VARCHAR(30) NOT NULL,
-  peso_cli VARCHAR(30) NOT NULL,
-  parroq_cli VARCHAR(100) NOT NULL,
-  calle_princ_pers VARCHAR(100) NOT NULL,
-  calle_secun_pers VARCHAR(100) NOT NULL,
-  id_ciud INTEGER,
-  FOREIGN KEY (id_ciud) REFERENCES ciudad(id_ciud),
-  id_estado INTEGER,
-  FOREIGN KEY (id_estado) REFERENCES estado(id_estado),
-);
-
 CREATE TABLE estado (
   id_estado SERIAL PRIMARY KEY,
-  nom_estado VARCHAR(100) NOT NULL,
-)
-
+  nom_estado VARCHAR(100) NOT NULL
+);
 
 CREATE TABLE pais (
   id_pais SERIAL PRIMARY KEY,
-  nom_pais VARCHAR(100) NOT NULL,
-);
-
-CREATE TABLE provincia (
-  id_provin SERIAL PRIMARY KEY,
-  nom_provin VARCHAR(100) NOT NULL,
-  id_pais INTEGER,
-  FOREIGN KEY (id_pais) REFERENCES pais(id_pais)
-
-);
-CREATE TABLE ciudad (
-  id_ciud SERIAL PRIMARY KEY,
-  nom_ciud VARCHAR(100) NOT NULL,
-  id_provin INTEGER,
-  FOREIGN KEY (id_provin) REFERENCES provincia(id_provin)
-);
-
-
-CREATE TABLE usuarios (
-  id_usuario SERIAL PRIMARY KEY,
-  users VARCHAR(100) NOT NULL,
-  pass VARCHAR(150) NOT NULL,
-  id_persona INTEGER,
-  id_rol INTEGER,
-  FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
+  nom_pais VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE roles (
   id_rol SERIAL PRIMARY KEY,
-  nom_rol VARCHAR(20) NOT NULL,
-);
-
-
-CREATE TABLE roles_usuarios (
-  id_rol INTEGER,
-  id_usuario INTEGER,
-  FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
-  FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+  nom_rol VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE empleado (
@@ -79,19 +20,6 @@ CREATE TABLE empleado (
   email_emple VARCHAR(100) NOT NULL,
   firma_emple VARCHAR(100) NOT NULL
 );
-
-
-  CREATE TABLE excl_empresa (
-    id_excl_empresa SERIAL PRIMARY KEY,
-    ciud_excl_empresa VARCHAR(100) NOT NULL,
-    dia_excl_empresa VARCHAR(100) NOT NULL,
-    mes_excl_empresa VARCHAR(100) NOT NULL,
-    anio_excl_empresa VARCHAR(100) NOT NULL,
-    firma_excl_empresa VARCHAR(100) NOT NULL,
-    nombre_excl_empresa VARCHAR(100) NOT NULL,
-    cargo_excl_empresa VARCHAR(100) NOT NULL
-  
-  );
 
 CREATE TABLE persona_fac (
   id_pers_fac SERIAL PRIMARY KEY,
@@ -115,59 +43,71 @@ CREATE TABLE cuenta_banco (
   mun_cuent_Ban VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE seguros (
-  id_seguro SERIAL PRIMARY KEY,
-  ciud_seguro VARCHAR(100) NOT NULL,
-  dia_seguro VARCHAR(100) NOT NULL,
-  mes_seguro VARCHAR(100) NOT NULL,
-  anio_seguro VARCHAR(100) NOT NULL,
-  monto_seguro VARCHAR(100) NOT NULL,
-  tiempo_seguro VARCHAR(100) NOT NULL,
-  id_pers INTEGER,
-  id_emple INTEGER,
-  id_tip_seg INTEGER,
-  id_pers_fac INTEGER,
-  id_cuent_Ban INTEGER,
-  id_estado INTEGER,
-  FOREIGN KEY (id_estado) REFERENCES estado(id_estado),
-  FOREIGN KEY (id_pers) REFERENCES cliente(id_pers),
-  FOREIGN KEY (id_emple) REFERENCES empleado(id_emple),
-  FOREIGN KEY (id_tip_seg) REFERENCES tipo_seguro(id_tip_seg),
-  FOREIGN KEY (id_pers_fac) REFERENCES persona_fac(id_pers_fac),
-  FOREIGN KEY (id_cuent_Ban) REFERENCES cuenta_banco(id_cuent_Ban)
-);
-
-CREATE TABLE dependientes (
-  id_depen SERIAL PRIMARY KEY,
-  cedr_depen VARCHAR(15) NOT NULL,
-  tipo_cedr_depen VARCHAR(20) NOT NULL,
-  nom_depen VARCHAR(100) NOT NULL,
-  ape_depen VARCHAR(100) NOT NULL,
-  fecha_naci_depen VARCHAR(12) NOT NULL,
-  parent_depen VARCHAR(70) NOT NULL,
-  discap_depen VARCHAR(170) NOT NULL,
-  cond_depen VARCHAR(170) NOT NULL,
-  fecha_fin_cond VARCHAR(20) NOT NULL,
-  fecha_ini_cond VARCHAR(20) NOT NULL,
-  id_seguro INTEGER,
-  FOREIGN KEY (id_seguro) REFERENCES seguros(id_seguro)
-);
-
-CREATE TABLE salud (
-  id_salud SERIAL PRIMARY KEY,
-  discapci_salud VARCHAR(150) NOT NULL,
-  diagnos_salud VARCHAR(150) NOT NULL,
-  fecha_ini_salud VARCHAR(50) NOT NULL
- fecha_fin_salud VARCHAR(50) NOT NULL,
-);
-
-
 CREATE TABLE categoria (
   id_categoria SERIAL PRIMARY KEY,
-  nom_categoria VARCHAR(450) NOT NULL,
+  nom_categoria VARCHAR(450) NOT NULL
 );
 
+CREATE TABLE provincia (
+  id_provin SERIAL PRIMARY KEY,
+  nom_provin VARCHAR(100) NOT NULL,
+  id_pais INTEGER,
+  FOREIGN KEY (id_pais) REFERENCES pais(id_pais)
+);
 
+CREATE TABLE ciudad (
+  id_ciud SERIAL PRIMARY KEY,
+  nom_ciud VARCHAR(100) NOT NULL,
+  id_provin INTEGER,
+  FOREIGN KEY (id_provin) REFERENCES provincia(id_provin)
+);
+
+CREATE TABLE agente (
+  id_agente SERIAL PRIMARY KEY,
+  ced_agente VARCHAR(10) NOT NULL,
+  nom_agente VARCHAR(70) NOT NULL,
+  ape_agente VARCHAR(70) NOT NULL,
+  email_agente VARCHAR(70) NOT NULL,
+  dire_agente VARCHAR(120) NOT NULL,
+  tel_agente VARCHAR(10) NOT NULL,
+  id_estado INTEGER,
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
+
+CREATE TABLE cliente (
+  id_pers SERIAL PRIMARY KEY,
+  cedr_cli VARCHAR(15) NOT NULL,
+  tipo_cedr_cli VARCHAR(20) NOT NULL,
+  nacion_cli VARCHAR(30) NOT NULL,
+  nom_cli VARCHAR(100) NOT NULL,
+  ape_cli VARCHAR(100) NOT NULL,
+  fecha_naci_cli VARCHAR(12) NOT NULL,
+  lugar_naci_cli VARCHAR(100) NOT NULL,
+  tel_pers VARCHAR(10),
+  cel_pers VARCHAR(10),
+  email_pers VARCHAR(60) NOT NULL,
+  edad_pers VARCHAR(20) NOT NULL,
+  sexo_cli VARCHAR(20) NOT NULL,
+  estado_civil_pers VARCHAR(30) NOT NULL,
+  estatura_cli VARCHAR(30) NOT NULL,
+  peso_cli VARCHAR(30) NOT NULL,
+  parroq_cli VARCHAR(100) NOT NULL,
+  calle_princ_pers VARCHAR(100) NOT NULL,
+  calle_secun_pers VARCHAR(100) NOT NULL,
+  id_ciud INTEGER,
+  FOREIGN KEY (id_ciud) REFERENCES ciudad(id_ciud),
+  id_estado INTEGER,
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
+
+CREATE TABLE usuarios (
+  id_usuario SERIAL PRIMARY KEY,
+  users VARCHAR(100) NOT NULL,
+  pass VARCHAR(150) NOT NULL,
+  id_persona INTEGER,
+  id_rol INTEGER,
+  FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
+);
 CREATE TABLE beneficios (
   id_beneficios SERIAL PRIMARY KEY,
   nom_beneficios VARCHAR(450) NOT NULL,
@@ -192,6 +132,45 @@ CREATE TABLE seguro_bedeficio (
   FOREIGN KEY (id_beneficios) REFERENCES beneficios(id_beneficios)
 );
 
+CREATE TABLE seguros (
+  id_seguro SERIAL PRIMARY KEY,
+  ciud_seguro VARCHAR(100) NOT NULL,
+  dia_seguro VARCHAR(100) NOT NULL,
+  mes_seguro VARCHAR(100) NOT NULL,
+  anio_seguro VARCHAR(100) NOT NULL,
+  monto_seguro VARCHAR(100) NOT NULL,
+  tiempo_seguro VARCHAR(100) NOT NULL,
+  id_persona INTEGER,
+  tipo_persona VARCHAR(100) NOT NULL,
+  id_pers INTEGER,
+  id_tip_seg INTEGER,
+  id_pers_fac INTEGER,
+  id_cuent_Ban INTEGER,
+  id_estado INTEGER,
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado),
+  FOREIGN KEY (id_pers) REFERENCES cliente(id_pers),
+  FOREIGN KEY (id_tip_seg) REFERENCES tipo_seguro(id_tip_seg),
+  FOREIGN KEY (id_pers_fac) REFERENCES persona_fac(id_pers_fac),
+  FOREIGN KEY (id_cuent_Ban) REFERENCES cuenta_banco(id_cuent_Ban)
+);
+
+
+CREATE TABLE dependientes (
+  id_depen SERIAL PRIMARY KEY,
+  cedr_depen VARCHAR(15) NOT NULL,
+  tipo_cedr_depen VARCHAR(20) NOT NULL,
+  nom_depen VARCHAR(100) NOT NULL,
+  ape_depen VARCHAR(100) NOT NULL,
+  fecha_naci_depen VARCHAR(12) NOT NULL,
+  parent_depen VARCHAR(70) NOT NULL,
+  discap_depen VARCHAR(170) NOT NULL,
+  cond_depen VARCHAR(170) NOT NULL,
+  fecha_fin_cond VARCHAR(20) NOT NULL,
+  fecha_ini_cond VARCHAR(20) NOT NULL,
+  id_seguro INTEGER,
+  FOREIGN KEY (id_seguro) REFERENCES seguros(id_seguro)
+);
+
 CREATE TABLE validar_email (
   id_val_email SERIAL PRIMARY KEY,
   url_emal VARCHAR(20) NOT NULL,
@@ -200,16 +179,16 @@ CREATE TABLE validar_email (
   FOREIGN KEY (id_pers) REFERENCES cliente(id_pers)
 );
 
-CREATE TABLE agente (
-  id_agente SERIAL PRIMARY KEY,
-  ced_agente VARCHAR(10) NOT NULL,
-  nom_agente VARCHAR(70) NOT NULL,
-  ape_agente VARCHAR(70) NOT NULL,
-  email_agente VARCHAR(70) NOT NULL,
-  dire_agente VARCHAR(120) NOT NULL,
-  tel_agente VARCHAR(10) NOT NULL,
+CREATE TABLE reembolso (
+  id_reemb SERIAL PRIMARY KEY,
+  fecha_reemb VARCHAR(20) NOT NULL,
+  motivo_reemb VARCHAR(512) NOT NULL,
+  id_pers INTEGER,
+  id_seguro INTEGER,
   id_estado INTEGER,
-  FOREIGN KEY (id_estado) REFERENCES estado(id_estado),
+  FOREIGN KEY (id_pers) REFERENCES cliente(id_pers),
+  FOREIGN KEY (id_seguro) REFERENCES seguros(id_seguro),
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
 );
 
 CREATE TABLE token_agente (
@@ -219,3 +198,98 @@ CREATE TABLE token_agente (
   id_agente INTEGER,
   FOREIGN KEY (id_agente) REFERENCES agente(id_agente)
 );
+
+CREATE TABLE validar_contratacion(
+  id_val_contra SERIAL PRIMARY KEY,
+  url_contra VARCHAR(20) NOT NULL,
+  token_val_contra VARCHAR(512) NOT NULL
+);
+
+CREATE TABLE revision (
+  id_revision SERIAL PRIMARY KEY,
+  fecha_revision VARCHAR(20) NOT NULL,
+  descripcion_revision VARCHAR(512) NOT NULL,
+  id_reemb INTEGER,
+  id_estado INTEGER,
+  FOREIGN KEY (id_reemb) REFERENCES reembolso(id_reemb),
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
+
+-- País
+INSERT INTO pais (nom_pais) VALUES ('Ecuador');
+
+-- Provincias
+INSERT INTO provincia (nom_provin, id_pais) VALUES 
+('Pichincha', 1), ('Guayas', 1), ('Azuay', 1);
+
+-- Ciudades
+INSERT INTO ciudad (nom_ciud, id_provin) VALUES 
+('Quito', 1), ('Cayambe', 1), ('Sangolquí', 1),
+('Guayaquil', 2), ('Daule', 2), ('Samborondón', 2),
+('Cuenca', 3), ('Gualaceo', 3), ('Paute', 3);
+
+-- Estados
+INSERT INTO estado (nom_estado) VALUES 
+('activo'), ('inactivo'), ('pendiente'), ('preactivo'),('revicion'),('aprovado'),('rechazado');
+
+-- Roles
+INSERT INTO roles (nom_rol) VALUES 
+('admin'), ('agente'), ('cliente');
+
+-- Categorías
+INSERT INTO categoria (nom_categoria) VALUES 
+('Vida'), ('Salud'), ('Vehicular'), ('Hogar');
+
+-- Beneficios
+INSERT INTO beneficios (nom_beneficios, id_categoria) VALUES
+-- Vida (1)
+('Cobertura de fallecimiento por cualquier causa', 1),
+('Invalidez total y permanente por enfermedad o accidente', 1),
+('Gastos funerarios y de sepelio', 1),
+-- Salud (2)
+('Anticipo de suma asegurada por enfermedades terminales', 2),
+('Doble indemnización por muerte accidental', 2),
+('Beneficio por desmembración o pérdidas funcionales', 2),
+-- Vehicular (3)
+('Gastos de hospitalización y estancia hospitalaria', 3),
+('Honorarios médicos y quirúrgicos', 3),
+('Medicamentos recetados dentro y fuera del hospital', 3),
+('Exámenes de laboratorio e imagenología (Rayos X, resonancias, etc.)', 3),
+('Terapias de rehabilitación (física, respiratoria, ocupacional)', 3),
+('Atención de emergencias médicas 24/7', 3),
+('Cobertura de enfermedades catastróficas (cáncer, infarto, etc.)', 3),
+-- Hogar (4)
+('Daños propios al vehículo por colisión, vuelco o incendio', 4),
+('Robo total o parcial del vehículo', 4),
+('Responsabilidad civil por daños a terceros (bienes y personas)', 4),
+('Asistencia legal en caso de accidente de tránsito', 4),
+('Servicio de grúa y asistencia vial (cambio de llanta, paso de corriente)', 4),
+('Gastos médicos ocupantes (conductor y pasajeros)', 4),
+('Auto sustituto por reparación o robo', 4),
+('Daños a la estructura por incendio, rayo o explosión', 4),
+('Robo de contenidos (muebles, electrodomésticos, joyas)', 4),
+('Daños por agua (rotura de tuberías, inundación)', 4),
+('Responsabilidad civil familiar por daños a terceros dentro y fuera del hogar', 4),
+('Gastos de remoción de escombros y limpieza', 4),
+('Daños por fenómenos naturales (terremoto, temblor, huracán, inundación)', 4),
+('Asistencia en el hogar (plomería, electricidad, cerrajería, vidriería)', 4);
+
+-- Tipo de seguros
+INSERT INTO tipo_seguro (nom_tip_seg, descrip_tip_seg, pago_tip_seg, suma_tip_seg, id_estado) VALUES
+('Seguro de Vida Básico', 'Cobertura por fallecimiento', '10000', '10000', 1),
+('Seguro Médico Premium', 'Cobertura total salud', '20000', '5000', 1),
+('Seguro Vehicular Full', 'Daños totales y terceros', '34555', '15000', 1),
+('Seguro Hogar Completo', 'Daños estructurales y contenido', '534234', '20000', 1),
+('Seguro de Vida Platinum', 'Cobertura máxima', '123456', '50000', 1);
+
+-- Relación seguro-beneficio
+INSERT INTO seguro_bedeficio (id_tip_seg, id_beneficios) VALUES
+(1, 1), (1, 2), (1, 3),
+(2, 4), (2, 5), (2, 6),
+(3, 7), (3, 8), (3, 9),
+(4, 10), (4, 11), (4, 12),
+(5, 1), (5, 2), (5, 3);
+
+-- Usuarios
+INSERT INTO usuarios (users, pass, id_persona, id_rol) VALUES
+('admin', 'admin', 0, 1);
