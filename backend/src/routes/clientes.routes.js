@@ -320,11 +320,14 @@ router.post("/validar-token-email", async (req, res) => {
 
 router.get("/buscarclienteID", async (req, res) => {
   const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+console.log('hola mundo')
+console.log(id)
 
   try {
     const query = `SELECT * FROM cliente WHERE id_pers = $1`;
     const data = await database.query(query, [id]);
     res.json(data.rows);
+    console.log(data.rows)
   } catch (error) {
     console.error("Error en consulta:", error);
     res.status(500).json({ success: false, message: "Error al obtener datos", error: error.message });
@@ -422,10 +425,6 @@ router.put("/update-correo", async (req, res) => {
 
 router.post("/buscar-ruta-token", async (req, res) => {
   const { id } = req.body;
-
-  console.log('id de llegada')
-  console.log(id)
-
   try {
     const result = await database.query(
       "SELECT token_val_email, url_emal FROM validar_email WHERE id_pers = $1",

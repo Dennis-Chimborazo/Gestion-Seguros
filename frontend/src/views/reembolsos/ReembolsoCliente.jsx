@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import Select from "react-select";
+import ReembolsoFun from './ReembolsoFun';
+import { useNavigate } from "react-router-dom";
 
 const ReembolsoCliente = ({ id }) => {
   const [reembolsoPdf, setReembolsoPdf] = useState(null);
   const [reenbolsoError, setReembolsoError] = useState('');
+  const navigate = useNavigate();
+  const [seguros, setSeguros] = useState([]);
+
 
 
   useEffect(() => {
     const traerDatos = async () => {
-      console.log(id)
-      // const res = await ClientesFun.buscarSegurosContatados(id, navigate);
+      const resSeguros = await ReembolsoFun.traerSegurosContratados(id, navigate);
+      setSeguros(resSeguros);
     };
     traerDatos();
   }, []);
@@ -45,7 +50,10 @@ const ReembolsoCliente = ({ id }) => {
         <label htmlFor="">Motivo de reembolso</label>
         <input type="text" id="motivo" name="motivo" placeholder="Motivo de reembolso" />
         <Select
-          data={data}
+          options={Array.isArray(seguros) ? seguros.map((s) => ({
+            value: s.id_seguro,
+            label: s.nom_tip_seg,
+          })) : []}
           placeholder="Seleccione su seguro" />
         <div>
           <div >

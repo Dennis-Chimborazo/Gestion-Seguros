@@ -63,7 +63,7 @@ class ClientesFun {
    }
 
    static async buscarcliente(id, navigate) {
-      const response = await ApiService.get("client/buscarclienteID", id, navigate);
+      const response = await ApiService.getNull("client/buscarclienteID", id, navigate);
       return response;
    }
    static async preActivarCuentaUsuario(id, navigate) {

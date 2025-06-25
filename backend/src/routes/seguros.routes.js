@@ -120,7 +120,6 @@ router.post("/cuentabanco/save", async (req, res) => {
 
 router.post("/saveSeguro", async (req, res) => {
   const formulario = req.body;
-  console.log(formulario);
   const idEstado = 3
   try {
     const data = await database.query(`
@@ -132,7 +131,7 @@ router.post("/saveSeguro", async (req, res) => {
               monto_seguro,
               tiempo_seguro,
               id_pers,
-              id_emple,
+              id_agente,
               id_tip_seg,
               id_pers_fac,
               id_cuent_Ban,
@@ -148,7 +147,7 @@ router.post("/saveSeguro", async (req, res) => {
       formulario.monto_seguro,
       formulario.tiempo_seguro,
       formulario.id_pers,
-      formulario.id_emple,
+      formulario.id_agente,
       formulario.id_tip_seg,
       formulario.id_pers_fac,
       formulario.id_cuent_Ban,
@@ -348,6 +347,24 @@ router.get("/seguros-clientes", async (req, res) => {
                   INNER JOIN seguro_bedeficio sf ON sf.id_tip_seg = tp.id_tip_seg
                   WHERE s.id_pers = $1
                   GROUP BY s.id_seguro, tp.nom_tip_seg`;
+    const values = [id_pers];
+    const data = await database.query(query, values);
+    res.json(data.rows);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el empleado", error });
+  }
+});
+
+router.get("/reembolso-seguros-clientes", async (req, res) => {
+  try {
+    const id_pers = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+    if (!id_pers) {
+      return res.status(400).json({ message: id_pers });
+    }
+    const query = `SELECT s.id_seguro,tp.nom_tip_seg
+                  FROM public.seguros s
+                  INNER JOIN tipo_seguro tp ON tp.id_tip_seg = s.id_tip_seg
+                  WHERE s.id_pers = $1`;
     const values = [id_pers];
     const data = await database.query(query, values);
     res.json(data.rows);

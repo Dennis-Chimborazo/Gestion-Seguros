@@ -10,7 +10,9 @@ export function Login() {
   const navigate = useNavigate();
   const [formulario, setFormulario] = useState({ user: "", pass: "" });
 
-  const ingresar = async () => {
+  const ingresar = async (e) => {
+    e.preventDefault();
+    localStorage.clear();
     if (formulario.pass === "" || formulario.user === "") {
       toast.error("Complete todos los campos");
     } else {
