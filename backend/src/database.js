@@ -9,14 +9,11 @@ const { Client } = pkg;
     }
 
    this.client = new Client({
-      user: 'admin',
-      host: 'dpg-d0j12bd6ubrc73cko57g-a.oregon-postgres.render.com',
-      database: 'gestionpruebas',
-      password: 'cTbyF9p3fcC4Yo7xpFNzcLwtvK6TboTH',
+      user: 'postgres',
+      host: 'localhost',
+      database: 'gestionPruebas',
+      password: 'admin',
       port: 5432, 
-       ssl: {
-        rejectUnauthorized: false // ⚠ Importante para Render
-      }
     });
 
     this.#connect(); 

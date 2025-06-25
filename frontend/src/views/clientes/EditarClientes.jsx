@@ -67,7 +67,6 @@ export function EditarClientes({ mostrarSeccion }) {
                 calle_princ_pers: editData.cliente.calle_princ_pers,
                 calle_secun_pers: editData.cliente.calle_secun_pers,
                 sexo_cli: editData.cliente.sexo_cli,
-                peso_cli: editData.cliente.peso_cli,
                 estado_civil_pers: editData.cliente.estado_civil_pers,
                 id_ciud: editData.cliente.id_ciud
             });

@@ -1,14 +1,37 @@
-import React from 'react';
-import AppRoutes from './AppRoutes';
-import Login from './views/Login';
+// src/AppRoutes.jsx
 
-function App() {
-  const user = sessionStorage.getItem('user');
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./views/Login";
+import VentanaAdmin from "./views/usuarios/VentanaAdmin";
+import VentanaAgente from "./views/usuarios/VentanaAgente";
+import VentanaCliente from "./views/usuarios/ventanaCliente";
+import ValidarContratacionSeguro from "./views/validaciones/ValidarContratacionSeguro";
+import ValidarEmail from "./views/validaciones/ValidarEmail";
+import ValidarAgente from "./views/validaciones/ValidarAgente";
 
-  if (user) {
-    return <AppRoutes />;
-  }
-  return <Login />;
+// Componente solo con las rutas, sin router
+export function RoutesOnly() {
+  return (
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/admin" element={<VentanaAdmin />} />
+      <Route path="/agente" element={<VentanaAgente />} />
+      <Route path="/cliente" element={<VentanaCliente />} />
+      <Route path="/validacionContratacion/:id" element={<ValidarContratacionSeguro />} />
+      <Route path="/validacionEmail/:id" element={<ValidarEmail />} />
+      <Route path="/validacionAgente/:id" element={<ValidarAgente />} />
+    </Routes>
+  );
 }
 
-export default App;
+// Componente usado en producción que envuelve en BrowserRouter
+function AppRoutes() {
+  return (
+    <BrowserRouter>
+      <RoutesOnly />
+    </BrowserRouter>
+  );
+}
+
+export default AppRoutes;

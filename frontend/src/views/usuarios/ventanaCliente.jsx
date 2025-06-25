@@ -21,6 +21,7 @@ export function VentanaCliente() {
   useEffect(() => {
     const cargarDatos = async () => {
       const login = JSON.parse(localStorage.getItem("login"));
+      console.log(login)
       const res = await ClientesFun.buscarcliente(login.user, navigate);
       setcliente(res);
       setEstado(res[0].id_estado);
