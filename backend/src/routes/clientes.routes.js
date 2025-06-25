@@ -324,7 +324,6 @@ router.get("/buscarclienteID", async (req, res) => {
     const query = `SELECT * FROM cliente WHERE id_pers = $1`;
     const data = await database.query(query, [id]);
     res.json(data.rows);
-    console.log(data.rows)
   } catch (error) {
     console.error("Error en consulta:", error);
     res.status(500).json({ success: false, message: "Error al obtener datos", error: error.message });

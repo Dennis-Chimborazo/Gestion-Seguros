@@ -19,8 +19,6 @@ export function ValidarContratacionSeguro() {
   const verificar = async () => {
     try {
       const res = await GestionContratacionFun.validarTokenContratacion({ url: id }, navigate);
-      console.log(res.idvalid);
-
       const datosCliente = res.client[0];
       const datosSeguro = res.contr[0];
 

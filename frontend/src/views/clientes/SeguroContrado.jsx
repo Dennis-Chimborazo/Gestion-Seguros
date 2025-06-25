@@ -18,7 +18,10 @@ const SeguroContrado = ({ mostrarSeccion, id }) => {
             confirmButtonText: "Sí"
         }).then(async (respuesta) => {
             if (respuesta.isConfirmed) {
-                await GestionContratacionFun.activarContratacion({ id: seguro.id_estado }, navigate);
+                console.log(seguro);
+                console.log( seguro.id_estado);
+               const c= await GestionContratacionFun.activarContratacion({ id: seguro.id_seguro }, navigate);
+               console.log(c);
                 swal.fire({
                     title: "<label>Éxito</label>",
                     text: "El seguro ha sido validado con éxito",
