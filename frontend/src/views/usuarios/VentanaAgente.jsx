@@ -31,12 +31,26 @@ export function VentanaAgente() {
 
   return (
     <div className={styles.container}>
-      <h2>Bienvenido {user?.nom_rol}</h2>
       <ul className={styles.menu}>
-        <li><a onClick={() => mostrarSeccion("clientes")}>Clientes</a></li>
-        <li><a onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</a></li>
-        <li><a onClick={() => mostrarSeccion("listaRembolso")}>Reembolso</a></li>
-        <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
+        <li className={styles.welcomeHeader}>
+          <h2>Bienvenido {user?.nom_rol}</h2>
+        </li>
+        <li>
+          <button className={styles.menuButton} onClick={() => mostrarSeccion("clientes")}>Clientes</button>
+        </li>
+        <li>
+          <button className={styles.menuButton} onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</button>
+        </li>
+        <li>
+          <button className={styles.menuButton} onClick={() => mostrarSeccion("seguros")}>Reembolso</button>
+        </li>
+        <li>
+          <button className={styles.menuButton} onClick={() => mostrarSeccion("reportes")}>Reportes</button>
+        </li>
+        <li>
+          <button className={`${styles.menuButton} ${styles.logoutButton}`} onClick={cerrarSesion}>Cerrar sesión</button>
+        </li>
+
       </ul>
 
       <section className={styles.section}>

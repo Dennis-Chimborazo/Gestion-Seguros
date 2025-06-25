@@ -23,6 +23,6 @@ class UsuariosFun {
       const response = await ApiService.post("user/usuario-existe", formulario, navigate);
       return response;
    }
-  
+
 }
 export default UsuariosFun;
