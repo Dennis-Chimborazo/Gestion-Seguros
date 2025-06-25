@@ -16,6 +16,7 @@ import AgentesPendientes from "../agentes/AgentesPendientes";
 import EditarAgente from "../agentes/EditarAgente";
 import ListReembolsosAdmin from "../reembolsos/ListReembolsosAdmin";
 import ReembolsosAdmin from "../reembolsos/ReembolsosAdmin";
+import DashboardInicio from "./DashboardInicio";
 
 export function VentanaAdmin() {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ export function VentanaAdmin() {
         {seccionActiva === "listaRembolso" && <ListReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "RevisionRembolso" && <ReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reportes" && <p>Sección de reportes</p>}
-        {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
+        {seccionActiva === "inicio" && <DashboardInicio mostrarSeccion={mostrarSeccion} user={user} />}
       </section>
     </div>
   );
