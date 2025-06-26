@@ -7,6 +7,7 @@
   justify-content: center;
   align-items: flex-start;
   overflow-y: auto;
+  height: 100%; /* Altura fija */
 }
 
 .uploadCard {
@@ -133,4 +134,48 @@
   font-size: 22px;
   margin-right: 10px;
   vertical-align: middle;
+}
+
+/* Estilos para los botones de acción */
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.cancelButton {
+  background-color: #e53e3e;
+  color: white;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.cancelButton:hover {
+  background-color: #c53030;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(229, 62, 62, 0.2);
+}
+
+.saveButton {
+  background-color: #27ae60;
+  color: white;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.saveButton:hover {
+  background-color: #219653;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(39, 174, 96, 0.2);
 }
