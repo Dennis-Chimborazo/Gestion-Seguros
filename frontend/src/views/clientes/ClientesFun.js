@@ -92,5 +92,9 @@ class ClientesFun {
       return response;
    }
 
+   static async buscarClienteCedula(id, navigate) {
+      const response = await ApiService.get("client/buscar-cliente-cedula", id, navigate);
+      return response;
+   }
 }
 export default ClientesFun;

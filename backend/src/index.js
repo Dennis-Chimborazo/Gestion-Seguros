@@ -12,6 +12,7 @@ const agenteRoute = require("./routes/agente.routes.js");
 const reembolsoRoute = require("./routes/reembolsos.routes.js");
 const archivoAdic= require("./routes/archivosadicionales.route.js")
 const pagoRoute = require("./routes/pagos.routes.js");
+const reportesRoute = require("./routes/reportes.routes.js"); 
 
 const path = require('path');
 
@@ -30,6 +31,7 @@ app.use("/agente", agenteRoute);
 app.use("/archivoAdicional", archivoAdic)
 app.use("/reembolso", reembolsoRoute);
 app.use("/pago", pagoRoute);
+app.use("/reportes", reportesRoute);
 
 module.exports = app;
 
