@@ -19,6 +19,7 @@ import ReembolsosAdmin from "../reembolsos/ReembolsosAdmin";
 import ListaPagosAdmin from "../pagos/ListaPagosAdmin";
 import RevisionPagoAdmin from "../pagos/RevisionPagoAdmin";
 import Dashboard from "../reportes/Dashboard";
+import DashboardInicio from "./DashboardInicio";
 
 export function VentanaAdmin() {
   const navigate = useNavigate();
@@ -75,7 +76,7 @@ export function VentanaAdmin() {
         {seccionActiva === "procesoPagosAdmin" && <RevisionPagoAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reportes" && <Dashboard mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reportes" && <p>Sección de reportes</p>}
-        {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
+        {seccionActiva === "inicio" && <DashboardInicio mostrarSeccion={mostrarSeccion} user={user} />}
       </section>
     </div>
   );

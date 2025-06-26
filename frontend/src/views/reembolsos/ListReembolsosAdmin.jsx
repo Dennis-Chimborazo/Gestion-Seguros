@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import { FcClearFilters, FcFinePrint,FcCancel  } from "react-icons/fc";
+import { FcClearFilters, FcFinePrint, FcCancel } from "react-icons/fc";
 import { FaSearch } from "react-icons/fa";
 import CargarTablas from "../cargando/CargarTablas.jsx";
 import "../estilos/Cliente.css";
@@ -38,28 +38,28 @@ export function ListReembolsosAdmin({ mostrarSeccion }) {
         { name: "Nombres", selector: row => row.nombre },
         { name: "Motivo", selector: row => row.motivo_reemb },
         { name: "Estado", selector: row => row.nom_estado },
-         {
-  name: "Revisiones",
-  cell: (row, index) => (
-    <div>
-      {row.nom_estado !== "pendiente" ? (
-        row.nom_estado === "aprobado" ? (
-          <FcOk size={40} className="option-icon" data-testid={`icono-estado-${index}`} />
-        ) : (
-          <FcCancel size={40} className="option-icon" data-testid={`icono-estado-${index}`} />
-        )
-      ) : (
-        <FcFinePrint
-          size={40}
-          className="option-icon"
-          data-testid={`icono-cliente-${index}`}
-          onClick={() => revisionReembolso(row)}
-        />
-      )}
-    </div>
-  ),
-  ignoreRowClick: true
-}
+        {
+            name: "Revisiones",
+            cell: (row, index) => (
+                <div>
+                    {row.nom_estado !== "pendiente" ? (
+                        row.nom_estado === "aprobado" ? (
+                            <FcOk size={40} className="option-icon" data-testid={`icono-estado-${index}`} />
+                        ) : (
+                            <FcCancel size={40} className="option-icon" data-testid={`icono-estado-${index}`} />
+                        )
+                    ) : (
+                        <FcFinePrint
+                            size={40}
+                            className="option-icon"
+                            data-testid={`icono-cliente-${index}`}
+                            onClick={() => revisionReembolso(row)}
+                        />
+                    )}
+                </div>
+            ),
+            ignoreRowClick: true
+        }
     ];
 
     const filtrarClientes = (e) => {
@@ -74,7 +74,7 @@ export function ListReembolsosAdmin({ mostrarSeccion }) {
         localStorage.setItem("revisionReembolso", JSON.stringify({
             edit: true,
             revision: row
-        }));        
+        }));
         mostrarSeccion("RevisionRembolso");
     }
 
@@ -127,7 +127,7 @@ export function ListReembolsosAdmin({ mostrarSeccion }) {
                 )}
             </div>
 
-           
+
         </div>
     );
 }

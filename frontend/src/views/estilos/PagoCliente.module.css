@@ -1,0 +1,434 @@
+.pagoClienteContainer {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.titulo {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  font-weight: 700;
+  border-bottom: 3px solid #e67e22;
+  padding-bottom: 0.5rem;
+}
+
+.pagoClienteForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.formGroup label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #34495e;
+  font-size: 1rem;
+}
+
+.formGroup input {
+  padding: 0.8rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: #e67e22;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
+}
+
+.formGroup input.invalid {
+  border-color: #e74c3c;
+  background-color: #fdf2f2;
+}
+
+.formGroup input.valid {
+  border-color: #27ae60;
+  background-color: #f0f9f0;
+}
+
+.formGroupRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.validationMessage {
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  padding: 0.3rem;
+  border-radius: 4px;
+}
+
+.validationMessage.error {
+  color: #e74c3c;
+  background-color: #fadbd8;
+  border-left: 3px solid #e74c3c;
+}
+
+.validationMessage.success {
+  color: #27ae60;
+  background-color: #d5f4e6;
+  border-left: 3px solid #27ae60;
+}
+
+.selectContainer {
+  margin-bottom: 1.5rem;
+}
+
+.selectContainer label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #34495e;
+  font-size: 1rem;
+}
+
+/* Custom styles for react-select */
+.selectContainer :global(.css-13cymwt-control) {
+  border: 2px solid #e0e0e0 !important;
+  border-radius: 8px !important;
+  padding: 0.3rem !important;
+  background-color: #fafafa !important;
+  transition: all 0.3s ease !important;
+  min-height: 48px !important;
+}
+
+.selectContainer :global(.css-13cymwt-control:hover) {
+  border-color: #e67e22 !important;
+}
+
+.selectContainer :global(.css-13cymwt-control--is-focused) {
+  border-color: #e67e22 !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1) !important;
+}
+
+.selectContainer :global(.css-1pahdxg-control) {
+  border: 2px solid #e67e22 !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1) !important;
+}
+
+.selectContainer :global(.css-1dimb5e-singleValue) {
+  color: #34495e !important;
+  font-weight: 500 !important;
+}
+
+.infoSeguroSection {
+  background-color: #fff8f0;
+  border: 2px solid #f39c12;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.infoSeguroTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #e67e22;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.infoSeguroGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.infoSeguroItem {
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem;
+  background-color: #ffffff;
+  border-radius: 6px;
+  border-left: 4px solid #f39c12;
+}
+
+.infoSeguroLabel {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.3rem;
+}
+
+.infoSeguroValue {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+.fileUploadSection {
+  background-color: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.fileUploadSection:hover {
+  border-color: #e67e22;
+  background-color: #fef9f3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(230, 126, 34, 0.15);
+}
+
+.fileUploadSection.dragOver {
+  border-color: #27ae60;
+  background-color: #f0fff0;
+  transform: scale(1.02);
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileLabel {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  background-color: #e67e22;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.fileLabel:hover {
+  background-color: #d35400;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(230, 126, 34, 0.3);
+}
+
+.fileInfo {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.fileSelected {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.errorMessage {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #fadbd8;
+  border-radius: 4px;
+  border-left: 4px solid #e74c3c;
+}
+
+.pdfPreview {
+  margin-top: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.pdfPreview embed {
+  border-radius: 8px;
+}
+
+.pdfPlaceholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  color: #6c757d;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.pdfPlaceholder .icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.botonCancelar {
+  padding: 1rem 2rem;
+  background: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.botonCancelar:hover {
+  background: #7f8c8d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(149, 165, 166, 0.3);
+}
+
+.botonEnviar {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.botonEnviar:hover {
+  background: linear-gradient(135deg, #d35400, #bf4f00);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
+}
+
+.botonEnviar:active {
+  transform: translateY(0);
+}
+
+.botonEnviar:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .pagoClienteContainer {
+    margin: 1rem;
+    padding: 1.5rem;
+    max-width: none;
+  }
+  
+  .titulo {
+    font-size: 1.5rem;
+  }
+  
+  .formGroupRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .infoSeguroGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .fileUploadSection {
+    padding: 1.5rem;
+  }
+  
+  .pdfPreview embed {
+    height: 250px;
+  }
+  
+  .buttonContainer {
+    flex-direction: column;
+  }
+}
+
+/* Animation for form appearance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pagoClienteContainer {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.formGroup {
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.formGroup:nth-child(1) { animation-delay: 0.1s; }
+.formGroup:nth-child(2) { animation-delay: 0.2s; }
+.selectContainer { animation-delay: 0.3s; }
+.infoSeguroSection { animation-delay: 0.4s; }
+.fileUploadSection { animation-delay: 0.5s; }
+.buttonContainer { animation-delay: 0.6s; }
+
+/* Loading spinner for button */
+.botonEnviar.loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.botonEnviar.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Success states */
+.formGroup.success input {
+  border-color: #27ae60;
+  background-color: #f0f9f0;
+}
+
+.formGroup.error input {
+  border-color: #e74c3c;
+  background-color: #fdf2f2;
+}

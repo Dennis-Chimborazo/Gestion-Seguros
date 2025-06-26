@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const CargarTablas = () => {
   return (
-    <StyledWrapper>
+    <StyledWrapper data-testid="cargar-tablas">
       <div className="loader">
         <div className="wrapper">
           <div className="circle" />

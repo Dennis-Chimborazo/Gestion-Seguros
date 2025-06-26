@@ -1,54 +1,308 @@
 .reembolsoClienteContainer {
-  max-width: 600px;
+  max-width: 700px;
   margin: auto;
   padding: 2rem;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .titulo {
   text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  color: #333;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  font-weight: 700;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 0.5rem;
 }
 
 .reembolsoClienteForm {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .formGroup label {
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #444;
-}
-
-.formGroup input {
-  padding: 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  color: #34495e;
   font-size: 1rem;
 }
 
-.botonEnviar {
-  padding: 0.8rem 1.2rem;
-  background-color: #007bff;
+.formGroup input {
+  padding: 0.8rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: #3498db;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.formGroup input.invalid {
+  border-color: #e74c3c;
+  background-color: #fdf2f2;
+}
+
+.formGroup input.valid {
+  border-color: #27ae60;
+  background-color: #f0f9f0;
+}
+
+.validationMessage {
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  padding: 0.3rem;
+  border-radius: 4px;
+}
+
+.validationMessage.error {
+  color: #e74c3c;
+  background-color: #fadbd8;
+  border-left: 3px solid #e74c3c;
+}
+
+.validationMessage.success {
+  color: #27ae60;
+  background-color: #d5f4e6;
+  border-left: 3px solid #27ae60;
+}
+
+.selectContainer {
+  margin-bottom: 1.5rem;
+}
+
+.selectContainer label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #34495e;
+  font-size: 1rem;
+}
+
+/* Custom styles for react-select */
+.selectContainer :global(.css-13cymwt-control) {
+  border: 2px solid #e0e0e0 !important;
+  border-radius: 8px !important;
+  padding: 0.3rem !important;
+  background-color: #fafafa !important;
+  transition: all 0.3s ease !important;
+  min-height: 48px !important;
+}
+
+.selectContainer :global(.css-13cymwt-control:hover) {
+  border-color: #3498db !important;
+}
+
+.selectContainer :global(.css-13cymwt-control--is-focused) {
+  border-color: #3498db !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1) !important;
+}
+
+.selectContainer :global(.css-1pahdxg-control) {
+  border: 2px solid #3498db !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1) !important;
+}
+
+.selectContainer :global(.css-1dimb5e-singleValue) {
+  color: #34495e !important;
+  font-weight: 500 !important;
+}
+
+.fileUploadSection {
+  background-color: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.fileUploadSection:hover {
+  border-color: #3498db;
+  background-color: #f0f8ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.15);
+}
+
+.fileUploadSection.dragOver {
+  border-color: #27ae60;
+  background-color: #f0fff0;
+  transform: scale(1.02);
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileLabel {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  background-color: #3498db;
   color: white;
-  border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.fileLabel:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.fileInfo {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.fileSelected {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.errorMessage {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #fadbd8;
+  border-radius: 4px;
+  border-left: 4px solid #e74c3c;
+}
+
+.pdfPreview {
+  margin-top: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.pdfPreview embed {
+  border-radius: 8px;
+}
+
+.botonEnviar {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .botonEnviar:hover {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, #2980b9, #1f5f99);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.botonEnviar:active {
+  transform: translateY(0);
+}
+
+.botonEnviar:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .reembolsoClienteContainer {
+    margin: 1rem;
+    padding: 1.5rem;
+    max-width: none;
+  }
+  
+  .titulo {
+    font-size: 1.5rem;
+  }
+  
+  .fileUploadSection {
+    padding: 1.5rem;
+  }
+  
+  .pdfPreview embed {
+    height: 250px;
+  }
+}
+
+/* Animation for form appearance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reembolsoClienteContainer {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.formGroup {
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.formGroup:nth-child(1) { animation-delay: 0.1s; }
+.formGroup:nth-child(2) { animation-delay: 0.2s; }
+.selectContainer { animation-delay: 0.3s; }
+.fileUploadSection { animation-delay: 0.4s; }
+.botonEnviar { animation-delay: 0.5s; }
+
+/* Loading spinner for button */
+.botonEnviar.loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.botonEnviar.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

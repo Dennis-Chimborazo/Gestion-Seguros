@@ -61,11 +61,14 @@ export function AgentesPendientes({ mostrarSeccion }) {
     const filtrarClientes = (e) => {
         if (e.target.value !== '') {
             const filtro = clientes.filter((a) =>
-                a.cedr_cli && a.cedr_cli.startsWith(e.target.value)
+                a.ced_agente && a.ced_agente.startsWith(e.target.value)
             );
             setFiltroCli(filtro);
+        } else {
+            setFiltroCli(clientes);
         }
     };
+
     const borrarFiltro = () => {
         setFiltroCli(clientes);
     }
@@ -111,6 +114,7 @@ export function AgentesPendientes({ mostrarSeccion }) {
                             <button 
                                 type="button" 
                                 className="clear-filter-btn" 
+                                data-testid="clear-filtro"
                                 onClick={borrarFiltro}
                                 title="Limpiar filtro"
                             >
@@ -121,6 +125,7 @@ export function AgentesPendientes({ mostrarSeccion }) {
                                 className="refresh-btn" 
                                 onClick={refrescar}
                                 title="Actualizar datos"
+                                data-testid="btn-actualizar"
                             >
                                 <SlRefresh size={20} />
                             </button>
@@ -138,9 +143,9 @@ export function AgentesPendientes({ mostrarSeccion }) {
                     />}
             </form>
             {isModalOpen && (
-                <div className={stylesmod.overlay}>
-                    <div className={stylesmod.modal}>
-                        <button className={stylesmod.closeBtn} onClick={cerrarModal}>X</button>
+                <div className={stylesmod.overlay}  data-testid="overlay-modal"> 
+                    <div className={stylesmod.modal} data-testid="modal-contenido">
+                        <button className={stylesmod.closeBtn} data-testid="btn-cerrar-modal" onClick={cerrarModal}>X</button>
                         <ModalCorreoAgente cerrarModal={cerrarModal} datosCliente={formulario} mostrarSeccion={mostrarSeccion} />
                     </div>
                 </div>

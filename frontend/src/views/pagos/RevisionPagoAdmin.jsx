@@ -5,6 +5,7 @@ import swal from "sweetalert2";
 import RechazoPago from "./RechazoPago";
 import PagosFun from "./PagosFun";
 import Archivos from "../../services/Archivos";
+import "../estilos/RevisionPagoAdmin.css";
 
 export function RevisionPagoAdmin({ mostrarSeccion }) {
   const [pago, setPago] = useState(null);
@@ -70,47 +71,91 @@ export function RevisionPagoAdmin({ mostrarSeccion }) {
     }
   };
 
-  if (!pago) return <div>Cargando datos del reembolso...</div>;
+  if (!pago) return (
+    <div className="revision-pago-container">
+      <div className="loading-container">
+        <div className="loading-text">Cargando datos del pago...</div>
+      </div>
+    </div>
+  );
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2>Revisión de pago</h2>
-
-      <div style={{ marginTop: "1rem" }}>
-        <p><strong>Nombre del cliente:</strong> {pago.nombre}</p>
-        <p><strong>Cédula:</strong> {pago.cedr_cli}</p>
-        <p><strong>Fecha de pago:</strong> {pago.fecha_pago}</p>
-        <p><strong>Monto pagado:</strong> ${pago.nonto_pago}</p>
-        <p><strong>Comprobante de pago:</strong> {pago.comprobante_pago}</p>
-        <p><strong>Tipo de seguro:</strong> {pago.nom_tip_seg}</p>
-        <p><strong>Estado:</strong> {pago.nom_estado}</p>
-      </div>
-
-      {pdfUrl && (
-        <div>
-          <p><strong>Comprobante de pago (PDF):</strong></p>
-          <embed
-            src={pdfUrl}
-            type="application/pdf"
-            width="100%"
-            height="400px"
-          />
-        </div>
-      )}
-
-      <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>
-        <button onClick={() => manejarAccion("aceptado")}>Aceptado</button>
-        <button onClick={() => manejarAccion("rechazado")}>Rechazado</button>
-      </div>
-
-      {isModalOpen && (
-        <div className={stylesmod.overlay}>
-          <div className={stylesmod.modal}>
-            <button className={stylesmod.closeBtn} onClick={cerrarModal}>X</button>
-            <RechazoPago cerrarModal={cerrarModal} />
+    <div className="revision-pago-container">
+      <div className="revision-pago-form">
+        <h2 className="revision-pago-title">Revisión de Pago</h2>
+        
+        <div className="pago-info-section">
+          <div className="pago-info-grid">
+            <div className="pago-info-item">
+              <span className="pago-info-label">Nombre del Cliente:</span>
+              <span className="pago-info-value">{pago.nombre}</span>
+            </div>
+            <div className="pago-info-item">
+              <span className="pago-info-label">Cédula:</span>
+              <span className="pago-info-value">{pago.cedr_cli}</span>
+            </div>
+            <div className="pago-info-item">
+              <span className="pago-info-label">Fecha de Pago:</span>
+              <span className="pago-info-value fecha-pago">{pago.fecha_pago}</span>
+            </div>
+            <div className="pago-info-item">
+              <span className="pago-info-label">Monto Pagado:</span>
+              <span className="pago-info-value monto-destacado">${pago.nonto_pago}</span>
+            </div>
+            <div className="pago-info-item">
+              <span className="pago-info-label">Tipo de Seguro:</span>
+              <span className="pago-info-value">{pago.nom_tip_seg}</span>
+            </div>
+            <div className="pago-info-item">
+              <span className="pago-info-label">Estado:</span>
+              <span className={`pago-info-value estado-${pago.nom_estado?.toLowerCase()}`}>
+                {pago.nom_estado}
+              </span>
+            </div>
+            <div className="pago-info-item" style={{ gridColumn: '1 / -1' }}>
+              <span className="pago-info-label">Comprobante de Pago:</span>
+              <span className="pago-info-value comprobante-info">{pago.comprobante_pago}</span>
+            </div>
           </div>
         </div>
-      )}
+
+        {pdfUrl && (
+          <div className="pdf-section">
+            <p className="pdf-title">📄 Comprobante de Pago (PDF)</p>
+            <embed
+              className="pdf-embed"
+              src={pdfUrl}
+              type="application/pdf"
+              width="100%"
+              height="400px"
+            />
+          </div>
+        )}
+
+        <div className="action-buttons-section">
+          <button 
+            className="action-button action-button-accept" 
+            onClick={() => manejarAccion("aceptado")}
+          >
+            ✓ Aceptar
+          </button>
+          <button 
+            className="action-button action-button-reject" 
+            onClick={() => manejarAccion("rechazado")}
+          >
+            ✗ Rechazar
+          </button>
+        </div>
+
+        {isModalOpen && (
+          <div className={stylesmod.overlay}>
+            <div className={stylesmod.modal}>
+              <button className={stylesmod.closeBtn} onClick={cerrarModal}>X</button>
+              <RechazoPago cerrarModal={cerrarModal} />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 

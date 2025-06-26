@@ -99,19 +99,21 @@ export function ValidarAgente() {
         }
     }
 
-    const cancelarCuenta = (e) => {
-        e.preventDefault()
-        swal.fire({
+    const cancelarCuenta = async (e) => {
+        e.preventDefault();
+        const respuesta = await swal.fire({
             title: "⚠️ <label>Advertencia</label>",
             text: "Desea salir de la validanción de cuenta",
             showDenyButton: true,
             denyButtonText: "No",
             confirmButtonText: "Si"
-        }).then(respuesta => {
-            if (respuesta.isConfirmed) {navigate('/');}
         });
-    }
-    
+        if (respuesta.isConfirmed) {
+            navigate('/');
+        }
+    };
+
+
     return (
         <div className="validar-email-container">
             <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />

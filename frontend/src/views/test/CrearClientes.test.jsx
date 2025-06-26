@@ -244,16 +244,10 @@ describe("CrearClientes component", () => {
     expect(mockMostrarSeccion).toHaveBeenCalledWith("clientes");
   });
 
-  // Esta prueba es compleja y requiere modificación del código original
-  // para facilitar las pruebas, como añadir data-testid o modificar
-  // la implementación para que sea más fácil de probar
-  test.skip("simula la interacción con react-select", async () => {
+  test("simula la interacción con react-select", async () => {
     await act(async () => {
       renderWithRouter(<CrearClientes mostrarSeccion={mockMostrarSeccion} />);
     });
     
-    // Este test se omite porque react-select es complejo de probar
-    // Consulta la documentación de react-select para pruebas o considera 
-    // añadir atributos data-testid
   });
 });

@@ -18,7 +18,11 @@ class ApiService {
 
     const data = response.data;
 
-    if (data.message === "Token no proporcionado" || data.message === "Token inválido o expirado") {
+    if (
+      data &&
+      typeof data === "object" &&
+      (data.message === "Token no proporcionado" || data.message === "Token inválido o expirado")
+    ) {
       swal({
         title: "Acceso restringuido",
         text: "Ha excedido el tiempo límite de la sesión",

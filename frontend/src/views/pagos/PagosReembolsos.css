@@ -1,0 +1,168 @@
+/* General container styles */
+.pago-cliente-container,
+.reembolso-cliente-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: sans-serif;
+}
+
+.pago-cliente-container h2,
+.reembolso-cliente-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Form group styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+    font-weight: bold;
+}
+
+/* Input and Select styles */
+.form-control,
+.select-control .css-13cymwt-control {
+    /* Specific to react-select */
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.select-control .css-13cymwt-control {
+    padding: 0.1rem;
+}
+
+
+.form-control:focus,
+.select-control .css-13cymwt-control:focus-within {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Info section */
+.info-section {
+    display: flex;
+    justify-content: space-between;
+    background-color: #e9ecef;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.info-section label {
+    font-weight: bold;
+    color: #333;
+}
+
+/* File input styles */
+.file-input-container {
+    margin-bottom: 1.5rem;
+}
+
+.file-input-label {
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.file-input-label:hover {
+    background-color: #0056b3;
+}
+
+#reenbolsoPdfInput,
+#pagoPdfInput {
+    display: none;
+}
+
+.file-name {
+    margin-left: 1rem;
+    color: #555;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* PDF Preview */
+.pdf-preview-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    /* Adjust height as needed */
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+}
+
+.pdf-preview {
+    width: 100%;
+    height: 100%;
+}
+
+.empty-preview-message {
+    color: #777;
+    text-align: center;
+}
+
+/* Button container */
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* Button styles */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary {
+    background-color: #28a745;
+    /* Green for send */
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #218838;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    /* Gray for cancel */
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
