@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import ApiService from "../../services/ApiService";
 import styles from "../estilos/VentanaAdmin.module.css";
 import CrearClientes from "../clientes/CrearClientes";
 import Clientes from "../clientes/Clientes";
@@ -15,7 +14,9 @@ import Agentes from "../agentes/Agentes";
 import CrearAgentes from "../agentes/CrearAgentes";
 import AgentesPendientes from "../agentes/AgentesPendientes";
 import EditarAgente from "../agentes/EditarAgente";
-
+import ListReembolsosAdmin from "../reembolsos/ListReembolsosAdmin";
+import ReembolsosAdmin from "../reembolsos/ReembolsosAdmin";
+import DashboardInicio from "./DashboardInicio";
 
 export function VentanaAdmin() {
   const navigate = useNavigate();
@@ -44,8 +45,7 @@ export function VentanaAdmin() {
         <li><button className={styles.menuButton} onClick={() => mostrarSeccion("clientes")}>Clientes</button></li>
         <li><button className={styles.menuButton} onClick={() => mostrarSeccion("segurosAdmin")}>Seguros</button></li>
         <li><button className={styles.menuButton} onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</button></li>
-        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("seguros")}>Reembolso</button></li>
-        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("reportes")}>Reportes</button></li>
+        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("listaRembolso")}>Reembolso</button></li>
         <li><button className={`${styles.menuButton} ${styles.logoutButton}`} onClick={cerrarSesion}>Cerrar sesión</button></li>
       </ul>
 
@@ -63,9 +63,10 @@ export function VentanaAdmin() {
         {seccionActiva === "crearAgentes" && <CrearAgentes mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "AgentePendiente" && <AgentesPendientes mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "EditarAgente" && <EditarAgente mostrarSeccion={mostrarSeccion} />}
-
+        {seccionActiva === "listaRembolso" && <ListReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "RevisionRembolso" && <ReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reportes" && <p>Sección de reportes</p>}
-        {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
+        {seccionActiva === "inicio" && <DashboardInicio mostrarSeccion={mostrarSeccion} user={user} />}
       </section>
     </div>
   );

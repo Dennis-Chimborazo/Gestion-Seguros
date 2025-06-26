@@ -73,9 +73,6 @@ export function VentanaCliente() {
             <li><a onClick={() => mostrarSeccion("SegurosContratados")}>Seguros contratados</a></li>
             <li><a onClick={() => mostrarSeccion("SolictudReembolso")}>Solicitud de Reembolso</a></li>
             <li><a onClick={() => mostrarSeccion("Reembolsos")}>Reembolsos</a></li>
-
-
-            <li><a onClick={() => mostrarSeccion("Historial")}>Historial de pagos</a></li>
             <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
           </>)}
         </ul>

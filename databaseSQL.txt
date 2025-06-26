@@ -205,6 +205,16 @@ CREATE TABLE validar_contratacion(
   token_val_contra VARCHAR(512) NOT NULL
 );
 
+CREATE TABLE revision (
+  id_revision SERIAL PRIMARY KEY,
+  fecha_revision VARCHAR(20) NOT NULL,
+  descripcion_revision VARCHAR(512) NOT NULL,
+  id_reemb INTEGER,
+  id_estado INTEGER,
+  FOREIGN KEY (id_reemb) REFERENCES reembolso(id_reemb),
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
+
 -- País
 INSERT INTO pais (nom_pais) VALUES ('Ecuador');
 

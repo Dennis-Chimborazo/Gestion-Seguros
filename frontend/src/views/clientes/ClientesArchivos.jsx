@@ -176,15 +176,9 @@ export function ClientesArchivos({ mostrarSeccion }) {
                         </div>
                     )}
                 </div>
-                <div>
-                    <button onClick={() => {
-                        setFotoPerfil(null);
-                        setCedulaPdf(null);
-                        setFotoError('');
-                        setCedulaError('');
-                    }}>Cancelar</button>
-
-                    <button onClick={guardarArchivos}>Guardar</button>
+                <div className={styles.buttonContainer}>
+                    <button className={styles.cancelButton} onClick={() => mostrarSeccion("clientes")}>Cancelar</button>
+                    <button className={styles.saveButton} onClick={guardarArchivos}>Guardar</button>
                 </div>
             </div>
         </div>

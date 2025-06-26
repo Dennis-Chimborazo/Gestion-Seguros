@@ -16,8 +16,11 @@
 
 .sidebar img {
   width: 100px;
+  height: 100px;
   margin-bottom: 20px;
   border-radius: 50%;
+  border: dodgerblue;
+  border-style: solid;
 }
 
 .sidebar h2 {

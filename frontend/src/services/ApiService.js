@@ -1,7 +1,7 @@
 import axios from "axios";
 import swal from "sweetalert";
 
-const apiUrl = "http://localhost:4000/";
+const apiUrl = "https://gestion-seguros-backend.onrender.com/";
 
 class ApiService {
 
@@ -65,8 +65,7 @@ class ApiService {
     return Array.isArray(response.data) ? response.data : [];
   }
 
-    static async getNull(getApi, id, navigate) {
-    console.log(`${apiUrl}${getApi}?id=${id}`)
+  static async getNull(getApi, id, navigate) {
     const response = await axios.get(`${apiUrl}${getApi}?id=${id}`, {
       headers: {
         "Content-Type": "application/json",
@@ -123,6 +122,7 @@ class ApiService {
 
     return response.data;
   }
+  
   static async getArchivo(getApi, id, tipo, navigate) {
     const tokenInfo = JSON.parse(localStorage.getItem("login"));
     const token = tokenInfo ? tokenInfo.token : "";
@@ -138,6 +138,27 @@ class ApiService {
 
     return response.data.url;
   }
+
+  static async getArchivoSearch(getApi, nombreBase, navigate) {
+    const tokenInfo = JSON.parse(localStorage.getItem("login"));
+    const token = tokenInfo ? tokenInfo.token : "";
+    const url = `${apiUrl}${getApi}?nombre=${encodeURIComponent(nombreBase)}`;
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data.url; // Devuelve la URL del PDF
+
+    } catch (error) {
+      console.error("🔴 Error al obtener archivo PDF:", error);
+      if (navigate) navigate("/error");
+      throw error;
+    }
+  }
+
 
 }
 

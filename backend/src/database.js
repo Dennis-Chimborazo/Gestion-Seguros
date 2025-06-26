@@ -1,24 +1,26 @@
-import pkg from 'pg';          
+import pkg from 'pg';
 const { Client } = pkg;
 
- class DataBase{
+class DataBase {
   static instancia;
-  constructor (){
+  constructor() {
     if (DataBase.instancia) {
       return DataBase.instancia;
     }
 
-
-   this.client = new Client({
-      user: 'postgres',
-      host: 'localhost',
-      database: 'gestionpruebas',
-      password: 'admin',
-      port: 5432, 
+    this.client = new Client({
+      user: 'gestorseguros_user',
+      host: 'dpg-d1dsn3umcj7s73bf4dkg-a.oregon-postgres.render.com',
+      database: 'gestorseguros',
+      password: 'a5bTM4ZbC49Fc9K5ulaSGvNwCFlj7vKF',
+      port: 5432,
+      ssl: {
+        rejectUnauthorized: false
+      }
     });
 
-    this.#connect(); 
-    DataBase.instancia=this;
+    this.#connect();
+    DataBase.instancia = this;
   }
   async #connect() {
     try {
@@ -28,10 +30,10 @@ const { Client } = pkg;
       console.error('❌ Error al conectar a PostgreSQL:', error);
     }
   }
- 
- getConexion() {
-  return this.client;
-}
+
+  getConexion() {
+    return this.client;
+  }
 }
 export { DataBase };
 

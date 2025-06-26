@@ -1,33 +1,25 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import { FcClearFilters, FcFinePrint } from "react-icons/fc";
+import { FcClearFilters, FcFinePrint,FcCancel  } from "react-icons/fc";
 import { FaSearch } from "react-icons/fa";
-import CargarTablas from "../cargando/CargarTablas";
+import CargarTablas from "../cargando/CargarTablas.jsx";
 import "../estilos/Cliente.css";
-import stylesmod from "../estilos/modalDependientes.module.css";
 import ReembolsoFun from "./ReembolsoFun.js";
-import InfoAceptadoReembolso from "./InfoAceptadoReembolso.jsx";
-import InfoRechazoReembolso from "./InfoRechazoReembolso.jsx";
+import { FcOk } from "react-icons/fc";
 
-export function ListaReembolsoCliente({ id, mostrarSeccion }) {
+export function ListReembolsosAdmin({ mostrarSeccion }) {
     const navigate = useNavigate();
     const [Reembolsos, setReembolso] = useState();
     const [filtroReem, setFiltroReem] = useState();
     const [loading, setLoading] = useState(true);
-    const [isModalOpenAceptado, setIsModalOpenAceptado] = useState(false);    
-    const [isModalOpenRechazado, setIsModalOpenRechazado] = useState(false);
-    const cerrarModalAceptado = () => setIsModalOpenAceptado(false);
-    const abrirModalAceptado = () => setIsModalOpenAceptado(true);
-    const cerrarModalRechazado = () => setIsModalOpenRechazado(false);
-    const abrirModalRechazado = () => setIsModalOpenRechazado(true);
 
     useEffect(() => {
         const traterClientes = async () => {
             try {
-                const dataReembolsos = await ReembolsoFun.buscarReembolsoCliente(id, navigate);
-                setFiltroReem(dataReembolsos);
-                setReembolso(dataReembolsos);
+                const dataReembolsos = await ReembolsoFun.traerReembolsos(navigate);
+                setFiltroReem(dataReembolsos.rows);
+                setReembolso(dataReembolsos.rows);
             } catch (error) {
                 console.log("Ha ocurrido un error");
             } finally {
@@ -39,49 +31,38 @@ export function ListaReembolsoCliente({ id, mostrarSeccion }) {
     }, []);
 
     const columasReembolso = [
-        { name: "Numero de solcitud", selector: row => row.id_reemb },
+        { name: "Solcitud", selector: row => row.id_reemb },
         { name: "Seguro", selector: row => row.nom_tip_seg },
-        { name: "Fecha de solicitud", selector: row => row.fecha_reemb },
-        { name: "motivo", selector: row => row.motivo_reemb },
+        { name: "Fecha", selector: row => row.fecha_reemb },
+        { name: "cedula/pasaporte", selector: row => row.cedr_cli },
+        { name: "Nombres", selector: row => row.nombre },
+        { name: "Motivo", selector: row => row.motivo_reemb },
         { name: "Estado", selector: row => row.nom_estado },
-    {
-  name: "Resolución",
+         {
+  name: "Revisiones",
   cell: (row, index) => (
     <div>
       {row.nom_estado !== "pendiente" ? (
         row.nom_estado === "aprobado" ? (
-          <FcFinePrint size={40} className="option-icon" data-testid={`icono-estado-${index}` } onClick={() => mostrarModalAceptado(row)} />
+          <FcOk size={40} className="option-icon" data-testid={`icono-estado-${index}`} />
         ) : (
-          <FcFinePrint size={40} className="option-icon" data-testid={`icono-estado-${index}`} onClick={() => mostrarModalRechazado(row)} />
+          <FcCancel size={40} className="option-icon" data-testid={`icono-estado-${index}`} />
         )
       ) : (
-        <>
-        <p>Sin resolución</p>
-        </>
+        <FcFinePrint
+          size={40}
+          className="option-icon"
+          data-testid={`icono-cliente-${index}`}
+          onClick={() => revisionReembolso(row)}
+        />
       )}
     </div>
   ),
   ignoreRowClick: true
 }
-
     ];
-    const mostrarModalAceptado = (row) => {
-      localStorage.setItem("revisionReembolso", JSON.stringify({
-        edit: true,
-        revision: row
-      }));
-      abrirModalAceptado();
-    }
-      const mostrarModalRechazado = (row) => {
-      localStorage.setItem("revisionReembolso", JSON.stringify({
-        edit: true,
-        revision: row
-      }));
-      abrirModalRechazado();
-    }
 
     const filtrarClientes = (e) => {
-        if (!Reembolsos) return; 
         if (e.target.value !== '') {
             const filtro = Reembolsos.filter((a) =>
                 a.cedr_cli && a.cedr_cli.startsWith(e.target.value)
@@ -89,6 +70,13 @@ export function ListaReembolsoCliente({ id, mostrarSeccion }) {
             setFiltroReem(filtro);
         }
     };
+    const revisionReembolso = (row) => {
+        localStorage.setItem("revisionReembolso", JSON.stringify({
+            edit: true,
+            revision: row
+        }));        
+        mostrarSeccion("RevisionRembolso");
+    }
 
     const borrarFiltro = () => {
         setFiltroReem(Reembolsos);
@@ -139,25 +127,9 @@ export function ListaReembolsoCliente({ id, mostrarSeccion }) {
                 )}
             </div>
 
-            {isModalOpenAceptado && (
-        <div className={stylesmod.overlay}>
-          <div className={stylesmod.modal}>
-            <button className={stylesmod.closeBtn} onClick={cerrarModalAceptado}>X</button>
-            <InfoAceptadoReembolso cerrarModalAceptado={cerrarModalAceptado}/>
-          </div>
-        </div>
-      )}
-
-      {isModalOpenRechazado && (
-        <div className={stylesmod.overlay}>
-          <div className={stylesmod.modal}>
-            <button className={stylesmod.closeBtn} onClick={cerrarModalRechazado}>X</button>
-            <InfoRechazoReembolso cerrarModalRechazado={cerrarModalRechazado}/>
-          </div>
-        </div>
-      )}
+           
         </div>
     );
 }
 
-export default ListaReembolsoCliente;
+export default ListReembolsosAdmin;

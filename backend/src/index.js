@@ -8,7 +8,6 @@ const direccionesRoute = require("./routes/direcciones.routes.js");
 const seguroRoute = require("./routes/seguros.routes.js");
 const tipoSeguroeguroRoute = require("./routes/tiposeguro.route.js");
 const emailRoute = require("./routes/email.routes.js");
-const agenteRoute = require("./routes/agente.routes.js");
 const archivosRoute = require("./routes/archivos.routes.js");
 const reembolsoRoute = require("./routes/reembolsos.routes.js");
 
@@ -26,15 +25,12 @@ app.use("/seguro", seguroRoute);
 app.use("/tiposeguro", tipoSeguroeguroRoute);
 app.use("/email", emailRoute);
 app.use("/agente", agenteRoute);
-app.use("/archivo", archivosRoute);
 app.use("/reembolso", reembolsoRoute);
 
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
-// Exporta la app para SuperTest
 module.exports = app;
 
-// Solo inicia el servidor si no está en modo prueba
 if (require.main === module) {
   app.listen(puerto, () => {
     console.log(`Servidor escuchando en http://localhost:${puerto}`);
