@@ -9,6 +9,9 @@ import CrearContratacion from "../gestionContratacion/CrearContratacion";
 import ValidacionCliente from "../clientes/ValidacionCliente";
 import ListReembolsosAdmin from "../reembolsos/ListReembolsosAdmin";
 import ReembolsosAdmin from "../reembolsos/ReembolsosAdmin";
+import ListaPagosAdmin from "../pagos/ListaPagosAdmin";
+import RevisionPagoAdmin from "../pagos/RevisionPagoAdmin";
+import Dashboard from "../reportes/Dashboard";
 
 export function VentanaAgente() {
   const navigate = useNavigate();
@@ -36,6 +39,8 @@ export function VentanaAgente() {
         <li><a onClick={() => mostrarSeccion("clientes")}>Clientes</a></li>
         <li><a onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</a></li>
         <li><a onClick={() => mostrarSeccion("listaRembolso")}>Reembolso</a></li>
+        <li><a onClick={() => mostrarSeccion("reviPagosAdmin")}>Revisiones de Pagos</a></li>
+        <li><a onClick={() => mostrarSeccion("reportes")}>Reportes</a></li>
         <li><a onClick={cerrarSesion}>Cerrar sesión</a></li>
       </ul>
 
@@ -48,7 +53,9 @@ export function VentanaAgente() {
         {seccionActiva === "clientePendiente" && <ValidacionCliente mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "listaRembolso" && <ListReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "RevisionRembolso" && <ReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
-        {seccionActiva === "reportes" && <p>Sección de reportes</p>}
+        {seccionActiva === "reviPagosAdmin" && <ListaPagosAdmin mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "procesoPagosAdmin" && <RevisionPagoAdmin mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "reportes" && <Dashboard mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
       </section>
     </div>
