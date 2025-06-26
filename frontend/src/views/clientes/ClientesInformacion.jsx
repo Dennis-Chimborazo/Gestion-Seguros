@@ -21,10 +21,10 @@ export function ClientesInformacion() {
   }
 
   return (
-    <div className={styles.container}>
-      <h2 className={styles.title}>Información del Cliente</h2>
-      <div className={styles.card}>
-        <div className={styles.grid}>
+    <div className={styles.clientInfoContainer}>
+      <h2 className={styles.clientInfoTitle}>Información del Cliente</h2>
+      <div className={styles.clientInfoCard}>
+        <div className={styles.clientInfoGrid}>
           <div><strong>Cédula:</strong> {cliente.cedr_cli}</div>
           <div><strong>Tipo de Cédula:</strong> {cliente.tipo_cedr_cli}</div>
 
@@ -36,7 +36,7 @@ export function ClientesInformacion() {
 
           <div><strong>Sexo:</strong> {cliente.sexo_cli}</div>
           <div><strong>Edad:</strong> {cliente.edad_pers}</div>
-           <div><strong>Estatura:</strong> {cliente.estatura_cli}</div>
+          <div><strong>Estatura:</strong> {cliente.estatura_cli}</div>
           <div><strong>Peso:</strong> {cliente.peso_cli}</div>
 
           <div><strong>Estado Civil:</strong> {cliente.estado_civil_pers}</div>
@@ -50,7 +50,7 @@ export function ClientesInformacion() {
           <div><strong>Parroquia:</strong> {cliente.parroq_cli}</div>
           <div><strong>Dirección:</strong> {cliente.calle_princ_pers} y {cliente.calle_secun_pers}</div>
 
-         
+
         </div>
       </div>
     </div>

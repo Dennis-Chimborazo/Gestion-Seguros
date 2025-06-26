@@ -9,8 +9,9 @@ const seguroRoute = require("./routes/seguros.routes.js");
 const tipoSeguroeguroRoute = require("./routes/tiposeguro.route.js");
 const emailRoute = require("./routes/email.routes.js");
 const agenteRoute = require("./routes/agente.routes.js");
-const archivosRoute = require("./routes/archivos.routes.js");
 const reembolsoRoute = require("./routes/reembolsos.routes.js");
+const archivoAdic= require("./routes/archivosadicionales.route.js")
+const pagoRoute = require("./routes/pagos.routes.js");
 
 const path = require('path');
 
@@ -26,10 +27,9 @@ app.use("/seguro", seguroRoute);
 app.use("/tiposeguro", tipoSeguroeguroRoute);
 app.use("/email", emailRoute);
 app.use("/agente", agenteRoute);
-app.use("/archivo", archivosRoute);
+app.use("/archivoAdicional", archivoAdic)
 app.use("/reembolso", reembolsoRoute);
-
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use("/pago", pagoRoute);
 
 module.exports = app;
 

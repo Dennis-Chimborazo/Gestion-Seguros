@@ -4,6 +4,7 @@ import styles from '../estilos/ClientesArchivos.module.css';
 import ClientesFun from "./ClientesFun";
 import { Toaster, toast } from "sonner";
 import swal from "sweetalert2";
+import Archivos from "../../services/Archivos";
 
 export function ClientesArchivos({ mostrarSeccion }) {
     const [fotoError, setFotoError] = useState('');
@@ -28,12 +29,17 @@ export function ClientesArchivos({ mostrarSeccion }) {
             return;
         }
         try {
+
             const formDataFoto = new FormData();
-            formDataFoto.append('profilePhoto', fotoPerfil);  // archivo
-            await ClientesFun.guardarArhivoImagen(formDataFoto, cliente.id_pers, navigate)
+            formDataFoto.append('tipo', 'imagen');
+            formDataFoto.append('id_pers', cliente.id_pers);
+            formDataFoto.append('archivo', fotoPerfil);
+            await Archivos.guardarArhivo(formDataFoto);
             const formDataPdf = new FormData();
-            formDataPdf.append('cedulaPdf', cedulaPdf);
-            await ClientesFun.guardarArhivoCedula(formDataPdf, cliente.id_pers, navigate)
+            formDataPdf.append('tipo', 'PDF');
+            formDataPdf.append('id_pers', cliente.id_pers);
+            formDataPdf.append('archivo', cedulaPdf);
+            await Archivos.guardarArhivo(formDataPdf);
             await ClientesFun.actualizarEstadoActivo({ id_pers: cliente.id_pers }, navigate)
             swal.fire({
                 title: "<label>Exito</label>",
@@ -176,15 +182,9 @@ export function ClientesArchivos({ mostrarSeccion }) {
                         </div>
                     )}
                 </div>
-                <div>
-                    <button onClick={() => {
-                        setFotoPerfil(null);
-                        setCedulaPdf(null);
-                        setFotoError('');
-                        setCedulaError('');
-                    }}>Cancelar</button>
-
-                    <button onClick={guardarArchivos}>Guardar</button>
+                <div className={styles.buttonContainer}>
+                    <button className={styles.cancelButton} onClick={() => mostrarSeccion("clientes")}>Cancelar</button>
+                    <button className={styles.saveButton} onClick={guardarArchivos}>Guardar</button>
                 </div>
             </div>
         </div>
