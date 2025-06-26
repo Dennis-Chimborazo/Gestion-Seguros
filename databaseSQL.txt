@@ -186,8 +186,10 @@ CREATE TABLE reembolso (
   id_pers INTEGER,
   id_seguro INTEGER,
   id_estado INTEGER,
+  id_archivos_cliente INTEGER,
   FOREIGN KEY (id_pers) REFERENCES cliente(id_pers),
   FOREIGN KEY (id_seguro) REFERENCES seguros(id_seguro),
+  FOREIGN KEY (id_archivos_cliente) REFERENCES archivos_cliente(id_archivos_cliente),
   FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
 );
 

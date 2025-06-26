@@ -16,6 +16,8 @@ import AgentesPendientes from "../agentes/AgentesPendientes";
 import EditarAgente from "../agentes/EditarAgente";
 import ListReembolsosAdmin from "../reembolsos/ListReembolsosAdmin";
 import ReembolsosAdmin from "../reembolsos/ReembolsosAdmin";
+import ListaPagosAdmin from "../pagos/ListaPagosAdmin";
+import RevisionPagoAdmin from "../pagos/RevisionPagoAdmin";
 import DashboardInicio from "./DashboardInicio";
 
 export function VentanaAdmin() {
@@ -46,6 +48,8 @@ export function VentanaAdmin() {
         <li><button className={styles.menuButton} onClick={() => mostrarSeccion("segurosAdmin")}>Seguros</button></li>
         <li><button className={styles.menuButton} onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</button></li>
         <li><button className={styles.menuButton} onClick={() => mostrarSeccion("listaRembolso")}>Reembolso</button></li>
+        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("reviPagosAdmin")}>Revisiones de Pagos</button></li>
+
         <li><button className={`${styles.menuButton} ${styles.logoutButton}`} onClick={cerrarSesion}>Cerrar sesión</button></li>
       </ul>
 
@@ -65,6 +69,8 @@ export function VentanaAdmin() {
         {seccionActiva === "EditarAgente" && <EditarAgente mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "listaRembolso" && <ListReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "RevisionRembolso" && <ReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "reviPagosAdmin" && <ListaPagosAdmin mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "procesoPagosAdmin" && <RevisionPagoAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reportes" && <p>Sección de reportes</p>}
         {seccionActiva === "inicio" && <DashboardInicio mostrarSeccion={mostrarSeccion} user={user} />}
       </section>

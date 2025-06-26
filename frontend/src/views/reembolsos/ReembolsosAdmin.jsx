@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import stylesmod from "../estilos/modalDependientes.module.css";
 import RechazoReembolso from "./RechazoReembolso";
 import swal from "sweetalert2";
+import Archivos from "../../services/Archivos";
 
 
 export function ReembolsosAdmin({ mostrarSeccion }) {
@@ -19,9 +20,8 @@ export function ReembolsosAdmin({ mostrarSeccion }) {
             const revData = JSON.parse(localStorage.getItem("revisionReembolso"));
             if (revData && revData.revision) {
                 setReembolso(revData.revision);
-                const rutaImagen = await ReembolsoFun.buscarArhivoReembolsoPDF(`${revData.revision.id_reemb}_${revData.revision.id_pers}_reembolso`, revData.revision.id_pers, navigate);
-               console.log(rutaImagen);
-                setPdfUrl(rutaImagen);
+                const pdf = await Archivos.traerArchivo(revData.revision.id_archivos_cliente, navigate);
+                setPdfUrl(pdf);
                 localStorage.removeItem("revisionReembolso");
             }
         }

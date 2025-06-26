@@ -11,6 +11,7 @@ import ListaReembolsoCliente from "../reembolsos/ListaReembolsoCliente";
 import ListaPagoCliente from "../pagos/ListaPagoCliente";
 import PagoCliente from "../pagos/PagoCliente";
 import HistorialPagos from "../pagos/HistorialPagos";
+import Archivos from "../../services/Archivos";
 
 export function VentanaCliente() {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ export function VentanaCliente() {
       if (res[0].id_estado === 1) {
         setLoadingFoto(true); // empieza carga
         try {
-          const rutaImagen = await ClientesFun.buscarArchivos('imagen', res[0].id_pers, navigate);
+          const rutaImagen = await Archivos.traerImagen(res[0].id_pers, navigate);
           setFotoPerfil(rutaImagen);
         } catch (error) {
           console.error('Error al cargar la imagen de perfil:', error);

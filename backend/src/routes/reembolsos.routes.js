@@ -7,17 +7,17 @@ const database = db.getConexion();
 const dayjs = require("dayjs");
 
 router.post("/save-reembolso", async (req, res) => {
-  const { motivo_reemb, id_pers, id_seguro } = req.body;
+  const {id_archivos_cliente, motivo_reemb, id_pers, id_seguro } = req.body;
   const fechaActual = dayjs().format("YYYY-MM-DD");
   const estado = 3;
   try {
     const result = await database.query(`
       INSERT INTO reembolso (
-        fecha_reemb, motivo_reemb, id_pers, id_seguro,id_estado
+        fecha_reemb, motivo_reemb, id_pers, id_seguro,id_estado,id_archivos_cliente
       ) VALUES (
-        $1, $2, $3, $4, $5
+        $1, $2, $3, $4, $5, $6
       ) RETURNING id_reemb; `,
-      [fechaActual, motivo_reemb, id_pers, id_seguro, estado]);
+      [fechaActual, motivo_reemb, id_pers, id_seguro, estado,id_archivos_cliente]);
 
     res.json({
       message: "Reembolso guardado exitosamente",
@@ -33,7 +33,7 @@ router.post("/save-reembolso", async (req, res) => {
 router.get("/listar", async (req, res) => {
   try {
     const query = `SELECT r.id_reemb,r.fecha_reemb, r.motivo_reemb, r.id_pers,(c.ape_cli || ' ' ||c.nom_cli)as nombre 
-                  ,c.cedr_cli,r.id_seguro,e.nom_estado,tp.nom_tip_seg
+                  ,c.cedr_cli,r.id_seguro,e.nom_estado,tp.nom_tip_seg,r.id_archivos_cliente
                   FROM reembolso r
                   INNER JOIN seguros s ON r.id_seguro = s.id_seguro
                   INNER JOIN tipo_seguro tp ON tp.id_tip_seg = s.id_tip_seg

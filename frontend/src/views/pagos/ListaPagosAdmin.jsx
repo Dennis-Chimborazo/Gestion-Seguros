@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import { FcClearFilters, FcFinePrint } from "react-icons/fc";
+import { FcClearFilters, FcFinePrint, FcCancel } from "react-icons/fc";
 import { FaSearch } from "react-icons/fa";
-import CargarTablas from "../cargando/CargarTablas";
+import CargarTablas from "../cargando/CargarTablas.jsx";
 import "../estilos/Cliente.css";
-import stylesmod from "../estilos/modalDependientes.module.css";
 import PagosFun from "./PagosFun.js";
-import InfoPagoRechazado from "./InfoPagoRechazado.jsx";
 
-export function HistorialPagos({ id, mostrarSeccion }) {
+export function ListaPagosAdmin({ mostrarSeccion }) {
     const navigate = useNavigate();
-    const [reviPagos, setReviPagos] = useState();
-    const [filtroReviPagos, setFiltroReviPagos] = useState();
+    const [Reembolsos, setReembolso] = useState();
+    const [filtroReem, setFiltroReem] = useState();
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         const traterClientes = async () => {
             try {
-                const dataReviPagos = await PagosFun.pagoAprobadosCliente(id, navigate);
-                console.log(dataReviPagos);
-                setFiltroReviPagos(dataReviPagos);
-                setReviPagos(dataReviPagos);
+                const dataReembolsos = await PagosFun.pagoRevisionPendiente(navigate);
+                setFiltroReem(dataReembolsos);
+                setReembolso(dataReembolsos);
             } catch (error) {
                 console.log("Ha ocurrido un error");
             } finally {
@@ -32,29 +30,52 @@ export function HistorialPagos({ id, mostrarSeccion }) {
     }, []);
 
     const columasReembolso = [
-        { name: "compobante", selector: row => row.comprobante_pago },
-        { name: "Seguro", selector: row => row.nom_tip_seg },
-        { name: "Fecha de pago", selector: row => row.fecha_pago },
+        { name: "Identificacion", selector: row => row.cedr_cli },
+        { name: "Cliente", selector: row => row.nombre },
+        { name: "Fecha de Pago", selector: row => row.fecha_pago },
         { name: "Monto", selector: row => row.nonto_pago },
+        { name: "Comprobante", selector: row => row.comprobante_pago },
+        { name: "Seguro", selector: row => row.nom_tip_seg },
+        {
+            name: "Revisiones",
+            cell: (row, index) => (
+                <div>
+                    <FcFinePrint
+                        size={40}
+                        className="option-icon"
+                        data-testid={`icono-cliente-${index}`}
+                        onClick={() => revisionPagos(row)}
+                    />
+                </div>
+            ),
+            ignoreRowClick: true
+        }
     ];
 
     const filtrarClientes = (e) => {
         if (e.target.value !== '') {
-            const filtro = reviPagos.filter((a) =>
+            const filtro = Reembolsos.filter((a) =>
                 a.cedr_cli && a.cedr_cli.startsWith(e.target.value)
             );
-            setFiltroReviPagos(filtro);
+            setFiltroReem(filtro);
         }
     };
+    const revisionPagos = (row) => {
+        localStorage.setItem("revisionPagos", JSON.stringify({
+            edit: true,
+            revision: row
+        }));
+        mostrarSeccion("procesoPagosAdmin");
+    }
 
     const borrarFiltro = () => {
-        setFiltroReviPagos(reviPagos);
+        setFiltroReem(Reembolsos);
     }
 
     return (
         <div className="cliente-container">
             <div className="cliente-form">
-                <h1 className="cliente-title"> Historial de Pagos</h1>
+                <h1 className="cliente-title">Revision de pagos pendientes</h1>
 
                 <div className="search-controls">
                     <div className="search-group">
@@ -81,24 +102,24 @@ export function HistorialPagos({ id, mostrarSeccion }) {
                         </button>
                     </div>
                 </div>
-                <div>
-                    {loading ? (
-                        <CargarTablas />
-                    ) : (
-                        <DataTable
-                            pagination
-                            paginationPerPage={20}
-                            columns={columasReembolso}
-                            data={filtroReviPagos}
-                            noDataComponent="No hay Solicitudes de Reembolsos para mostrar"
-                            persistTableHead
-                        />
-                    )}
 
-                </div>
+                {loading ? (
+                    <CargarTablas />
+                ) : (
+                    <DataTable
+                        pagination
+                        paginationPerPage={20}
+                        columns={columasReembolso}
+                        data={filtroReem}
+                        noDataComponent="No hay Solicitudes de Reembolsos para mostrar"
+                        persistTableHead
+                    />
+                )}
             </div>
+
+
         </div>
     );
 }
 
-export default HistorialPagos;
+export default ListaPagosAdmin;
