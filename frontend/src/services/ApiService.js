@@ -1,7 +1,7 @@
 import axios from "axios";
 import swal from "sweetalert";
 
-const apiUrl = "http://localhost:4000";
+const apiUrl = "http://localhost:4000/";
 
 class ApiService {
 
