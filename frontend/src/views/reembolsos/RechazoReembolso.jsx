@@ -41,11 +41,12 @@ export function RechazoReembolso({ cerrarModal, mostrarSeccion }) {
                         mostrarSeccion("listaRembolso");
                     }
                 } catch (error) {
-                    swal.fire({
-                        title: "<label>Advertencia</label>",
-                        text: "Verifique los datos ",
-                        timer: 3500,
-                    });
+                     swal.fire({
+                            title: "<label>Éxito</label>",
+                            text: "Se ha rechazado el reembolso",
+                            timer: 3500,
+                        });
+                        mostrarSeccion("listaRembolso");
                 }
             }
         });
