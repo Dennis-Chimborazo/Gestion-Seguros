@@ -121,6 +121,7 @@ export function ClientesArchivos({ mostrarSeccion }) {
                     <div className={styles.fileInputGroup}>
                         <input
                             id="fotoPerfilInput"
+                            data-testid="input-fotoPerfilInput"
                             type="file"
                             accept="image/png, image/jpeg, image/jpg, image/webp"
                             onChange={CargarFoto}
@@ -153,12 +154,13 @@ export function ClientesArchivos({ mostrarSeccion }) {
                     <div className={styles.fileInputGroup}>
                         <input
                             id="cedulaPdfInput"
+                            data-testid="input-cedulaPdfInput"  // CORRECTO: corresponde a cedulaPdfInput
                             type="file"
                             accept="application/pdf"
                             onChange={cargarCedula}
                             className={styles.hiddenInput}
                         />
-                        <label htmlFor="cedulaPdfInput" className={styles.customFileUpload}>
+                        <label data-testid="label-fotoPerfilInput" htmlFor="cedulaPdfInput" className={styles.customFileUpload}>
                             Seleccionar archivo
                         </label>
                         <span className={styles.fileName}>
@@ -170,6 +172,7 @@ export function ClientesArchivos({ mostrarSeccion }) {
                     {cedulaPdf && (
                         <div className={styles.preview}>
                             <embed
+                                data-testid="pdf-preview"
                                 src={URL.createObjectURL(cedulaPdf)}
                                 type="application/pdf"
                                 width="100%"

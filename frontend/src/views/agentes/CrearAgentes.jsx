@@ -7,15 +7,31 @@ import UsuariosFun from "../usuarios/UsuariosFun";
 import { toast, Toaster } from "sonner";
 import "../estilos/CrearAgentes.css";
 
-
 export function CrearAgentes({ mostrarSeccion }) {
     const navigate = useNavigate();
-    const [formulario, setFormulario] = useState({ ced_agente: '', nom_agente: '', ape_agente: '', email_agente: '', dire_agente: '', tel_agente: '' })
+    const [formulario, setFormulario] = useState({ 
+        ced_agente: '', 
+        nom_agente: '', 
+        ape_agente: '', 
+        email_agente: '', 
+        dire_agente: '', 
+        tel_agente: '' 
+    });
     const [errores, setErrores] = useState({});
 
     // Función para validar solo números
     const validarSoloNumeros = (valor) => {
         return /^\d*$/.test(valor);
+    };
+
+    // Función para validar cédula (exactamente 10 dígitos)
+    const validarCedula = (valor) => {
+        return /^\d{10}$/.test(valor);
+    };
+
+    // Función para validar solo letras (incluyendo espacios, tildes y ñ)
+    const validarSoloLetras = (valor) => {
+        return /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(valor);
     };
 
     // Función para validar formato de email
@@ -31,11 +47,36 @@ export function CrearAgentes({ mostrarSeccion }) {
 
         // Validaciones específicas por campo
         if (name === 'ced_agente') {
+            // Solo permitir números y máximo 10 caracteres
             if (!validarSoloNumeros(value)) {
                 nuevosErrores.ced_agente = 'La cédula solo debe contener números';
                 return; // No actualizar el valor si no es válido
+            } else if (value.length > 10) {
+                return; // No permitir más de 10 caracteres
+            } else if (value.length > 0 && value.length < 10) {
+                nuevosErrores.ced_agente = 'La cédula debe tener exactamente 10 dígitos';
+            } else if (value.length === 10) {
+                delete nuevosErrores.ced_agente;
             } else {
                 delete nuevosErrores.ced_agente;
+            }
+        }
+
+        if (name === 'nom_agente') {
+            if (!validarSoloLetras(value)) {
+                nuevosErrores.nom_agente = 'Los nombres solo deben contener letras';
+                return; // No actualizar el valor si no es válido
+            } else {
+                delete nuevosErrores.nom_agente;
+            }
+        }
+
+        if (name === 'ape_agente') {
+            if (!validarSoloLetras(value)) {
+                nuevosErrores.ape_agente = 'Los apellidos solo deben contener letras';
+                return; // No actualizar el valor si no es válido
+            } else {
+                delete nuevosErrores.ape_agente;
             }
         }
 
@@ -59,12 +100,19 @@ export function CrearAgentes({ mostrarSeccion }) {
         setErrores(nuevosErrores);
         setFormulario({ ...formulario, [name]: valorValido });
     }
+
     const crearAgente = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         try {
             // Verificar que todos los campos estén llenos
             if (!Object.values(formulario).every(valor => valor !== '')) {
                 toast.error('Todos los campos son obligatorios');
+                return;
+            }
+
+            // Validación específica de cédula antes de enviar
+            if (!validarCedula(formulario.ced_agente)) {
+                toast.error('La cédula debe tener exactamente 10 dígitos');
                 return;
             }
 
@@ -80,29 +128,59 @@ export function CrearAgentes({ mostrarSeccion }) {
                 return;
             }
 
-            let resVerif = await UsuariosFun.verificarDatosUsuario({ users: formulario.email_agente, cedula: formulario.ced_agente }, navigate);
+            let resVerif = await UsuariosFun.verificarDatosUsuario({ 
+                users: formulario.email_agente, 
+                cedula: formulario.ced_agente 
+            }, navigate);
+            
             if (resVerif.existe) {
                 toast.error(resVerif.message);
             } else {
                 const res = await AgenteFun.guardarAgente(formulario, navigate);
-                const pass = await Utilidades.crearPassAleatoria()
-                const resCuent = await UsuariosFun.crearCuentaAgente({ idpersona: res.id_agente, user: formulario.email_agente, pass: pass }, navigate)
+                const pass = await Utilidades.crearPassAleatoria();
+                const resCuent = await UsuariosFun.crearCuentaAgente({ 
+                    idpersona: res.id_agente, 
+                    user: formulario.email_agente, 
+                    pass: pass 
+                }, navigate);
+                
                 if (resCuent) {
-                    const urlRandom = await Utilidades.crearRutaAleatoria()
-                    await AgenteFun.generarTokenValidacion(({ id_pers: res.id_agente, url: urlRandom, pass: pass }), navigate);
-                    await AgenteFun.enviarCorreoEmail(({ to: formulario.email_agente, token: urlRandom, pass: pass }), navigate)
+                    const urlRandom = await Utilidades.crearRutaAleatoria();
+                    await AgenteFun.generarTokenValidacion(({ 
+                        id_pers: res.id_agente, 
+                        url: urlRandom, 
+                        pass: pass 
+                    }), navigate);
+                    await AgenteFun.enviarCorreoEmail(({ 
+                        to: formulario.email_agente, 
+                        token: urlRandom, 
+                        pass: pass 
+                    }), navigate);
+                    
                     swal.fire({
-                        title: "<label>Exito</label>",
+                        title: "<label>Éxito</label>",
                         text: "Nuevo agente creado",
                         timer: 3500,
-                    })
-                    mostrarSeccion("agente")
+                    });
+                    mostrarSeccion("agente");
                 }
             }
         } catch (error) {
             toast.error('Error al crear el agente');
         }
     }
+
+    const limpiarFormulario = () => {
+        setFormulario({
+            ced_agente: '',
+            nom_agente: '',
+            ape_agente: '',
+            email_agente: '',
+            dire_agente: '',
+            tel_agente: ''
+        });
+        setErrores({});
+    };
 
     const cancelar = () => {
         const algunCampoLleno = Object.values(formulario).some(valor => valor.trim() !== '');
@@ -112,14 +190,15 @@ export function CrearAgentes({ mostrarSeccion }) {
                 text: "Desea descartar los datos ingresados",
                 showDenyButton: true,
                 denyButtonText: "No",
-                confirmButtonText: "Si"
+                confirmButtonText: "Sí"
             }).then(respuesta => {
                 if (respuesta.isConfirmed) {
-                    mostrarSeccion("agente")
+                    limpiarFormulario();
+                    mostrarSeccion("agente");
                 }
             });
         } else {
-            mostrarSeccion("agente")
+            mostrarSeccion("agente");
         }
     }
 
@@ -140,7 +219,8 @@ export function CrearAgentes({ mostrarSeccion }) {
                             id="ced_agente"
                             value={formulario.ced_agente}
                             onChange={asignarValores}
-                            placeholder="Ingrese la cédula"
+                            maxLength={10}
+                            placeholder="Ingrese la cédula (10 dígitos)"
                         />
                         {errores.ced_agente && <span className="error-message">{errores.ced_agente}</span>}
                     </div>
@@ -148,27 +228,29 @@ export function CrearAgentes({ mostrarSeccion }) {
                     <div className="form-group">
                         <label className="form-label" htmlFor="nom_agente">Nombres</label>
                         <input
-                            className="form-input"
+                            className={`form-input ${errores.nom_agente ? 'input-error' : ''}`}
                             type="text"
                             name="nom_agente"
                             id="nom_agente"
                             value={formulario.nom_agente}
                             onChange={asignarValores}
-                            placeholder="Ingrese los nombres"
+                            placeholder="Ingrese los nombres (solo letras)"
                         />
+                        {errores.nom_agente && <span className="error-message">{errores.nom_agente}</span>}
                     </div>
 
                     <div className="form-group">
                         <label className="form-label" htmlFor="ape_agente">Apellidos</label>
                         <input
-                            className="form-input"
+                            className={`form-input ${errores.ape_agente ? 'input-error' : ''}`}
                             type="text"
                             name="ape_agente"
                             id="ape_agente"
                             value={formulario.ape_agente}
                             onChange={asignarValores}
-                            placeholder="Ingrese los apellidos"
+                            placeholder="Ingrese los apellidos (solo letras)"
                         />
+                        {errores.ape_agente && <span className="error-message">{errores.ape_agente}</span>}
                     </div>
 
                     <div className="form-group">
@@ -222,4 +304,5 @@ export function CrearAgentes({ mostrarSeccion }) {
         </div>
     );
 }
+
 export default CrearAgentes;

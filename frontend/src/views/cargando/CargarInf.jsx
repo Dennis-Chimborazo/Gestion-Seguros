@@ -5,11 +5,11 @@ const CargarInf = () => {
   return (
     <StyledWrapper>
       <section className="dots-container">
-        <div className="dot" />
-        <div className="dot" />
-        <div className="dot" />
-        <div className="dot" />
-        <div className="dot" />
+        <div className="dot" data-testid="dot" />
+        <div className="dot" data-testid="dot" />
+        <div className="dot" data-testid="dot" />
+        <div className="dot" data-testid="dot" />
+        <div className="dot" data-testid="dot" />
       </section>
     </StyledWrapper>
   );

@@ -269,7 +269,7 @@ export function CrearContratacion({ mostrarSeccion }) {
                                 />
                             </div>
                         </div>
-                        <button className="btn-search" onClick={buscarCliente}>Buscar</button>
+                        <button className="btn-search" data-testid="btn-buscar-titular" onClick={buscarCliente}>Buscar</button>
                     </div>
 
                     <table className="custom-table">
@@ -301,7 +301,7 @@ export function CrearContratacion({ mostrarSeccion }) {
                                 <input className="search-input" type="text" name="nom_tip_seg" id="nom_tip_seg" placeholder="Ingrese el nombre del seguro" />
                             </div>
                         </div>
-                        <button className="btn-search" onClick={buscarTipoSeguro}> Buscar</button>
+                        <button className="btn-search" data-testid="btn-buscar-seguro" onClick={buscarTipoSeguro}> Buscar</button>
                     </div>
                     <div className="form-row">
                         <div className="form-group">

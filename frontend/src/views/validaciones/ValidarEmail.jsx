@@ -19,6 +19,8 @@ export function ValidarEmail() {
     const verificar = async () => {
       try {
         const res = await ClientesFun.validarTokenEmail({ url: id }, navigate);
+        console.log(res); // ✅ Agregado para test
+        console.log(res.data?.id_pers);
         console.log(res)
         if (res?.success && res.data?.id_pers) {
           const resCli = await ClientesFun.buscarcliente(res.data.id_pers, navigate);
@@ -83,8 +85,9 @@ export function ValidarEmail() {
     e.preventDefault()
     if (verificarDatos()) {
       try {
-        const api = await ClientesFun.preActivarCuentaUsuario(({ id: cliente.id_pers, idvalid: cliente.idvalid }), navigate)
+        const api = await ClientesFun.preActivarCuentaUsuario({ id: cliente.id_pers, idvalid: cliente.idvalid }, navigate)
         if (api) {
+          console.log(true); 
           await UsuariosFun.actualizarPass(formulario, navigate)
           swal.fire({
             title: "<label>Muchas Felicidades</label>",
@@ -136,15 +139,15 @@ export function ValidarEmail() {
             </p>
             <div className="validar-email-form">
               <label htmlFor="passTemp">Ingrese contraseña temporal</label>
-              <input type="password" id="passTemp" name="passTemp" onChange={asignarValores} />
+              <input type="password" id="passTemp" name="passTemp" data-testid="passTemp" onChange={asignarValores} />
               <label htmlFor="pass">Ingrese una contraseña</label>
-              <input type="password" id="pass" name="pass" onChange={asignarValores} />
+              <input type="password" id="pass" name="pass" data-testid="pass" onChange={asignarValores} />
               <label htmlFor="confirmPassword">Vuelva a escribir la contraseña</label>
-              <input type="password" id="confirmPassword" name="confirmPassword" onChange={asignarValores} />
+              <input type="password" id="confirmPassword" name="confirmPassword" data-testid="confirmpass" onChange={asignarValores} />
             </div>
             <div className="validar-email-button-container">
               <button className="validar-email-button cancel" onClick={cancelarCuenta}>Cancelar</button>
-              <button className="validar-email-button" onClick={preValidarCuenta}>Validar Cuenta</button>
+              <button className="validar-email-button" data-testid="btn-validar-cuenta" onClick={preValidarCuenta}>Validar Cuenta</button>
             </div>
           </>
         ) : (

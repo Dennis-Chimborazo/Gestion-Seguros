@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, {  useEffect,  useState  } from "react";
+import { useNavigate,  useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import SegurosAdminFun from "./SegurosAdminFun";
 import { FcClearFilters, FcEditImage, FcFinePrint } from "react-icons/fc";

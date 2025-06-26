@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const cargarArchivos = () => {
   return (
-    <StyledWrapper>
+    <StyledWrapper role="status" aria-label="Cargando">
       <div className="loader">
         <div className="bar1" />
         <div className="bar2" />
