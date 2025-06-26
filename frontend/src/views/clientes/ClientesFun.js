@@ -63,7 +63,7 @@ class ClientesFun {
    }
 
    static async buscarcliente(id, navigate) {
-      const response = await ApiService.get("client/buscarclienteID", id, navigate);
+      const response = await ApiService.getNull("client/buscarclienteID", id, navigate);
       return response;
    }
    static async preActivarCuentaUsuario(id, navigate) {
@@ -82,22 +82,13 @@ class ClientesFun {
       const response = await ApiService.put("client/update-correo", id, navigate);
       return response;
    }
-
-   static async guardarArhivoImagen(formulario, id, navigate) {
-      const response = await ApiService.postArchive(`archivo/foto-perfil/${id}`, formulario, navigate);
-      return response;
-   }
-   static async guardarArhivoCedula(formulario, id, navigate) {
-      const response = await ApiService.postArchive(`archivo/cedula-pdf/${id}`, formulario, navigate);
-      return response;
-   }
-   static async buscarArchivos(tipo, id, navigate) {
-      const response = await ApiService.getArchivo('archivo/buscar', id, tipo, navigate);
-      return response;
-   }
-
    static async BuscarRutaValidacion(formulario, navigate) {
       const response = await ApiService.post("client/buscar-ruta-token", formulario, navigate);
+      return response;
+   }
+
+   static async buscarSegurosContatados(id, navigate) {
+      const response = await ApiService.get('seguro/seguros-clientes', id, navigate);
       return response;
    }
 

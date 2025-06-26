@@ -9,17 +9,17 @@ const database = db.getConexion();
 
 // Nueva ruta: enviar correo
 router.post("/enviar-correo", async (req, res) => {
-  const { to, token,pass } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
+  const { to, token, pass } = req.body; // Espera un JSON: { id_pers: 1, url: "algo.com" }
   const subject = 'Validar la creacion de la cuenta'
   const text = `
         🎉 ¡Gracias por registrarte en Seguros.SA!
         Nos complace darte la bienvenida a nuestra plataforma. Tu cuenta ha sido creada con éxito y estás a un paso de comenzar a disfrutar de todos los beneficios que ofrecemos.
         🔐 Para garantizar la seguridad de tu información y asegurarnos de que tú solicitaste esta cuenta, necesitamos que confirmes tu dirección de correo electrónico.
-            👉 Clave temporaal: ${pass}
+            👉 Clave temporal: ${pass}
 
         👉 Por favor, haz clic en el siguiente botón para validar tu cuenta:
         
-         "http://localhost:3000/validacionEmail/${token}" 
+            "https://gestion-seguros.onrender.com/validacionEmail/${token}" 
             Validar mi cuenta
         Si tú no solicitaste esta cuenta, puedes ignorar este mensaje. No se tomará ninguna acción sin tu confirmación.
         Atentamente,<br><strong>El equipo de Seguros.SA
@@ -67,7 +67,7 @@ router.post("/correo-Gest-contratacion", async (req, res) => {
       Recientemente se ha generado una solicitud de contratación de un nuevo seguro a tu nombre en nuestra plataforma Seguros.SA
       🔐 Para confirmar que estás de acuerdo con este contrato, es necesario que valides tu aceptación.
       👉 Haz clic en el siguiente botón para revisar los detalles y confirmar la contratación:
-        "http://localhost:3000/validacionContratacion/${token}" 
+        "https://gestion-seguros.onrender.com/validacionContratacion/${token}" 
       Si tú no solicitaste este contrato, puedes ignorar este mensaje. No se realizará ninguna acción sin tu confirmación
       Atentamente,
       El equipo de Seguros.SA
@@ -118,7 +118,7 @@ router.post("/correo-agente", async (req, res) => {
 
     👉 Haz clic en el siguiente enlace para validar tu cuenta:
     
-    "http://localhost:3000/validacionAgente/${token}" 
+    "https://gestion-seguros.onrender.com/validacionAgente/${token}" 
 
     Si no reconoces esta acción o no solicitaste una cuenta en Seguros.SA, puedes ignorar este mensaje. Ninguna acción será realizada sin tu confirmación.
 

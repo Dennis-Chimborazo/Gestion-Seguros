@@ -1,7 +1,7 @@
 import axios from "axios";
 import swal from "sweetalert";
 
-const apiUrl = "http://localhost:4000/";
+const apiUrl = "https://gestion-seguros-backend.onrender.com/";
 
 class ApiService {
 
@@ -60,6 +60,16 @@ class ApiService {
     return Array.isArray(response.data) ? response.data : [];
   }
 
+  static async getNull(getApi, id, navigate) {
+    const response = await axios.get(`${apiUrl}${getApi}?id=${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return Array.isArray(response.data) ? response.data : [];
+  }
+
   static async put(putApi, form, navigate) {
     const response = await axios.put(
       apiUrl + `${putApi}`,
@@ -97,7 +107,20 @@ class ApiService {
     return response.data;
   }
 
-  static async postArchive(postApi, form, navigate) {
+  static async getArchivo(getApi, id) {
+    const tokenInfo = JSON.parse(localStorage.getItem("login"));
+    const token = tokenInfo ? tokenInfo.token : "";
+    const url = `${apiUrl}${getApi}?id=${id}`;
+    const response = await axios.get(url, {
+      responseType: "blob",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const fileURL = URL.createObjectURL(response.data);
+    return fileURL;
+  }
+   static async postArchive(postApi, form, navigate) {
     const response = await axios.post(
       apiUrl + `${postApi}`,
       form,
@@ -107,21 +130,6 @@ class ApiService {
 
     return response.data;
   }
-static async getArchivo(getApi, id, tipo, navigate) {
-  const tokenInfo = JSON.parse(localStorage.getItem("login"));
-  const token = tokenInfo ? tokenInfo.token : "";
-
-  const url = `${apiUrl}${getApi}/${id}?tipo=${tipo}`;
-
-  const response = await axios.get(url, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data.url;
-}
 
 }
 

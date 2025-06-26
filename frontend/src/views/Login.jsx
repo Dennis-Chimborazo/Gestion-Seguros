@@ -10,23 +10,27 @@ export function Login() {
   const navigate = useNavigate();
   const [formulario, setFormulario] = useState({ user: "", pass: "" });
 
-  const ingresar = async () => {
+  const ingresar = async (e) => {
+    e.preventDefault();
+    localStorage.clear();
     if (formulario.pass === "" || formulario.user === "") {
       toast.error("Complete todos los campos");
     } else {
       const res = await ApiService.login(formulario);
+      console.log(res.user.nom_rol)
       if (res.success) {
         localStorage.setItem("login", JSON.stringify({
           login: true,
           token: res.token,
-          user: res.user.id
+          user: res.user.id_persona,
+          rol: res.user.nom_rol
         }));
-        navigate("/" + res.user.nom_rol, { state: { user: res.user } });
+     navigate("/" + res.user.nom_rol, { state: { user: res.user } });
       } else {
         if (res.user.estado === 3) {
           if (res.user.nom_rol === 'agente') {
             try {
-              const resAgente = await AgenteFun.BuscarRutaValidacion({ id: res.user.id }, navigate);
+              const resAgente = await AgenteFun.BuscarRutaValidacion({ id: res.user.id_persona }, navigate);
               if (resAgente.success) {
                 navigate(`/validacionAgente/${resAgente.url}`);
               }
@@ -47,7 +51,7 @@ export function Login() {
             }
           } else {
              try {
-              const resCliente = await ClientesFun.BuscarRutaValidacion({ id: res.user.id }, navigate);
+              const resCliente = await ClientesFun.BuscarRutaValidacion({ id: res.user.id_persona }, navigate);
               if (resCliente.success) {
                 navigate(`/validacionEmail/${resCliente.url}`);
               }

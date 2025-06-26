@@ -49,5 +49,9 @@ class GestionContratacionFun {
       const response =  await ApiService.put("seguro/activar-seguro",formulario,navigate);
       return response;
    }
+     static async buscarSeguroPorId(id,navigate){
+      const response =  await ApiService.get("seguro/buscar-seguros-id",id,navigate);
+      return response;
+   }
 }
     export default GestionContratacionFun;

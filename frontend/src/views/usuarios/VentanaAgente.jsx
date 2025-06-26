@@ -7,6 +7,9 @@ import EditarClientes from "../clientes/EditarClientes";
 import GestionContratacion from "../gestionContratacion/gestionContratacion";
 import CrearContratacion from "../gestionContratacion/CrearContratacion";
 import ValidacionCliente from "../clientes/ValidacionCliente";
+import ListReembolsosAdmin from "../reembolsos/ListReembolsosAdmin";
+import ReembolsosAdmin from "../reembolsos/ReembolsosAdmin";
+import DashboardInicioAgente from "./DashboardInicioAgente";
 
 export function VentanaAgente() {
   const navigate = useNavigate();
@@ -30,24 +33,11 @@ export function VentanaAgente() {
   return (
     <div className={styles.container}>
       <ul className={styles.menu}>
-        <li className={styles.welcomeHeader}>
-          <h2>Bienvenido {user?.nom_rol}</h2>
-        </li>
-        <li>
-          <button className={styles.menuButton} onClick={() => mostrarSeccion("clientes")}>Clientes</button>
-        </li>
-        <li>
-          <button className={styles.menuButton} onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</button>
-        </li>
-        <li>
-          <button className={styles.menuButton} onClick={() => mostrarSeccion("seguros")}>Reembolso</button>
-        </li>
-        <li>
-          <button className={styles.menuButton} onClick={() => mostrarSeccion("reportes")}>Reportes</button>
-        </li>
-        <li>
-          <button className={`${styles.menuButton} ${styles.logoutButton}`} onClick={cerrarSesion}>Cerrar sesión</button>
-        </li>
+        <li className={styles.welcomeHeader}><h2>Bienvenido {user?.nom_rol}</h2></li>
+        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("clientes")}>Clientes</button></li>
+        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</button></li>
+        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("listaRembolso")}>Reembolso</button></li>
+        <li><button className={`${styles.menuButton} ${styles.logoutButton}`} onClick={cerrarSesion}>Cerrar sesión</button></li>
       </ul>
 
       <section className={styles.section}>
@@ -57,9 +47,10 @@ export function VentanaAgente() {
         {seccionActiva === "GestionContratacion" && <GestionContratacion mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "CrearContratacion" && <CrearContratacion mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "clientePendiente" && <ValidacionCliente mostrarSeccion={mostrarSeccion} />}
-
+        {seccionActiva === "listaRembolso" && <ListReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "RevisionRembolso" && <ReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reportes" && <p>Sección de reportes</p>}
-        {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
+        {seccionActiva === "inicio" && <DashboardInicioAgente mostrarSeccion={mostrarSeccion} user={user} />}
       </section>
     </div>
   );

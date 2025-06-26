@@ -1,37 +1,31 @@
-import pkg from 'pg';          
+import pkg from 'pg';
 const { Client } = pkg;
 
- class DataBase{
+class DataBase {
   static instancia;
-  constructor (){
+  constructor() {
     if (DataBase.instancia) {
       return DataBase.instancia;
     }
-
-  //  this.client = new Client({
-  //     user: 'admin',
-  //     host: 'dpg-d0j12bd6ubrc73cko57g-a.oregon-postgres.render.com',
-  //     database: 'gestionpruebas',
-  //     password: 'cTbyF9p3fcC4Yo7xpFNzcLwtvK6TboTH',
-  //     port: 5432, 
-  //      ssl: {
-  //       rejectUnauthorized: false // ⚠ Importante para Render
-  //     }
-  //   });
-
     this.client = new Client({
       user: 'gestorseguros_user',
       host: 'dpg-d1dsn3umcj7s73bf4dkg-a.oregon-postgres.render.com',
       database: 'gestorseguros',
       password: 'a5bTM4ZbC49Fc9K5ulaSGvNwCFlj7vKF',
+<<<<<<< HEAD
       port: 5432, 
       ssl: {
       rejectUnauthorized: false
+=======
+      port: 5432,
+      ssl: {
+        rejectUnauthorized: false
+>>>>>>> 6e21eae14267c610eb6216ce92efe0e1102fb7c0
       }
     });
 
-    this.#connect(); 
-    DataBase.instancia=this;
+    this.#connect();
+    DataBase.instancia = this;
   }
   async #connect() {
     try {
@@ -41,10 +35,10 @@ const { Client } = pkg;
       console.error('❌ Error al conectar a PostgreSQL:', error);
     }
   }
- 
- getConexion() {
-  return this.client;
-}
+
+  getConexion() {
+    return this.client;
+  }
 }
 export { DataBase };
 
