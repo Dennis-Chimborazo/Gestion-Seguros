@@ -2,17 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Toaster, toast } from "sonner";
 import swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import PagosFun from "./PagosFun";
 
 export function RechazoPago({ cerrarModal, mostrarSeccion }) {
     const navigate = useNavigate();
     const [motivo, setMotivo] = useState('');
-    const [reembolso, setReembolso] = useState(null);
+    const [pago, setPago] = useState(null);
 
     useEffect(() => {
         const valores = () => {
             const editData = JSON.parse(localStorage.getItem("revisionReembolso"));
             if (editData && editData.revision) {
-                setReembolso(editData.revision);
+                setPago(editData.revision);
                 localStorage.removeItem("revisionReembolso");
             }
         }
@@ -23,22 +24,22 @@ export function RechazoPago({ cerrarModal, mostrarSeccion }) {
         e.preventDefault()
         swal.fire({
             title: "<label>Confirmacion</label>",
-            text: "Esta seguro de rechazar el reembolso dado una revision rigurosa",
+            text: "Esta seguro de que este pago no es valido",
             showDenyButton: true,
             denyButtonText: "No",
             confirmButtonText: "Si"
         }).then(async (respuesta) => {
             if (respuesta.isConfirmed) {
                 try {
-                    // const respuesta = await ReembolsoFun.rechazarRevisionReembolso({ descripcion_revision: motivo, id_reemb: reembolso.id_reemb }, navigate);
-                    // if (respuesta?.success) {
-                    //     swal.fire({
-                    //         title: "<label>Éxito</label>",
-                    //         text: "Se ha rechazado el reembolso",
-                    //         timer: 3500,
-                    //     });
-                    //     mostrarSeccion("listaRembolso");
-                    // }
+                    const res = await PagosFun.rechazarRevisionPago({ descripcion_revision_pago: motivo, id_pago: pago.id_pago }, navigate);
+                    if (res?.success) {
+                        swal.fire({
+                            title: "<label>Éxito</label>",
+                            text: "Se ha rechazado el pago ",
+                            timer: 3500,
+                        });
+                        mostrarSeccion("reviPagosAdmin");
+                    }
                 } catch (error) {
                     swal.fire({
                         title: "<label>Advertencia</label>",

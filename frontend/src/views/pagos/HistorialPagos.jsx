@@ -5,9 +5,7 @@ import { FcClearFilters, FcFinePrint } from "react-icons/fc";
 import { FaSearch } from "react-icons/fa";
 import CargarTablas from "../cargando/CargarTablas";
 import "../estilos/Cliente.css";
-import stylesmod from "../estilos/modalDependientes.module.css";
 import PagosFun from "./PagosFun.js";
-import InfoPagoRechazado from "./InfoPagoRechazado.jsx";
 
 export function HistorialPagos({ id, mostrarSeccion }) {
     const navigate = useNavigate();
@@ -18,7 +16,6 @@ export function HistorialPagos({ id, mostrarSeccion }) {
         const traterClientes = async () => {
             try {
                 const dataReviPagos = await PagosFun.pagoAprobadosCliente(id, navigate);
-                console.log(dataReviPagos);
                 setFiltroReviPagos(dataReviPagos);
                 setReviPagos(dataReviPagos);
             } catch (error) {
