@@ -20,6 +20,7 @@ export function ReembolsosAdmin({ mostrarSeccion }) {
             if (revData && revData.revision) {
                 setReembolso(revData.revision);
                 const rutaImagen = await ReembolsoFun.buscarArhivoReembolsoPDF(`${revData.revision.id_reemb}_${revData.revision.id_pers}_reembolso`, revData.revision.id_pers, navigate);
+               console.log(rutaImagen);
                 setPdfUrl(rutaImagen);
                 localStorage.removeItem("revisionReembolso");
             }
