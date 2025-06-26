@@ -10,6 +10,7 @@ import SeguroContrado from "../clientes/SeguroContrado";
 import ListaReembolsoCliente from "../reembolsos/ListaReembolsoCliente";
 import ListaPagoCliente from "../pagos/ListaPagoCliente";
 import PagoCliente from "../pagos/PagoCliente";
+import HistorialPagos from "../pagos/HistorialPagos";
 
 export function VentanaCliente() {
   const navigate = useNavigate();
@@ -73,6 +74,7 @@ export function VentanaCliente() {
           ) : (<>
             <li><a onClick={() => mostrarSeccion("SegurosContratados")}>Seguros contratados</a></li>
             <li><a onClick={() => mostrarSeccion("pago")}>Pagos</a></li>
+            <li><a onClick={() => mostrarSeccion("RevisionPago")}>Revision de pagos</a></li>
             <li><a onClick={() => mostrarSeccion("HistorialPago")}>Historial de pagos</a></li>
             <li><a onClick={() => mostrarSeccion("SolictudReembolso")}>Solicitud de Reembolso</a></li>
             <li><a onClick={() => mostrarSeccion("Reembolsos")}>Reembolsos</a></li>
@@ -89,7 +91,8 @@ export function VentanaCliente() {
             <section >
               {seccionActiva === "SegurosContratados" && <SeguroContrado mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers} />}
               {seccionActiva === "Reembolsos" && <ListaReembolsoCliente mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers} />}
-              {seccionActiva === "HistorialPago" && <ListaPagoCliente mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers}  />}
+              {seccionActiva === "HistorialPago" && <HistorialPagos mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers}  />}
+              {seccionActiva === "RevisionPago" && <ListaPagoCliente mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers}  />}
               {seccionActiva === "pago" && <PagoCliente mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers}  />}
               {seccionActiva === "SolictudReembolso" && <ReembolsoCliente mostrarSeccion={mostrarSeccion} id={cliente[0].id_pers}  />}
               {seccionActiva === "inicio" && <>

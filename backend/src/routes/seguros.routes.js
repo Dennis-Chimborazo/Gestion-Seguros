@@ -338,4 +338,20 @@ router.get("/reembolso-seguros-clientes", async (req, res) => {
   }
 });
 
+router.get("/buscar-seguros-id", async (req, res) => {
+  try {
+    const id_seguro = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+    if (!id_seguro) {
+      return res.status(400).json({ message: id_pers });
+    }
+    const query = `SELECT id_seguro,monto_seguro, tiempo_seguro
+	    FROM seguros WHERE id_seguro = $1`;
+    const values = [id_seguro];
+    const data = await database.query(query, values);
+    res.json(data.rows);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el empleado", error });
+  }
+});
+
 module.exports = router; 

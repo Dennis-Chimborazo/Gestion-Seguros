@@ -9,7 +9,7 @@ import stylesmod from "../estilos/modalDependientes.module.css";
 import PagosFun from "./PagosFun.js";
 import InfoPagoRechazado from "./InfoPagoRechazado.jsx";
 
-export function ListaPagoCliente({ id, mostrarSeccion }) {
+export function HistorialPagos({ id, mostrarSeccion }) {
     const navigate = useNavigate();
     const [reviPagos, setReviPagos] = useState();
     const [filtroReviPagos, setFiltroReviPagos] = useState();
@@ -21,7 +21,7 @@ export function ListaPagoCliente({ id, mostrarSeccion }) {
     useEffect(() => {
         const traterClientes = async () => {
             try {
-                const dataReviPagos = await PagosFun.pagoRevisionCliente(id, navigate);
+                const dataReviPagos = await PagosFun.pagoAprobadosCliente(id, navigate);
                 console.log(dataReviPagos);
                 setFiltroReviPagos(dataReviPagos);
                 setReviPagos(dataReviPagos);
@@ -41,24 +41,6 @@ export function ListaPagoCliente({ id, mostrarSeccion }) {
         { name: "Fecha de pago", selector: row => row.fecha_pago },
         { name: "Monto", selector: row => row.nonto_pago },
         { name: "Estado", selector: row => row.nom_estado },
-        {
-            name: "Resolución",
-            cell: (row, index) => (
-                <div>
-                    {row.nom_estado !== "pendiente" ? (
-                        row.nom_estado === "aprobado" ? (<></>
-                        ) : (
-                            <FcFinePrint size={40} className="option-icon" data-testid={`icono-estado-${index}`} onClick={() => mostrarModalRechazado(row)} />
-                        )
-                    ) : (
-                        <>
-                            <p>Sin resolución</p>
-                        </>
-                    )}
-                </div>
-            ),
-            ignoreRowClick: true
-        }
 
     ];
 
@@ -86,7 +68,7 @@ export function ListaPagoCliente({ id, mostrarSeccion }) {
     return (
         <div className="cliente-container">
             <div className="cliente-form">
-                <h1 className="cliente-title"> Revision de Pagos</h1>
+                <h1 className="cliente-title"> Historial de Pagos</h1>
 
                 <div className="search-controls">
                     <div className="search-group">
@@ -142,4 +124,4 @@ export function ListaPagoCliente({ id, mostrarSeccion }) {
     );
 }
 
-export default ListaPagoCliente;
+export default HistorialPagos;
