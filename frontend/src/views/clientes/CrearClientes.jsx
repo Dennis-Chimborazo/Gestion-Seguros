@@ -319,7 +319,6 @@ export function CrearClientes({ mostrarSeccion }) {
                     cedula: formulario.cedr_cli 
                 }, navigate);
                 
-                if (!resVerif.existe) {
                     const pass = await Utilidades.crearPassAleatoria()
                     const res = await ClientesFun.guardarCliente(formulario, navigate);
                     const resCuent = await ClientesFun.crearCuenta({ 
@@ -348,9 +347,7 @@ export function CrearClientes({ mostrarSeccion }) {
                         })
                         mostrarSeccion("clientes")
                     }
-                } else {
-                    toast.error(resVerif.message);
-                }
+                
             } catch (error) {
                 toast.error(resVerif.message);
             }
