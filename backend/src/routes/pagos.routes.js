@@ -73,7 +73,6 @@ router.get("/pago-cliente/estado/1", async (req, res) => {
   }
 });
 
-// Ruta: pagos con estado 3 o 7
 router.get("/pago-revision-pendientes", async (req, res) => {
   try {
     const query = `SELECT pg.id_pago, pg.fecha_pago,pg.nonto_pago,pg.comprobante_pago,pg.id_archivos_cliente,
@@ -116,8 +115,6 @@ router.get("/pagos-revision-cliente", async (req, res) => {
 
 router.get("/pagos-aprobados-cliente", async (req, res) => {
   const id_pers = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
-
-
   if (!id_pers) {
     return res.status(400).json({ error: "Falta el parámetro 'id_pers'." });
   }
@@ -145,5 +142,87 @@ router.get("/pagos-aprobados-cliente", async (req, res) => {
   }
 });
 
+router.post("/save-revision-aprovado", async (req, res) => {
+  const id_estado=6
+  const { descripcion_revision_pago, id_pago } = req.body;
+  const fechaRevision = dayjs().format("YYYY-MM-DD");
 
+  try {
+    const result = await database.query(
+      `INSERT INTO revision_pago (
+        fecha_revision_pago, descripcion_revision_pago, id_pago, id_estado
+      ) VALUES (
+        $1, $2, $3, $4
+      ) RETURNING id_revision_pago;`,
+      [fechaRevision, descripcion_revision_pago, id_pago, id_estado]
+    );
+
+     await database.query(`
+      UPDATE pago_cliente SET
+        id_estado = $1
+      WHERE id_pago = $2
+    `, [
+      id_estado,
+      id_pago
+    ]);
+
+    res.json({
+      message: " Revisión guardada exitosamente",
+       success: true
+    });
+
+  } catch (error) {
+    console.error(" Error al guardar pago:", error);
+    res.status(500).json({ message: "Error al guardar revisión", error });
+  }
+});
+
+router.post("/save-revision-rechasada", async (req, res) => {
+  const id_estado=7
+  const { descripcion_revision_pago, id_pago } = req.body;
+  const fechaRevision = dayjs().format("YYYY-MM-DD");
+
+  try {
+    const result = await database.query(
+      `INSERT INTO revision_pago (
+        fecha_revision_pago, descripcion_revision_pago, id_pago, id_estado
+      ) VALUES (
+        $1, $2, $3, $4
+      ) RETURNING id_revision_pago;`,
+      [fechaRevision, descripcion_revision_pago, id_pago, id_estado]
+    );
+
+     await database.query(`
+      UPDATE pago_cliente SET
+        id_estado = $1
+      WHERE id_pago = $2
+    `, [
+      id_estado,
+      id_pago
+    ]);
+
+    res.json({
+      message: "Revisión guardada exitosamente",
+       success: true
+    });
+
+  } catch (error) {
+    console.error(" Error al guardar revisión:", error);
+    res.status(500).json({ message: "Error al guardar revisión", error });
+  }
+});
+router.get("/buscar-pago-rechazado", async (req, res) => {
+  const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+  try {
+    const query = `SELECT r.fecha_revision_pago, r.descripcion_revision_pago
+                FROM revision_pago r
+                INNER JOIN pago_cliente p on p.id_pago = r.id_pago
+                where p.id_pago= $1`;
+    const data = await database.query(query, [id]);
+    res.json(data.rows);
+  } catch (error) {
+    console.error("Error en consulta:", error);
+    res.status(500).json({ success: false, message: "Error al obtener datos", error: error.message });
+  }
+});
 module.exports = router;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import PagosFun from "./PagosFun";
 
 export function InfoPagoRechazado({ cerrarModalRechazado }) {
   const navigate = useNavigate();
@@ -7,16 +8,12 @@ export function InfoPagoRechazado({ cerrarModalRechazado }) {
 
   useEffect(() => {
     const valores = async () => {
-    //   const data = JSON.parse(localStorage.getItem("revisionReembolso"));
-    //   if (data && data.revision) {
-    //     const res = await ReembolsoFun.infoRechazadoReembolso(
-    //       data.revision.id_reemb,
-    //       navigate
-    //     );
-    //     console.log(res);
-    //     setInfoRevision(res[0]); // Guardamos la única revisión en el estado
-    //     localStorage.removeItem("revisionReembolso");
-    //   }
+      const data = JSON.parse(localStorage.getItem("revisionPago"));
+      if (data && data.revision) {
+        const res = await PagosFun.infoPagoRechazado(data.revision.id_pago,navigate);
+        setInfoRevision(res[0]); 
+        localStorage.removeItem("revisionPago");
+      }
     };
     valores();
   }, []);
@@ -33,9 +30,9 @@ export function InfoPagoRechazado({ cerrarModalRechazado }) {
       {infoRevision ? (
         <div>
           <p><strong>📝 Motivo del rechazo:</strong></p>
-          <p>{infoRevision.descripcion_revision}</p>
+          <p>{infoRevision.descripcion_revision_pago}</p>
 
-          <p><strong>📅 Fecha de revisión:</strong> {infoRevision.fecha_revision}</p>
+          <p><strong>📅 Fecha de revisión:</strong> {infoRevision.fecha_revision_pago}</p>
         </div>
       ) : (
         <p>Cargando datos...</p>

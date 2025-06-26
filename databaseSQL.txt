@@ -216,6 +216,7 @@ CREATE TABLE revision (
   FOREIGN KEY (id_reemb) REFERENCES reembolso(id_reemb),
   FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
 );
+
 CREATE TABLE archivos_cliente (
   id_archivos_cliente SERIAL PRIMARY KEY,
   tipo_archivos_cliente VARCHAR(20) NOT NULL, 
@@ -238,6 +239,16 @@ CREATE TABLE pago_cliente (
   FOREIGN KEY (id_pers) REFERENCES cliente(id_pers),
   FOREIGN KEY (id_seguro) REFERENCES seguros(id_seguro),
   FOREIGN KEY (id_archivos_cliente) REFERENCES archivos_cliente(id_archivos_cliente),
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
+
+CREATE TABLE revision_pago (
+  id_revision_pago SERIAL PRIMARY KEY,
+  fecha_revision_pago VARCHAR(20) NOT NULL,
+  descripcion_revision_pago VARCHAR(512) NOT NULL,
+  id_pago INTEGER,
+  id_estado INTEGER,
+  FOREIGN KEY (id_pago) REFERENCES pago_cliente(id_pago),
   FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
 );
 

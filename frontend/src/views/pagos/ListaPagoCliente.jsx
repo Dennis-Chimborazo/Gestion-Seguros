@@ -22,7 +22,6 @@ export function ListaPagoCliente({ id, mostrarSeccion }) {
         const traterClientes = async () => {
             try {
                 const dataReviPagos = await PagosFun.pagoRevisionCliente(id, navigate);
-                console.log(dataReviPagos);
                 setFiltroReviPagos(dataReviPagos);
                 setReviPagos(dataReviPagos);
             } catch (error) {
@@ -47,14 +46,9 @@ export function ListaPagoCliente({ id, mostrarSeccion }) {
                 <div>
                     {row.nom_estado !== "pendiente" ? (
                         row.nom_estado === "aprobado" ? (<></>
-                        ) : (
-                            <FcFinePrint size={40} className="option-icon" data-testid={`icono-estado-${index}`} onClick={() => mostrarModalRechazado(row)} />
+                        ) : (<FcFinePrint size={40} className="option-icon" data-testid={`icono-estado-${index}`} onClick={() => mostrarModalRechazado(row)} />
                         )
-                    ) : (
-                        <>
-                            <p>Sin resolución</p>
-                        </>
-                    )}
+                    ) : (<> <p>Sin resolución</p></>)}
                 </div>
             ),
             ignoreRowClick: true
@@ -63,7 +57,7 @@ export function ListaPagoCliente({ id, mostrarSeccion }) {
     ];
 
     const mostrarModalRechazado = (row) => {
-        localStorage.setItem("revisionReembolso", JSON.stringify({
+        localStorage.setItem("revisionPago", JSON.stringify({
             edit: true,
             revision: row
         }));
