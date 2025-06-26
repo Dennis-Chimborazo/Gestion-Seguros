@@ -33,5 +33,5 @@ npm i sweetalert
 npm i react-select
 npm install react-icons --save
 npm install sweetalert2
+npm install recharts
 
-test
