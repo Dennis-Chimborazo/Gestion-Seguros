@@ -23,6 +23,7 @@ export function CrearContratacion({ mostrarSeccion }) {
     const [elecionTipoSeguro, setElecionTipoSeguro] = useState([]);
     const [tiempoPago, setTiempoPago] = useState('');
     const [valorAPagar, setValorAPagar] = useState('');
+    const [errores, setErrores] = useState({});
 
     const abrirModal = () => {
         if ((listDependientes.length + 1) <= 5) {
@@ -47,6 +48,40 @@ export function CrearContratacion({ mostrarSeccion }) {
 
     const [cuentaBancaria, setCuentaBancaria] = useState({ tipo_cuent_Ban: '', nom_cuent_Ban: '', mun_cuent_Ban: '' });
 
+    // Funciones de validación
+    const validarSoloLetras = (valor) => {
+        return /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(valor);
+    };
+
+    const validarSoloNumeros = (valor) => {
+        return /^\d*$/.test(valor);
+    };
+
+    const validarEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const validarCedula = (valor) => {
+        return /^\d{10}$/.test(valor);
+    };
+
+    const validarRUC = (valor) => {
+        // RUC debe tener 13 dígitos y terminar en 001
+        return /^\d{10}001$/.test(valor);
+    };
+
+    const validarIdentificacionFacturacion = (valor, tipo) => {
+        if (tipo === 'cedula') {
+            return validarSoloNumeros(valor) && valor.length <= 10;
+        } else if (tipo === 'ruc') {
+            return validarSoloNumeros(valor) && valor.length <= 13;
+        } else if (tipo === 'otro') {
+            return validarSoloNumeros(valor);
+        }
+        return true;
+    };
+
     useEffect(() => {
         const clientes = async () => {
             const res = await ClientesFun.obtenerCliente(navigate);
@@ -55,7 +90,6 @@ export function CrearContratacion({ mostrarSeccion }) {
             setListTipoSeguro(resTipSeg.rows);
         }
         clientes();
-
     }, []);
 
     const columnasDepencientes = [
@@ -70,11 +104,56 @@ export function CrearContratacion({ mostrarSeccion }) {
     ];
 
     const formaPago = [{ value: 12, label: 'Mensual' }, { value: 4, label: 'Trimestral' }, { value: 2, label: 'Semestral' }, { value: 1, label: 'Anual' }];
+
+    // Validación para campo titular (cédula)
+    const validarCedulaTitular = (e) => {
+        const { value } = e.target;
+        let nuevosErrores = { ...errores };
+
+        if (!validarSoloNumeros(value)) {
+            nuevosErrores.titular = 'La cédula solo debe contener números';
+            setErrores(nuevosErrores);
+            return;
+        } else if (value.length > 10) {
+            return; // No permitir más de 10 caracteres
+        } else if (value.length > 0 && value.length < 10) {
+            nuevosErrores.titular = 'La cédula debe tener exactamente 10 dígitos';
+        } else {
+            delete nuevosErrores.titular;
+        }
+
+        setErrores(nuevosErrores);
+    };
+
+    // Validación para tipo de seguro (solo letras)
+    const validarTipoSeguro = (e) => {
+        const { value } = e.target;
+        let nuevosErrores = { ...errores };
+
+        if (!validarSoloLetras(value)) {
+            nuevosErrores.nom_tip_seg = 'El nombre del seguro solo debe contener letras';
+            setErrores(nuevosErrores);
+            return;
+        } else {
+            delete nuevosErrores.nom_tip_seg;
+        }
+
+        setErrores(nuevosErrores);
+    };
+
     const buscarCliente = async (e) => {
         e.preventDefault();
-        const filtro = listcliente.filter((a) => a.cedr_cli === document.getElementById("titular").value);
+        const cedula = document.getElementById("titular").value;
+        
+        // Validación final antes de buscar
+        if (!validarCedula(cedula)) {
+            toast.error('La cédula debe tener exactamente 10 dígitos');
+            return;
+        }
+
+        const filtro = listcliente.filter((a) => a.cedr_cli === cedula);
         if (filtro.length === 0) {
-            toast.error("Nose encontro a ningun cliente")
+            toast.error("No se encontró a ningún cliente")
             setClienteSeguro([])
             setNuevoSeguro({ ...nuevoSeguro, id_pers: '' })
         } else {
@@ -82,15 +161,150 @@ export function CrearContratacion({ mostrarSeccion }) {
             setNuevoSeguro({ ...nuevoSeguro, id_pers: filtro[0].id_pers, email_pers: filtro[0].email_pers })
         }
     }
+
     const asignarValoresNuevoSeguro = (e) => {
-        setNuevoSeguro({ ...nuevoSeguro, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        let valorValido = value;
+        let nuevosErrores = { ...errores };
+
+        // Validaciones específicas por campo
+        if (name === 'ciud_seguro') {
+            if (!validarSoloLetras(value)) {
+                nuevosErrores.ciud_seguro = 'La ciudad solo debe contener letras';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.ciud_seguro;
+            }
+        }
+
+        if (name === 'mes_seguro') {
+            if (!validarSoloLetras(value)) {
+                nuevosErrores.mes_seguro = 'El mes solo debe contener letras';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.mes_seguro;
+            }
+        }
+
+        if (name === 'dia_seguro' || name === 'anio_seguro') {
+            if (!validarSoloNumeros(value)) {
+                nuevosErrores[name] = 'Este campo solo debe contener números';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores[name];
+            }
+        }
+
+        setErrores(nuevosErrores);
+        setNuevoSeguro({ ...nuevoSeguro, [name]: valorValido });
     }
+
     const asignarValoresPersonaFact = (e) => {
-        setPersonaFac({ ...personaFac, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        let valorValido = value;
+        let nuevosErrores = { ...errores };
+
+        // Validaciones específicas por campo
+        if (name === 'nacion_pers_fac' || name === 'razon_pers_fac' || 
+            name === 'nom_pers_fac' || name === 'ape_pers_fac') {
+            if (!validarSoloLetras(value)) {
+                nuevosErrores[name] = 'Este campo solo debe contener letras';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores[name];
+            }
+        }
+
+        if (name === 'tel_pers_fac' || name === 'cel_pers_fac') {
+            if (!validarSoloNumeros(value)) {
+                nuevosErrores[name] = 'Este campo solo debe contener números';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores[name];
+            }
+        }
+
+        if (name === 'email_pers_fac') {
+            if (value && !validarEmail(value)) {
+                nuevosErrores.email_pers_fac = 'Ingrese un formato de correo válido';
+            } else {
+                delete nuevosErrores.email_pers_fac;
+            }
+        }
+
+        if (name === 'cedr_pers_fac') {
+            if (!validarIdentificacionFacturacion(value, personaFac.tipo_pers_fac)) {
+                if (personaFac.tipo_pers_fac === 'cedula') {
+                    nuevosErrores.cedr_pers_fac = 'La cédula solo debe contener números (máximo 10)';
+                } else if (personaFac.tipo_pers_fac === 'ruc') {
+                    nuevosErrores.cedr_pers_fac = 'El RUC solo debe contener números (máximo 13)';
+                } else if (personaFac.tipo_pers_fac === 'otro') {
+                    nuevosErrores.cedr_pers_fac = 'Solo debe contener números';
+                }
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                // Validaciones específicas según el tipo
+                if (personaFac.tipo_pers_fac === 'cedula') {
+                    if (value.length > 0 && value.length < 10) {
+                        nuevosErrores.cedr_pers_fac = 'La cédula debe tener exactamente 10 dígitos';
+                    } else if (value.length === 10) {
+                        delete nuevosErrores.cedr_pers_fac;
+                    } else {
+                        delete nuevosErrores.cedr_pers_fac;
+                    }
+                } else if (personaFac.tipo_pers_fac === 'ruc') {
+                    if (value.length === 13 && !validarRUC(value)) {
+                        nuevosErrores.cedr_pers_fac = 'El RUC debe terminar en 001 (ej: 1234567890001)';
+                    } else if (value.length > 0 && value.length < 13) {
+                        nuevosErrores.cedr_pers_fac = 'El RUC debe tener exactamente 13 dígitos y terminar en 001';
+                    } else {
+                        delete nuevosErrores.cedr_pers_fac;
+                    }
+                } else {
+                    delete nuevosErrores.cedr_pers_fac;
+                }
+            }
+        }
+
+        setErrores(nuevosErrores);
+        setPersonaFac({ ...personaFac, [name]: valorValido });
     }
+
     const asignarValoresCuentaBanco = (e) => {
-        setCuentaBancaria({ ...cuentaBancaria, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        let valorValido = value;
+        let nuevosErrores = { ...errores };
+
+        if (name === 'mun_cuent_Ban') {
+            if (!validarSoloNumeros(value)) {
+                nuevosErrores.mun_cuent_Ban = 'El número de cuenta solo debe contener números';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.mun_cuent_Ban;
+            }
+        }
+
+        if (name === 'nom_cuent_Ban') {
+            if (!validarSoloLetras(value)) {
+                nuevosErrores.nom_cuent_Ban = 'El nombre del banco solo debe contener letras';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.nom_cuent_Ban;
+            }
+        }
+
+        setErrores(nuevosErrores);
+        setCuentaBancaria({ ...cuentaBancaria, [name]: valorValido });
     }
+
     const checkTipoIdentificaicon = (event) => {
         const { id } = event.target;
         document.getElementById("cedula").checked = false;
@@ -98,8 +312,20 @@ export function CrearContratacion({ mostrarSeccion }) {
         document.getElementById("otro").checked = false;
 
         document.getElementById(id).checked = true;
-        setPersonaFac({ ...personaFac, tipo_pers_fac: id })
+        
+        // Limpiar el campo de identificación y errores cuando cambie el tipo
+        setPersonaFac({ 
+            ...personaFac, 
+            tipo_pers_fac: id,
+            cedr_pers_fac: ''
+        });
+        
+        // Limpiar errores relacionados con la identificación
+        const nuevosErrores = { ...errores };
+        delete nuevosErrores.cedr_pers_fac;
+        setErrores(nuevosErrores);
     };
+
     const checktipoBanco = (event) => {
         const { id } = event.target;
         document.getElementById("ahorros").checked = false;
@@ -108,6 +334,7 @@ export function CrearContratacion({ mostrarSeccion }) {
         document.getElementById(id).checked = true;
         setCuentaBancaria({ ...cuentaBancaria, tipo_cuent_Ban: id })
     };
+
     const checkParentescoTitular = (event) => {
         const { id } = event.target;
         document.getElementById("padre").checked = false;
@@ -123,19 +350,34 @@ export function CrearContratacion({ mostrarSeccion }) {
             setPersonaFac({ ...personaFac, parent_pers_fac: id })
         }
     };
+
     const textParentesco = (e) => {
+        const { value } = e.target;
+        let nuevosErrores = { ...errores };
+
+        if (!validarSoloLetras(value)) {
+            nuevosErrores.otroparentesco = 'El parentesco solo debe contener letras';
+            setErrores(nuevosErrores);
+            return;
+        } else {
+            delete nuevosErrores.otroparentesco;
+        }
+
         document.getElementById("padre").checked = false;
         document.getElementById("madre").checked = false;
         document.getElementById("hijo").checked = false;
         document.getElementById("conyuge").checked = false;
         document.getElementById("empleador").checked = false;
         document.getElementById("otroParen").checked = true;
-        setPersonaFac({ ...personaFac, parent_pers_fac: e.target.value })
-
+        
+        setErrores(nuevosErrores);
+        setPersonaFac({ ...personaFac, parent_pers_fac: value })
     }
+
     const buscarTipoSeguro = (e) => {
         e.preventDefault()
         const valor = document.getElementById("nom_tip_seg").value;
+        
         if (valor !== '') {
             const filtro = listTipoSeguro.filter((a) =>
                 a.nom_tip_seg && a.nom_tip_seg.startsWith(valor)
@@ -149,12 +391,12 @@ export function CrearContratacion({ mostrarSeccion }) {
                 setTiempoPago('')
                 toast.error("Tipo de Seguro no encontrado");
                 setNuevoSeguro({ ...nuevoSeguro, id_tip_seg: '', monto_seguro: '' })
-
             }
         } else {
             toast.error("Ingrese el nombre del seguro");
         }
     }
+
     const calcularValorAPagar = (e) => {
         if (elecionTipoSeguro.length === 0) {
             toast.error("Primero debe de elegir un tipo de seguro");
@@ -166,8 +408,27 @@ export function CrearContratacion({ mostrarSeccion }) {
             setNuevoSeguro({ ...nuevoSeguro, monto_seguro: cuota, tiempo_seguro: e.label })
         }
     }
+
     const guardarSeguro = async (e) => {
         e.preventDefault();
+        
+        // Verificar que no haya errores de validación
+        if (Object.keys(errores).length > 0) {
+            toast.error('Por favor corrija los errores en el formulario');
+            return;
+        }
+
+        // Validaciones finales específicas
+        if (personaFac.tipo_pers_fac === 'cedula' && !validarCedula(personaFac.cedr_pers_fac)) {
+            toast.error('La cédula debe tener exactamente 10 dígitos');
+            return;
+        }
+
+        if (personaFac.tipo_pers_fac === 'ruc' && personaFac.cedr_pers_fac.length === 13 && !validarRUC(personaFac.cedr_pers_fac)) {
+            toast.error('El RUC debe tener 13 dígitos y terminar en 001');
+            return;
+        }
+
         if (verficarDatosCorrectos()) {
             try {
                 const [personFac, cuentaBan] = await Promise.all([
@@ -207,7 +468,7 @@ export function CrearContratacion({ mostrarSeccion }) {
                 });
                 mostrarSeccion("GestionContratacion");
             } catch (error) {
-                console.error(error); // Útil para debugging
+                console.error(error);
                 swal.fire({
                     title: "<label>Advertencia</label>",
                     text: "Verifique los datos ingresados ",
@@ -224,24 +485,23 @@ export function CrearContratacion({ mostrarSeccion }) {
                     if (listDependientes.length >= 1) {
                             return true;
                     } else {
-                        toast.error("Debe de asignar minimo un dependiente");
+                        toast.error("Debe de asignar mínimo un dependiente");
                         return false;
                     }
                 } else {
-                    toast.error("Datos de Tarjeta de Crédito estan incompletos ");
+                    toast.error("Datos de Tarjeta de Crédito están incompletos ");
                     return false;
                 }
             } else {
-                toast.error("faltan campos en Datos de tarjeta de credito ");
+                toast.error("Faltan campos en Datos de tarjeta de crédito ");
                 return false;
             }
         } else {
-        console.log("llega control else")
-
-            toast.error("Datos de encuentran incompletos");
+            toast.error("Datos se encuentran incompletos");
             return false;
         }
     }
+
     const crearCadenaRandom = () => {
         const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let cadenaAleatoria = '';
@@ -250,24 +510,31 @@ export function CrearContratacion({ mostrarSeccion }) {
             cadenaAleatoria += caracteres.charAt(indiceAleatorio);
         }
         return cadenaAleatoria;
-    }; return (
+    };
+
+    return (
         <div className="gestion-container">
             <form className="gestion-form" action="" method="">
                 <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-                <h1 className="gestion-title">Gestión Contratación - Crear</h1>                    <div className="form-section">
+                <h1 className="gestion-title">Gestión Contratación - Crear</h1>
+                
+                <div className="form-section">
                     <h2 className="section-title">Titular</h2>
                     <div className="search-controls">
                         <div className="search-group">
                             <label className="search-label" htmlFor="titular">Titular</label>
                             <div className="search-input-container">
                                 <input
-                                    className="search-input"
+                                    className={`search-input ${errores.titular ? 'input-error' : ''}`}
                                     type="text"
                                     name="titular"
                                     id="titular"
-                                    placeholder="Ingrese cédula del cliente"
+                                    maxLength={10}
+                                    placeholder="Ingrese cédula del cliente (10 dígitos)"
+                                    onChange={validarCedulaTitular}
                                 />
                             </div>
+                            {errores.titular && <span className="error-message">{errores.titular}</span>}
                         </div>
                         <button className="btn-search" data-testid="btn-buscar-titular" onClick={buscarCliente}>Buscar</button>
                     </div>
@@ -292,14 +559,24 @@ export function CrearContratacion({ mostrarSeccion }) {
                             </tr>
                         </tbody>
                     </table>
-                </div>                    <div className="form-section">
+                </div>
+                
+                <div className="form-section">
                     <h2 className="section-title">Elija tipo de Seguro</h2>
                     <div className="search-controls">
                         <div className="search-group">
                             <label className="search-label" htmlFor="nom_tip_seg">Nombre del Seguro</label>
                             <div className="search-input-container">
-                                <input className="search-input" type="text" name="nom_tip_seg" id="nom_tip_seg" placeholder="Ingrese el nombre del seguro" />
+                                <input 
+                                    className={`search-input ${errores.nom_tip_seg ? 'input-error' : ''}`}
+                                    type="text" 
+                                    name="nom_tip_seg" 
+                                    id="nom_tip_seg" 
+                                    placeholder="Ingrese el nombre del seguro (solo letras)" 
+                                    onChange={validarTipoSeguro}
+                                />
                             </div>
+                            {errores.nom_tip_seg && <span className="error-message">{errores.nom_tip_seg}</span>}
                         </div>
                         <button className="btn-search" data-testid="btn-buscar-seguro" onClick={buscarTipoSeguro}> Buscar</button>
                     </div>
@@ -334,7 +611,9 @@ export function CrearContratacion({ mostrarSeccion }) {
                             </tbody>
                         </table>
                     </div>
-                </div>                    <div className="form-section">
+                </div>
+                
+                <div className="form-section">
                     <h2 className="section-title">Dependientes</h2>
                     <div style={{ marginBottom: '1rem' }}>
                         <button type="button" className="btn-primary" onClick={abrirModal}>Agregar Dependiente</button>
@@ -347,7 +626,9 @@ export function CrearContratacion({ mostrarSeccion }) {
                         noDataComponent="No ha seleccionado ningún dependiente"
                         persistTableHead >
                     </DataTable>
-                </div>                   <div className="form-section">
+                </div>
+                
+                <div className="form-section">
                     <h2 className="section-title">Datos Facturación</h2>
                     <div className="form-row">
                         <div className="form-group">
@@ -371,47 +652,136 @@ export function CrearContratacion({ mostrarSeccion }) {
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label">Número de identificación</label>
-                            <input className="form-input" type="text" name="cedr_pers_fac" id="cedr_pers_fac" onChange={asignarValoresPersonaFact} />
+                            <input 
+                                className={`form-input ${errores.cedr_pers_fac ? 'input-error' : ''}`}
+                                type="text" 
+                                name="cedr_pers_fac" 
+                                id="cedr_pers_fac" 
+                                value={personaFac.cedr_pers_fac}
+                                maxLength={personaFac.tipo_pers_fac === 'cedula' ? 10 : personaFac.tipo_pers_fac === 'ruc' ? 13 : undefined}
+                                placeholder={
+                                    personaFac.tipo_pers_fac === 'cedula' 
+                                        ? "Ingrese 10 dígitos" 
+                                        : personaFac.tipo_pers_fac === 'ruc'
+                                        ? "Ej: 1234567890001 (13 dígitos, termina en 001)"
+                                        : personaFac.tipo_pers_fac === 'otro'
+                                        ? "Solo números"
+                                        : "Seleccione tipo de identificación"
+                                }
+                                onChange={asignarValoresPersonaFact} 
+                                disabled={!personaFac.tipo_pers_fac}
+                            />
+                            {errores.cedr_pers_fac && <span className="error-message">{errores.cedr_pers_fac}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label">Nacionalidad</label>
-                            <input className="form-input" type="text" name="nacion_pers_fac" id="nacion_pers_fac" onChange={asignarValoresPersonaFact} />
+                            <input 
+                                className={`form-input ${errores.nacion_pers_fac ? 'input-error' : ''}`}
+                                type="text" 
+                                name="nacion_pers_fac" 
+                                id="nacion_pers_fac" 
+                                value={personaFac.nacion_pers_fac}
+                                placeholder="Solo letras"
+                                onChange={asignarValoresPersonaFact} 
+                            />
+                            {errores.nacion_pers_fac && <span className="error-message">{errores.nacion_pers_fac}</span>}
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label">Razón social</label>
-                            <input className="form-input" type="text" name="razon_pers_fac" id="razon_pers_fac" onChange={asignarValoresPersonaFact} />
+                            <input 
+                                className={`form-input ${errores.razon_pers_fac ? 'input-error' : ''}`}
+                                type="text" 
+                                name="razon_pers_fac" 
+                                id="razon_pers_fac" 
+                                value={personaFac.razon_pers_fac}
+                                placeholder="Solo letras"
+                                onChange={asignarValoresPersonaFact} 
+                            />
+                            {errores.razon_pers_fac && <span className="error-message">{errores.razon_pers_fac}</span>}
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label">Nombres</label>
-                            <input className="form-input" type="text" name="nom_pers_fac" id="nom_pers_fac" onChange={asignarValoresPersonaFact} />
+                            <input 
+                                className={`form-input ${errores.nom_pers_fac ? 'input-error' : ''}`}
+                                type="text" 
+                                name="nom_pers_fac" 
+                                id="nom_pers_fac" 
+                                value={personaFac.nom_pers_fac}
+                                placeholder="Solo letras"
+                                onChange={asignarValoresPersonaFact} 
+                            />
+                            {errores.nom_pers_fac && <span className="error-message">{errores.nom_pers_fac}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label">Apellidos</label>
-                            <input className="form-input" type="text" name="ape_pers_fac" id="ape_pers_fac" onChange={asignarValoresPersonaFact} />
+                            <input 
+                                className={`form-input ${errores.ape_pers_fac ? 'input-error' : ''}`}
+                                type="text" 
+                                name="ape_pers_fac" 
+                                id="ape_pers_fac" 
+                                value={personaFac.ape_pers_fac}
+                                placeholder="Solo letras"
+                                onChange={asignarValoresPersonaFact} 
+                            />
+                            {errores.ape_pers_fac && <span className="error-message">{errores.ape_pers_fac}</span>}
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label">Correo electrónico</label>
-                            <input className="form-input" type="email" name="email_pers_fac" id="email_pers_fac" onChange={asignarValoresPersonaFact} />
+                            <input 
+                                className={`form-input ${errores.email_pers_fac ? 'input-error' : ''}`}
+                                type="email" 
+                                name="email_pers_fac" 
+                                id="email_pers_fac" 
+                                value={personaFac.email_pers_fac}
+                                placeholder="ejemplo@correo.com"
+                                onChange={asignarValoresPersonaFact} 
+                            />
+                            {errores.email_pers_fac && <span className="error-message">{errores.email_pers_fac}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label">Dirección domicilio</label>
-                            <input className="form-input" type="text" name="direc_pers_fac" id="direc_pers_fac" onChange={asignarValoresPersonaFact} />
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="direc_pers_fac" 
+                                id="direc_pers_fac" 
+                                value={personaFac.direc_pers_fac}
+                                onChange={asignarValoresPersonaFact} 
+                            />
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label">Teléfono del domicilio</label>
-                            <input className="form-input" type="text" name="tel_pers_fac" id="tel_pers_fac" onChange={asignarValoresPersonaFact} />
+                            <input 
+                                className={`form-input ${errores.tel_pers_fac ? 'input-error' : ''}`}
+                                type="text" 
+                                name="tel_pers_fac" 
+                                id="tel_pers_fac" 
+                                value={personaFac.tel_pers_fac}
+                                placeholder="Solo números"
+                                onChange={asignarValoresPersonaFact} 
+                            />
+                            {errores.tel_pers_fac && <span className="error-message">{errores.tel_pers_fac}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label">Celular</label>
-                            <input className="form-input" type="text" name="cel_pers_fac" id="cel_pers_fac" onChange={asignarValoresPersonaFact} />
+                            <input 
+                                className={`form-input ${errores.cel_pers_fac ? 'input-error' : ''}`}
+                                type="text" 
+                                name="cel_pers_fac" 
+                                id="cel_pers_fac" 
+                                value={personaFac.cel_pers_fac}
+                                placeholder="Solo números"
+                                onChange={asignarValoresPersonaFact} 
+                            />
+                            {errores.cel_pers_fac && <span className="error-message">{errores.cel_pers_fac}</span>}
                         </div>
                     </div>
                     <div className="form-row">
@@ -443,7 +813,15 @@ export function CrearContratacion({ mostrarSeccion }) {
                                     <label htmlFor="otroParen">Otro</label>
                                 </div>
                             </div>
-                            <input className="form-input" type="text" name="otroparentesco" id="otroparentesco" onChange={textParentesco} placeholder="Especifique otro parentesco" />
+                            <input 
+                                className={`form-input ${errores.otroparentesco ? 'input-error' : ''}`}
+                                type="text" 
+                                name="otroparentesco" 
+                                id="otroparentesco" 
+                                onChange={textParentesco} 
+                                placeholder="Especifique otro parentesco (solo letras)" 
+                            />
+                            {errores.otroparentesco && <span className="error-message">{errores.otroparentesco}</span>}
                         </div>
                     </div>
                     <div className="form-row">
@@ -466,16 +844,36 @@ export function CrearContratacion({ mostrarSeccion }) {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label className="form-label">Banco</label>
-                                    <input className="form-input" type="text" name="nom_cuent_Ban" id="nom_cuent_Ban" onChange={asignarValoresCuentaBanco} />
+                                    <input 
+                                        className={`form-input ${errores.nom_cuent_Ban ? 'input-error' : ''}`}
+                                        type="text" 
+                                        name="nom_cuent_Ban" 
+                                        id="nom_cuent_Ban" 
+                                        value={cuentaBancaria.nom_cuent_Ban}
+                                        placeholder="Solo letras"
+                                        onChange={asignarValoresCuentaBanco} 
+                                    />
+                                    {errores.nom_cuent_Ban && <span className="error-message">{errores.nom_cuent_Ban}</span>}
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Cuenta No.</label>
-                                    <input className="form-input" type="text" name="mun_cuent_Ban" id="mun_cuent_Ban" onChange={asignarValoresCuentaBanco} />
+                                    <input 
+                                        className={`form-input ${errores.mun_cuent_Ban ? 'input-error' : ''}`}
+                                        type="text" 
+                                        name="mun_cuent_Ban" 
+                                        id="mun_cuent_Ban" 
+                                        value={cuentaBancaria.mun_cuent_Ban}
+                                        placeholder="Solo números"
+                                        onChange={asignarValoresCuentaBanco} 
+                                    />
+                                    {errores.mun_cuent_Ban && <span className="error-message">{errores.mun_cuent_Ban}</span>}
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>                   <div className="form-section">
+                </div>
+                
+                <div className="form-section">
                     <h2 className="section-title">Datos Complementarios</h2>
                     <div className="info-text">
                         Como constancia de haber leído y entendido, acepto el contenido de la presente solicitud y declaro que la información que he
@@ -486,23 +884,59 @@ export function CrearContratacion({ mostrarSeccion }) {
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label">Ciudad</label>
-                            <input className="form-input" type="text" name="ciud_seguro" id="ciud_seguro" onChange={asignarValoresNuevoSeguro} />
+                            <input 
+                                className={`form-input ${errores.ciud_seguro ? 'input-error' : ''}`}
+                                type="text" 
+                                name="ciud_seguro" 
+                                id="ciud_seguro" 
+                                value={nuevoSeguro.ciud_seguro}
+                                placeholder="Solo letras"
+                                onChange={asignarValoresNuevoSeguro} 
+                            />
+                            {errores.ciud_seguro && <span className="error-message">{errores.ciud_seguro}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label">Día</label>
-                            <input className="form-input" type="text" name="dia_seguro" id="dia_seguro" onChange={asignarValoresNuevoSeguro} />
+                            <input 
+                                className={`form-input ${errores.dia_seguro ? 'input-error' : ''}`}
+                                type="text" 
+                                name="dia_seguro" 
+                                id="dia_seguro" 
+                                value={nuevoSeguro.dia_seguro}
+                                placeholder="Solo números"
+                                onChange={asignarValoresNuevoSeguro} 
+                            />
+                            {errores.dia_seguro && <span className="error-message">{errores.dia_seguro}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label">Mes</label>
-                            <input className="form-input" type="text" name="mes_seguro" id="mes_seguro" onChange={asignarValoresNuevoSeguro} />
+                            <input 
+                                className={`form-input ${errores.mes_seguro ? 'input-error' : ''}`}
+                                type="text" 
+                                name="mes_seguro" 
+                                id="mes_seguro" 
+                                value={nuevoSeguro.mes_seguro}
+                                placeholder="Solo letras"
+                                onChange={asignarValoresNuevoSeguro} 
+                            />
+                            {errores.mes_seguro && <span className="error-message">{errores.mes_seguro}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label">Año</label>
-                            <input className="form-input" type="text" name="anio_seguro" id="anio_seguro" onChange={asignarValoresNuevoSeguro} />
+                            <input 
+                                className={`form-input ${errores.anio_seguro ? 'input-error' : ''}`}
+                                type="text" 
+                                name="anio_seguro" 
+                                id="anio_seguro" 
+                                value={nuevoSeguro.anio_seguro}
+                                placeholder="Solo números"
+                                onChange={asignarValoresNuevoSeguro} 
+                            />
+                            {errores.anio_seguro && <span className="error-message">{errores.anio_seguro}</span>}
                         </div>
                     </div>
-
                 </div>
+                
                 <div className="action-buttons">
                     <button className="btn-cancelar" onClick={() => mostrarSeccion("GestionContratacion")}>Cancelar</button>
                     <button className="btn-guardar" onClick={guardarSeguro}>Guardar</button>
@@ -519,4 +953,5 @@ export function CrearContratacion({ mostrarSeccion }) {
         </div>
     );
 }
+
 export default CrearContratacion;

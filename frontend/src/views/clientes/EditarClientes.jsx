@@ -30,7 +30,7 @@ export function EditarClientes({ mostrarSeccion }) {
     const [parroq_cli, setParroq_cli] = useState('');
     const [calle_princ_pers, setCalle_princ_pers] = useState('');
     const [calle_secun_pers, setCalle_secun_pers] = useState('');
-
+    const [errores, setErrores] = useState({});
 
     const [formulario, setFormulario] = useState({
         id_pers: '', cedr_cli: '', tipo_cedr_cli: '', nacion_cli: '',
@@ -42,6 +42,38 @@ export function EditarClientes({ mostrarSeccion }) {
 
     const [formularioEdit, setFormularioEdit] = useState({});
 
+    // Funciones de validación
+    const validarSoloLetras = (valor) => {
+        return /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(valor);
+    };
+
+    const validarSoloNumeros = (valor) => {
+        return /^\d*$/.test(valor);
+    };
+
+    const validarEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const validarCedula = (valor) => {
+        return /^\d{10}$/.test(valor);
+    };
+
+    const validarPasaporte = (valor) => {
+        // 3 letras seguidas de 5 números (exactamente 8 caracteres)
+        return /^[A-Z]{3}\d{5}$/.test(valor.toUpperCase());
+    };
+
+    const validarIdentificacion = (valor, tipo) => {
+        if (tipo === 'cedula') {
+            return validarSoloNumeros(valor) && valor.length <= 10;
+        } else if (tipo === 'pasaporte') {
+            // Permitir letras y números, máximo 8 caracteres
+            return /^[A-Za-z0-9]*$/.test(valor) && valor.length <= 8;
+        }
+        return true;
+    };
 
     useEffect(() => {
         const cargarPais = async () => {
@@ -208,19 +240,176 @@ export function EditarClientes({ mostrarSeccion }) {
     };
 
     const agregarClaveFormulario = (e) => {
+        const { name, value } = e.target;
+        let valorValido = value;
+        let nuevosErrores = { ...errores };
+
+        // Validaciones específicas por campo
+        if (name === 'nom_cli') {
+            if (!validarSoloLetras(value)) {
+                nuevosErrores.nom_cli = 'Los nombres solo deben contener letras';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.nom_cli;
+            }
+        }
+
+        if (name === 'ape_cli') {
+            if (!validarSoloLetras(value)) {
+                nuevosErrores.ape_cli = 'Los apellidos solo deben contener letras';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.ape_cli;
+            }
+        }
+
+        if (name === 'nacion_cli') {
+            if (!validarSoloLetras(value)) {
+                nuevosErrores.nacion_cli = 'La nacionalidad solo debe contener letras';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.nacion_cli;
+            }
+        }
+
+        if (name === 'lugar_naci_cli') {
+            if (!validarSoloLetras(value)) {
+                nuevosErrores.lugar_naci_cli = 'El lugar de nacimiento solo debe contener letras';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.lugar_naci_cli;
+            }
+        }
+
+        if (name === 'parroq_cli') {
+            if (!validarSoloLetras(value)) {
+                nuevosErrores.parroq_cli = 'La parroquia solo debe contener letras';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.parroq_cli;
+            }
+        }
+
+        if (name === 'edad_pers') {
+            if (!validarSoloNumeros(value)) {
+                nuevosErrores.edad_pers = 'La edad solo debe contener números';
+                setErrores(nuevosErrores);
+                return;
+            } else if (value && (parseInt(value) < 0 || parseInt(value) > 120)) {
+                nuevosErrores.edad_pers = 'Ingrese una edad válida (0-120)';
+            } else {
+                delete nuevosErrores.edad_pers;
+            }
+        }
+
+        if (name === 'estatura_cli') {
+            if (!validarSoloNumeros(value)) {
+                nuevosErrores.estatura_cli = 'La estatura solo debe contener números';
+                setErrores(nuevosErrores);
+                return;
+            } else if (value && (parseInt(value) < 50 || parseInt(value) > 250)) {
+                nuevosErrores.estatura_cli = 'Ingrese una estatura válida (50-250 cm)';
+            } else {
+                delete nuevosErrores.estatura_cli;
+            }
+        }
+
+        if (name === 'tel_pers') {
+            if (!validarSoloNumeros(value)) {
+                nuevosErrores.tel_pers = 'El teléfono fijo solo debe contener números';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.tel_pers;
+            }
+        }
+
+        if (name === 'cel_pers') {
+            if (!validarSoloNumeros(value)) {
+                nuevosErrores.cel_pers = 'El celular solo debe contener números';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.cel_pers;
+            }
+        }
+
+        if (name === 'email_pers') {
+            if (value && !validarEmail(value)) {
+                nuevosErrores.email_pers = 'Ingrese un formato de correo válido';
+            } else {
+                delete nuevosErrores.email_pers;
+            }
+        }
+
+        if (name === 'cedr_cli') {
+            if (!validarIdentificacion(value, formulario.tipo_cedr_cli)) {
+                if (formulario.tipo_cedr_cli === 'cedula') {
+                    nuevosErrores.cedr_cli = 'La cédula solo debe contener números (máximo 10)';
+                } else if (formulario.tipo_cedr_cli === 'pasaporte') {
+                    nuevosErrores.cedr_cli = 'El pasaporte debe tener máximo 8 caracteres (letras y números)';
+                }
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                // Validaciones específicas según el tipo
+                if (formulario.tipo_cedr_cli === 'cedula') {
+                    if (value.length > 0 && value.length < 10) {
+                        nuevosErrores.cedr_cli = 'La cédula debe tener exactamente 10 dígitos';
+                    } else if (value.length === 10) {
+                        delete nuevosErrores.cedr_cli;
+                    } else {
+                        delete nuevosErrores.cedr_cli;
+                    }
+                } else if (formulario.tipo_cedr_cli === 'pasaporte') {
+                    if (value.length === 8 && !validarPasaporte(value)) {
+                        nuevosErrores.cedr_cli = 'Formato de pasaporte: 3 letras seguidas de 5 números (ej: ABC12345)';
+                    } else {
+                        delete nuevosErrores.cedr_cli;
+                    }
+                }
+            }
+        }
+
+        if (name === 'peso_cli') {
+            if (!validarSoloNumeros(value)) {
+                nuevosErrores.peso_cli = 'El peso solo debe contener números';
+                setErrores(nuevosErrores);
+                return;
+            } else {
+                delete nuevosErrores.peso_cli;
+            }
+        }
+
+        setErrores(nuevosErrores);
         setFormulario({
             ...formulario,
-            [e.target.name]: e.target.value
-        })
+            [name]: valorValido
+        });
     };
 
     const chechkTipoIdentificacion = (e) => {
         if (e.target.checked) {
             const name = e.target.name;
+            
+            // Limpiar el campo de identificación y errores cuando cambie el tipo
+            setCedr_cli('');
             setFormulario({
                 ...formulario,
-                tipo_cedr_cli: name
-            })
+                tipo_cedr_cli: name,
+                cedr_cli: ''
+            });
+
+            // Limpiar errores relacionados con la identificación
+            const nuevosErrores = { ...errores };
+            delete nuevosErrores.cedr_cli;
+            setErrores(nuevosErrores);
+
             if (name === "cedula") {
                 document.getElementById("cedula").setAttribute("checked", "");
                 document.getElementById("pasaporte").removeAttribute("checked");
@@ -315,6 +504,28 @@ export function EditarClientes({ mostrarSeccion }) {
     };
 
     const guardarCliente = async () => {
+        // Verificar que no haya errores de validación
+        if (Object.keys(errores).length > 0) {
+            toast.error('Por favor corrija los errores en el formulario');
+            return;
+        }
+
+        // Validaciones finales antes de enviar
+        if (formulario.tipo_cedr_cli === 'cedula' && !validarCedula(formulario.cedr_cli)) {
+            toast.error('La cédula debe tener exactamente 10 dígitos');
+            return;
+        }
+
+        if (formulario.tipo_cedr_cli === 'pasaporte' && formulario.cedr_cli.length === 8 && !validarPasaporte(formulario.cedr_cli)) {
+            toast.error('Formato de pasaporte inválido. Use: 3 letras seguidas de 5 números');
+            return;
+        }
+
+        if (formulario.email_pers && !validarEmail(formulario.email_pers)) {
+            toast.error('Por favor ingrese un correo electrónico válido');
+            return;
+        }
+
         if (formulario.id_ciud === '') {
             formulario.id_ciud = selectedCiudad.value;
         }
@@ -385,20 +596,53 @@ export function EditarClientes({ mostrarSeccion }) {
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="ape_cli">Apellidos</label>
-                            <input className="form-input" type="text" name="ape_cli" id="ape_cli" placeholder="Ingrese los apellidos"
-                                onChange={(e) => { agregarClaveFormulario(e); setApe_cli(e.target.value) }} value={ape_cli} />
+                            <input 
+                                className={`form-input ${errores.ape_cli ? 'input-error' : ''}`}
+                                type="text" 
+                                name="ape_cli" 
+                                id="ape_cli" 
+                                placeholder="Ingrese los apellidos (solo letras)"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setApe_cli(e.target.value) 
+                                }} 
+                                value={ape_cli} 
+                            />
+                            {errores.ape_cli && <span className="error-message">{errores.ape_cli}</span>}
                         </div>
 
                         <div className="form-group">
                             <label className="form-label" htmlFor="nom_cli">Nombre(s)</label>
-                            <input className="form-input" type="text" name="nom_cli" id="nom_cli" placeholder="Ingrese los nombres"
-                                onChange={(e) => { agregarClaveFormulario(e); setNom_cli(e.target.value) }} value={nom_cli} />
+                            <input 
+                                className={`form-input ${errores.nom_cli ? 'input-error' : ''}`}
+                                type="text" 
+                                name="nom_cli" 
+                                id="nom_cli" 
+                                placeholder="Ingrese los nombres (solo letras)"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setNom_cli(e.target.value) 
+                                }} 
+                                value={nom_cli} 
+                            />
+                            {errores.nom_cli && <span className="error-message">{errores.nom_cli}</span>}
                         </div>
                     </div>
                     <div className="form-group">
                         <label className="form-label" htmlFor="nacion_cli">Nacionalidad</label>
-                        <input className="form-input" type="text" name="nacion_cli" id="nacion_cli" placeholder="Ingrese la nacionalidad"
-                            onChange={(e) => { agregarClaveFormulario(e); setNacion_cli(e.target.value) }} value={nacion_cli} />
+                        <input 
+                            className={`form-input ${errores.nacion_cli ? 'input-error' : ''}`}
+                            type="text" 
+                            name="nacion_cli" 
+                            id="nacion_cli" 
+                            placeholder="Ingrese la nacionalidad (solo letras)"
+                            onChange={(e) => { 
+                                agregarClaveFormulario(e); 
+                                setNacion_cli(e.target.value) 
+                            }} 
+                            value={nacion_cli} 
+                        />
+                        {errores.nacion_cli && <span className="error-message">{errores.nacion_cli}</span>}
                     </div>
                     <div className="id-type-group">
                         <div className="form-group">
@@ -416,20 +660,59 @@ export function EditarClientes({ mostrarSeccion }) {
                         </div>
                         <div className="form-group">
                             <label className="form-label" htmlFor="cedr_cli">Número de Identificación</label>
-                            <input className="form-input" type="text" name="cedr_cli" id="cedr_cli" placeholder="Ingrese ID"
-                                onChange={(e) => { agregarClaveFormulario(e); }} value={cedr_cli} />
+                            <input 
+                                className={`form-input ${errores.cedr_cli ? 'input-error' : ''}`}
+                                type="text" 
+                                name="cedr_cli" 
+                                id="cedr_cli" 
+                                maxLength={formulario.tipo_cedr_cli === 'cedula' ? 10 : 8}
+                                placeholder={
+                                    formulario.tipo_cedr_cli === 'cedula' 
+                                        ? "Ingrese 10 dígitos" 
+                                        : formulario.tipo_cedr_cli === 'pasaporte'
+                                        ? "Ej: ABC12345 (3 letras + 5 números)"
+                                        : "Seleccione tipo de identificación"
+                                }
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setCedr_cli(e.target.value);
+                                }} 
+                                value={cedr_cli} 
+                                disabled={!formulario.tipo_cedr_cli}
+                            />
+                            {errores.cedr_cli && <span className="error-message">{errores.cedr_cli}</span>}
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="fecha_naci_cli">Fecha de Nacimiento</label>
-                            <input className="form-input" type="date" name="fecha_naci_cli" id="fecha_naci_cli"
-                                onChange={(e) => { agregarClaveFormulario(e); setFecha_naci_cli(e.target.value) }} value={fecha_naci_cli} />
+                            <input 
+                                className="form-input" 
+                                type="date" 
+                                name="fecha_naci_cli" 
+                                id="fecha_naci_cli"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setFecha_naci_cli(e.target.value) 
+                                }} 
+                                value={fecha_naci_cli} 
+                            />
                         </div>
                         <div className="form-group">
                             <label className="form-label" htmlFor="lugar_naci_cli">Lugar de Nacimiento</label>
-                            <input className="form-input" type="text" name="lugar_naci_cli" id="lugar_naci_cli" placeholder="Ingrese lugar de Nacimiento"
-                                onChange={(e) => { agregarClaveFormulario(e); setLugar_naci_cli(e.target.value) }} value={lugar_naci_cli} />
+                            <input 
+                                className={`form-input ${errores.lugar_naci_cli ? 'input-error' : ''}`}
+                                type="text" 
+                                name="lugar_naci_cli" 
+                                id="lugar_naci_cli" 
+                                placeholder="Ingrese lugar de nacimiento (solo letras)"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setLugar_naci_cli(e.target.value) 
+                                }} 
+                                value={lugar_naci_cli} 
+                            />
+                            {errores.lugar_naci_cli && <span className="error-message">{errores.lugar_naci_cli}</span>}
                         </div>
                     </div>
                 </div>
@@ -440,25 +723,69 @@ export function EditarClientes({ mostrarSeccion }) {
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="tel_pers">Teléfono fijo</label>
-                            <input className="form-input" type="text" name="tel_pers" id="tel_pers" placeholder="Ingrese teléfono convencional/fijo"
-                                onChange={(e) => { agregarClaveFormulario(e); setTel_pers(e.target.value) }} value={tel_pers} />
+                            <input 
+                                className={`form-input ${errores.tel_pers ? 'input-error' : ''}`}
+                                type="text" 
+                                name="tel_pers" 
+                                id="tel_pers" 
+                                placeholder="Ingrese teléfono fijo (solo números)"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setTel_pers(e.target.value) 
+                                }} 
+                                value={tel_pers} 
+                            />
+                            {errores.tel_pers && <span className="error-message">{errores.tel_pers}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label" htmlFor="cel_pers">Celular</label>
-                            <input className="form-input" type="text" name="cel_pers" id="cel_pers" placeholder="Ingrese número de Celular"
-                                onChange={(e) => { agregarClaveFormulario(e); setCel_pers(e.target.value) }} value={cel_pers} />
+                            <input 
+                                className={`form-input ${errores.cel_pers ? 'input-error' : ''}`}
+                                type="text" 
+                                name="cel_pers" 
+                                id="cel_pers" 
+                                placeholder="Ingrese número de celular (solo números)"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setCel_pers(e.target.value) 
+                                }} 
+                                value={cel_pers} 
+                            />
+                            {errores.cel_pers && <span className="error-message">{errores.cel_pers}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label" htmlFor="email_pers">Correo Electrónico</label>
-                            <input className="form-input" type="text" name="email_pers" id="email_pers" placeholder="Ingrese correo electrónico"
-                                onChange={(e) => { agregarClaveFormulario(e); setEmail_pers(e.target.value) }} value={email_pers} />
+                            <input 
+                                className={`form-input ${errores.email_pers ? 'input-error' : ''}`}
+                                type="email" 
+                                name="email_pers" 
+                                id="email_pers" 
+                                placeholder="Ingrese correo electrónico"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setEmail_pers(e.target.value) 
+                                }} 
+                                value={email_pers} 
+                            />
+                            {errores.email_pers && <span className="error-message">{errores.email_pers}</span>}
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="edad_pers">Edad</label>
-                            <input className="form-input" type="text" name="edad_pers" id="edad_pers" placeholder="Ingrese la edad"
-                                onChange={(e) => { agregarClaveFormulario(e); setEdad_pers(e.target.value) }} value={edad_pers} />
+                            <input 
+                                className={`form-input ${errores.edad_pers ? 'input-error' : ''}`}
+                                type="text" 
+                                name="edad_pers" 
+                                id="edad_pers" 
+                                placeholder="Ingrese la edad (solo números)"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setEdad_pers(e.target.value) 
+                                }} 
+                                value={edad_pers} 
+                            />
+                            {errores.edad_pers && <span className="error-message">{errores.edad_pers}</span>}
                         </div>
 
                         <div className="form-group">
@@ -499,14 +826,36 @@ export function EditarClientes({ mostrarSeccion }) {
                     </div>
                     <div className="form-row">
                         <div className="form-group">
-                            <label className="form-label" htmlFor="estatura_cli">Estatura (m)</label>
-                            <input className="form-input" type="text" name="estatura_cli" id="estatura_cli" placeholder="Ingrese la estatura"
-                                onChange={(e) => { agregarClaveFormulario(e); setEstatura_cli(e.target.value) }} value={estatura_cli} />
+                            <label className="form-label" htmlFor="estatura_cli">Estatura (cm)</label>
+                            <input 
+                                className={`form-input ${errores.estatura_cli ? 'input-error' : ''}`}
+                                type="text" 
+                                name="estatura_cli" 
+                                id="estatura_cli" 
+                                placeholder="Ingrese la estatura en cm (solo números)"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setEstatura_cli(e.target.value) 
+                                }} 
+                                value={estatura_cli} 
+                            />
+                            {errores.estatura_cli && <span className="error-message">{errores.estatura_cli}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label" htmlFor="peso_cli">Peso</label>
-                            <input className="form-input" type="text" name="peso_cli" id="peso_cli" placeholder="Ingrese el peso"
-                                onChange={(e) => { agregarClaveFormulario(e); setPeso_cli(e.target.value) }} value={peso_cli} />
+                            <input 
+                                className={`form-input ${errores.peso_cli ? 'input-error' : ''}`}
+                                type="text" 
+                                name="peso_cli" 
+                                id="peso_cli" 
+                                placeholder="Ingrese el peso (solo números)"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setPeso_cli(e.target.value) 
+                                }} 
+                                value={peso_cli} 
+                            />
+                            {errores.peso_cli && <span className="error-message">{errores.peso_cli}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label" htmlFor="tipoPeso">Tipo de Peso</label>
@@ -590,18 +939,49 @@ export function EditarClientes({ mostrarSeccion }) {
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="parroq_cli">Parroquia</label>
-                            <input className="form-input" type="text" name="parroq_cli" id="parroq_cli" placeholder="Ingrese la parroquia"
-                                onChange={(e) => { agregarClaveFormulario(e); setParroq_cli(e.target.value) }} value={parroq_cli} />
+                            <input 
+                                className={`form-input ${errores.parroq_cli ? 'input-error' : ''}`}
+                                type="text" 
+                                name="parroq_cli" 
+                                id="parroq_cli" 
+                                placeholder="Ingrese la parroquia (solo letras)"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setParroq_cli(e.target.value) 
+                                }} 
+                                value={parroq_cli} 
+                            />
+                            {errores.parroq_cli && <span className="error-message">{errores.parroq_cli}</span>}
                         </div>
                         <div className="form-group">
                             <label className="form-label" htmlFor="calle_princ_pers">Calle Principal</label>
-                            <input className="form-input" type="text" name="calle_princ_pers" id="calle_princ_pers" placeholder="Ingrese la calle Principal"
-                                onChange={(e) => { agregarClaveFormulario(e); setCalle_princ_pers(e.target.value) }} value={calle_princ_pers} />
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="calle_princ_pers" 
+                                id="calle_princ_pers" 
+                                placeholder="Ingrese la calle Principal"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setCalle_princ_pers(e.target.value) 
+                                }} 
+                                value={calle_princ_pers} 
+                            />
                         </div>
                         <div className="form-group">
                             <label className="form-label" htmlFor="calle_secun_pers">Calle Secundaria</label>
-                            <input className="form-input" type="text" name="calle_secun_pers" id="calle_secun_pers" placeholder="Ingrese la calle Secundaria"
-                                onChange={(e) => { agregarClaveFormulario(e); setCalle_secun_pers(e.target.value) }} value={calle_secun_pers} />
+                            <input 
+                                className="form-input" 
+                                type="text" 
+                                name="calle_secun_pers" 
+                                id="calle_secun_pers" 
+                                placeholder="Ingrese la calle Secundaria"
+                                onChange={(e) => { 
+                                    agregarClaveFormulario(e); 
+                                    setCalle_secun_pers(e.target.value) 
+                                }} 
+                                value={calle_secun_pers} 
+                            />
                         </div>
                     </div>
                 </div>

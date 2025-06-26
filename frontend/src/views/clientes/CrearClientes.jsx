@@ -23,7 +23,7 @@ export function CrearClientes({ mostrarSeccion }) {
         calle_secun_pers: '', id_ciud: ''
     });
     const [errores, setErrores] = useState({});
-    
+
     useEffect(() => {
         const cargarPais = async () => {
             const apiPais = await ClientesFun.traerPaises(navigate);
@@ -226,14 +226,14 @@ export function CrearClientes({ mostrarSeccion }) {
         document.getElementById("cedula").checked = false;
         document.getElementById("pasaporte").checked = false;
         document.getElementById(id).checked = true;
-        
+
         // Limpiar el campo de identificación y errores cuando cambie el tipo
-        setFormulario({ 
-            ...formulario, 
+        setFormulario({
+            ...formulario,
             tipo_cedr_cli: document.getElementById(id).id,
             cedr_cli: ''
         });
-        
+
         // Limpiar errores relacionados con la identificación
         const nuevosErrores = { ...errores };
         delete nuevosErrores.cedr_cli;
@@ -314,33 +314,33 @@ export function CrearClientes({ mostrarSeccion }) {
         if (Object.values(formulario).every(valor => valor !== '')) {
             let resVerif = null;
             try {
-                resVerif = await UsuariosFun.verificarDatosUsuario({ 
-                    users: formulario.email_pers, 
-                    cedula: formulario.cedr_cli 
+                resVerif = await UsuariosFun.verificarDatosUsuario({
+                    users: formulario.email_pers,
+                    cedula: formulario.cedr_cli
                 }, navigate);
-                
+
                 if (!resVerif.existe) {
                     const pass = await Utilidades.crearPassAleatoria()
                     const res = await ClientesFun.guardarCliente(formulario, navigate);
-                    const resCuent = await ClientesFun.crearCuenta({ 
-                        idpersona: res.id_pers, 
-                        user: formulario.email_pers, 
-                        pass: pass 
+                    const resCuent = await ClientesFun.crearCuenta({
+                        idpersona: res.id_pers,
+                        user: formulario.email_pers,
+                        pass: pass
                     }, navigate)
-                    
+
                     if (resCuent) {
                         const urlRandom = await Utilidades.crearRutaAleatoria()
-                        await ClientesFun.generarTokenValidacion(({ 
-                            id_pers: res.id_pers, 
-                            url: urlRandom, 
-                            pass: pass 
+                        await ClientesFun.generarTokenValidacion(({
+                            id_pers: res.id_pers,
+                            url: urlRandom,
+                            pass: pass
                         }), navigate);
-                        await ClientesFun.enviarCorreoEmail(({ 
-                            to: formulario.email_pers, 
-                            token: urlRandom, 
-                            pass: pass 
+                        await ClientesFun.enviarCorreoEmail(({
+                            to: formulario.email_pers,
+                            token: urlRandom,
+                            pass: pass
                         }), navigate)
-                        
+
                         swal.fire({
                             title: "<label>Éxito</label>",
                             text: "El usuario ha sido creado con éxito",
@@ -368,14 +368,14 @@ export function CrearClientes({ mostrarSeccion }) {
             calle_secun_pers: '', id_ciud: ''
         });
         setErrores({});
-        
+
         // Limpiar checkboxes
         const checkboxes = ['masculino', 'femenino', 'cedula', 'pasaporte', 'soltero', 'casado', 'divorciado', 'viudo', 'unionLibre', 'lb', 'kg'];
         checkboxes.forEach(id => {
             const element = document.getElementById(id);
             if (element) element.checked = false;
         });
-        
+
         setSelectedProvincia(null);
         setSelectedCiudad(null);
         setProvincia([]);
@@ -392,7 +392,7 @@ export function CrearClientes({ mostrarSeccion }) {
                 denyButtonText: "No",
                 confirmButtonText: "Sí"
             }).then(respuesta => {
-                if (respuesta.isConfirmed) { 
+                if (respuesta.isConfirmed) {
                     limpiarFormulario();
                     mostrarSeccion("clientes");
                 }
@@ -405,37 +405,37 @@ export function CrearClientes({ mostrarSeccion }) {
     return (
         <div className="crear-clientes-container">
             <Toaster position="top-center" visibleToasts={1} duration={3000} richColors />
-            
+
             <div className="crear-clientes-form">
                 <h2 className="crear-clientes-title">Registro de Nuevo Cliente</h2>
-                
+
                 <div className="form-section personal-info-section">
                     <h3 className="form-section-title">Información Personal</h3>
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="nom_cli">Nombres</label>
-                            <input 
+                            <input
                                 className={`form-input ${errores.nom_cli ? 'input-error' : ''}`}
-                                type="text" 
-                                name="nom_cli" 
-                                id="nom_cli" 
+                                type="text"
+                                name="nom_cli"
+                                id="nom_cli"
                                 value={formulario.nom_cli}
-                                placeholder="Ingrese los nombres (solo letras)" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese los nombres (solo letras)"
+                                onChange={agregarClaveFormulario}
                             />
                             {errores.nom_cli && <span className="error-message">{errores.nom_cli}</span>}
                         </div>
 
                         <div className="form-group">
                             <label className="form-label" htmlFor="ape_cli">Apellidos</label>
-                            <input 
+                            <input
                                 className={`form-input ${errores.ape_cli ? 'input-error' : ''}`}
-                                type="text" 
-                                name="ape_cli" 
-                                id="ape_cli" 
+                                type="text"
+                                name="ape_cli"
+                                id="ape_cli"
                                 value={formulario.ape_cli}
-                                placeholder="Ingrese los apellidos (solo letras)" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese los apellidos (solo letras)"
+                                onChange={agregarClaveFormulario}
                             />
                             {errores.ape_cli && <span className="error-message">{errores.ape_cli}</span>}
                         </div>
@@ -444,40 +444,40 @@ export function CrearClientes({ mostrarSeccion }) {
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="nacion_cli">Nacionalidad</label>
-                            <input 
+                            <input
                                 className={`form-input ${errores.nacion_cli ? 'input-error' : ''}`}
-                                type="text" 
-                                name="nacion_cli" 
-                                id="nacion_cli" 
+                                type="text"
+                                name="nacion_cli"
+                                id="nacion_cli"
                                 value={formulario.nacion_cli}
-                                placeholder="Ingrese la nacionalidad (solo letras)" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese la nacionalidad (solo letras)"
+                                onChange={agregarClaveFormulario}
                             />
                             {errores.nacion_cli && <span className="error-message">{errores.nacion_cli}</span>}
                         </div>
                     </div>
-                    
+
                     <div className="id-type-group">
                         <div className="form-group">
                             <label className="form-label" htmlFor="idType">Tipo de identificación</label>
                             <div className="checkbox-group">
                                 <div className="checkbox-item">
-                                    <input 
+                                    <input
                                         className="checkbox-input"
-                                        type="checkbox" 
-                                        id="cedula" 
-                                        name="cedula" 
+                                        type="checkbox"
+                                        id="cedula"
+                                        name="cedula"
                                         onChange={chechkTipoIdentificacion}
                                     />
                                     <label className="checkbox-label" htmlFor="cedula">Cédula</label>
                                 </div>
                                 <div className="checkbox-item">
-                                    <input 
+                                    <input
                                         className="checkbox-input"
-                                        type="checkbox" 
-                                        id="pasaporte" 
-                                        name="pasaporte" 
-                                        onChange={chechkTipoIdentificacion} 
+                                        type="checkbox"
+                                        id="pasaporte"
+                                        name="pasaporte"
+                                        onChange={chechkTipoIdentificacion}
                                     />
                                     <label className="checkbox-label" htmlFor="pasaporte">Pasaporte</label>
                                 </div>
@@ -485,50 +485,50 @@ export function CrearClientes({ mostrarSeccion }) {
                         </div>
                         <div className="form-group">
                             <label className="form-label" htmlFor="cedr_cli">Número de Identificación</label>
-                            <input 
+                            <input
                                 className={`form-input ${errores.cedr_cli ? 'input-error' : ''}`}
-                                type="text" 
-                                name="cedr_cli" 
-                                id="cedr_cli" 
+                                type="text"
+                                name="cedr_cli"
+                                id="cedr_cli"
                                 value={formulario.cedr_cli}
                                 maxLength={formulario.tipo_cedr_cli === 'cedula' ? 10 : 8}
                                 placeholder={
-                                    formulario.tipo_cedr_cli === 'cedula' 
-                                        ? "Ingrese 10 dígitos" 
+                                    formulario.tipo_cedr_cli === 'cedula'
+                                        ? "Ingrese 10 dígitos"
                                         : formulario.tipo_cedr_cli === 'pasaporte'
-                                        ? "Ej: ABC12345 (3 letras + 5 números)"
-                                        : "Seleccione tipo de identificación"
+                                            ? "Ej: ABC12345 (3 letras + 5 números)"
+                                            : "Seleccione tipo de identificación"
                                 }
-                                onChange={agregarClaveFormulario} 
+                                onChange={agregarClaveFormulario}
                                 disabled={!formulario.tipo_cedr_cli}
                             />
                             {errores.cedr_cli && <span className="error-message">{errores.cedr_cli}</span>}
                         </div>
                     </div>
-                    
+
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="fecha_naci_cli">Fecha de Nacimiento</label>
-                            <input 
-                                className="form-input" 
-                                type="date" 
-                                name="fecha_naci_cli" 
-                                id="fecha_naci_cli" 
+                            <input
+                                className="form-input"
+                                type="date"
+                                name="fecha_naci_cli"
+                                id="fecha_naci_cli"
                                 value={formulario.fecha_naci_cli}
-                                onChange={agregarClaveFormulario} 
+                                onChange={agregarClaveFormulario}
                             />
                         </div>
-                        
+
                         <div className="form-group">
                             <label className="form-label" htmlFor="lugar_naci_cli">Lugar de Nacimiento</label>
-                            <input 
+                            <input
                                 className={`form-input ${errores.lugar_naci_cli ? 'input-error' : ''}`}
-                                type="text" 
-                                name="lugar_naci_cli" 
-                                id="lugar_naci_cli" 
+                                type="text"
+                                name="lugar_naci_cli"
+                                id="lugar_naci_cli"
                                 value={formulario.lugar_naci_cli}
-                                placeholder="Ingrese lugar de nacimiento (solo letras)" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese lugar de nacimiento (solo letras)"
+                                onChange={agregarClaveFormulario}
                             />
                             {errores.lugar_naci_cli && <span className="error-message">{errores.lugar_naci_cli}</span>}
                         </div>
@@ -537,38 +537,38 @@ export function CrearClientes({ mostrarSeccion }) {
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="edad_pers">Edad</label>
-                            <input 
+                            <input
                                 className={`form-input ${errores.edad_pers ? 'input-error' : ''}`}
-                                type="text" 
-                                name="edad_pers" 
-                                id="edad_pers" 
+                                type="text"
+                                name="edad_pers"
+                                id="edad_pers"
                                 value={formulario.edad_pers}
-                                placeholder="Ingrese la edad (solo números)" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese la edad (solo números)"
+                                onChange={agregarClaveFormulario}
                             />
                             {errores.edad_pers && <span className="error-message">{errores.edad_pers}</span>}
                         </div>
-                        
+
                         <div className="form-group">
                             <label className="form-label">Sexo</label>
                             <div className="checkbox-group">
                                 <div className="checkbox-item">
-                                    <input 
+                                    <input
                                         className="checkbox-input"
-                                        type="checkbox" 
-                                        id="masculino" 
-                                        name="masculino" 
-                                        onChange={chechkSexo} 
+                                        type="checkbox"
+                                        id="masculino"
+                                        name="masculino"
+                                        onChange={chechkSexo}
                                     />
                                     <label className="checkbox-label" htmlFor="masculino">Masculino</label>
                                 </div>
                                 <div className="checkbox-item">
-                                    <input 
+                                    <input
                                         className="checkbox-input"
-                                        type="checkbox" 
-                                        id="femenino" 
-                                        name="femenino" 
-                                        onChange={chechkSexo} 
+                                        type="checkbox"
+                                        id="femenino"
+                                        name="femenino"
+                                        onChange={chechkSexo}
                                     />
                                     <label className="checkbox-label" htmlFor="femenino">Femenino</label>
                                 </div>
@@ -607,31 +607,39 @@ export function CrearClientes({ mostrarSeccion }) {
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="estatura_cli">Estatura (cm)</label>
-                            <input 
+                            <input
                                 className={`form-input ${errores.estatura_cli ? 'input-error' : ''}`}
-                                type="text" 
-                                name="estatura_cli" 
-                                id="estatura_cli" 
+                                type="text"
+                                name="estatura_cli"
+                                id="estatura_cli"
                                 value={formulario.estatura_cli}
-                                placeholder="Ingrese la altura en cm (solo números)" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese la altura en cm (solo números)"
+                                onChange={agregarClaveFormulario}
                             />
                             {errores.estatura_cli && <span className="error-message">{errores.estatura_cli}</span>}
                         </div>
-                        
+
                         <div className="form-group">
                             <label className="form-label" htmlFor="peso_cli">Peso</label>
                             <div className="form-row">
-                                <input 
+                                <input
                                     className={`form-input ${errores.peso_cli ? 'input-error' : ''}`}
-                                    type="text" 
-                                    name="peso_cli" 
-                                    id="peso_cli" 
-                                    placeholder="Ingrese el peso (solo números)" 
-                                    onChange={textPeso} 
-                                    style={{flex: 2}}
+                                    type="number"
+                                    name="peso_cli"
+                                    id="peso_cli"
+                                    placeholder="Ingrese el peso (solo números)"
+                                    onChange={e => {
+                                        // Validación en tiempo real: solo números positivos
+                                        const value = e.target.value;
+                                        if (!/^\d*\.?\d*$/.test(value)) return;
+                                        textPeso(e); // tu función de manejo existente
+                                    }}
+                                    style={{ flex: 2 }}
+                                    min="0"
+                                    step="any"
                                 />
-                                <div className="checkbox-group" style={{flex: 1, marginLeft: '10px'}}>
+
+                                <div className="checkbox-group" style={{ flex: 1, marginLeft: '10px' }}>
                                     <div className="checkbox-item">
                                         <input className="checkbox-input" type="checkbox" id="lb" onChange={chechkTipoPeso} />
                                         <label className="checkbox-label" htmlFor="lb">Lb</label>
@@ -642,58 +650,58 @@ export function CrearClientes({ mostrarSeccion }) {
                                     </div>
                                 </div>
                             </div>
-                            {errores.peso_cli && <span className="error-message">{errores.peso_cli}</span>}
                         </div>
+
                     </div>
                 </div>
-                
+
                 <div className="form-section contact-info-section">
                     <h3 className="form-section-title">Información de Contacto</h3>
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="tel_pers">Teléfono fijo</label>
-                            <input 
+                            <input
                                 className={`form-input ${errores.tel_pers ? 'input-error' : ''}`}
-                                type="text" 
-                                name="tel_pers" 
-                                id="tel_pers" 
+                                type="text"
+                                name="tel_pers"
+                                id="tel_pers"
                                 value={formulario.tel_pers}
-                                placeholder="Ingrese teléfono fijo (solo números)" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese teléfono fijo (solo números)"
+                                onChange={agregarClaveFormulario}
                             />
                             {errores.tel_pers && <span className="error-message">{errores.tel_pers}</span>}
                         </div>
-                        
+
                         <div className="form-group">
                             <label className="form-label" htmlFor="cel_pers">Teléfono celular</label>
-                            <input 
+                            <input
                                 className={`form-input ${errores.cel_pers ? 'input-error' : ''}`}
-                                type="text" 
-                                name="cel_pers" 
-                                id="cel_pers" 
+                                type="text"
+                                name="cel_pers"
+                                id="cel_pers"
                                 value={formulario.cel_pers}
-                                placeholder="Ingrese número de celular (solo números)" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese número de celular (solo números)"
+                                onChange={agregarClaveFormulario}
                             />
                             {errores.cel_pers && <span className="error-message">{errores.cel_pers}</span>}
                         </div>
-                        
+
                         <div className="form-group">
                             <label className="form-label" htmlFor="email_pers">Correo electrónico</label>
-                            <input 
+                            <input
                                 className={`form-input ${errores.email_pers ? 'input-error' : ''}`}
-                                type="email" 
-                                name="email_pers" 
-                                id="email_pers" 
+                                type="email"
+                                name="email_pers"
+                                id="email_pers"
                                 value={formulario.email_pers}
-                                placeholder="Ingrese correo electrónico" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese correo electrónico"
+                                onChange={agregarClaveFormulario}
                             />
                             {errores.email_pers && <span className="error-message">{errores.email_pers}</span>}
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="form-section location-info-section">
                     <h3 className="form-section-title">Dirección</h3>
                     <div className="form-row">
@@ -713,7 +721,7 @@ export function CrearClientes({ mostrarSeccion }) {
                                 }}
                             />
                         </div>
-                        
+
                         <div className="form-group">
                             <label className="form-label">Provincia</label>
                             <Select
@@ -732,7 +740,7 @@ export function CrearClientes({ mostrarSeccion }) {
                                 value={selectedProvincia}
                             />
                         </div>
-                        
+
                         <div className="form-group">
                             <label className="form-label">Ciudad</label>
                             <Select
@@ -751,50 +759,50 @@ export function CrearClientes({ mostrarSeccion }) {
                             />
                         </div>
                     </div>
-                    
+
                     <div className="form-row">
                         <div className="form-group">
                             <label className="form-label" htmlFor="parroq_cli">Parroquia</label>
-                            <input 
+                            <input
                                 className={`form-input ${errores.parroq_cli ? 'input-error' : ''}`}
-                                type="text" 
-                                name="parroq_cli" 
-                                id="parroq_cli" 
+                                type="text"
+                                name="parroq_cli"
+                                id="parroq_cli"
                                 value={formulario.parroq_cli}
-                                placeholder="Ingrese la parroquia (solo letras)" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese la parroquia (solo letras)"
+                                onChange={agregarClaveFormulario}
                             />
                             {errores.parroq_cli && <span className="error-message">{errores.parroq_cli}</span>}
                         </div>
-                        
+
                         <div className="form-group">
                             <label className="form-label" htmlFor="calle_princ_pers">Calle Principal</label>
-                            <input 
-                                className="form-input" 
-                                type="text" 
-                                name="calle_princ_pers" 
-                                id="calle_princ_pers" 
+                            <input
+                                className="form-input"
+                                type="text"
+                                name="calle_princ_pers"
+                                id="calle_princ_pers"
                                 value={formulario.calle_princ_pers}
-                                placeholder="Ingrese la calle principal" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese la calle principal"
+                                onChange={agregarClaveFormulario}
                             />
                         </div>
-                        
+
                         <div className="form-group">
                             <label className="form-label" htmlFor="calle_secun_pers">Calle Secundaria</label>
-                            <input 
-                                className="form-input" 
-                                type="text" 
-                                name="calle_secun_pers" 
-                                id="calle_secun_pers" 
+                            <input
+                                className="form-input"
+                                type="text"
+                                name="calle_secun_pers"
+                                id="calle_secun_pers"
                                 value={formulario.calle_secun_pers}
-                                placeholder="Ingrese la calle secundaria" 
-                                onChange={agregarClaveFormulario} 
+                                placeholder="Ingrese la calle secundaria"
+                                onChange={agregarClaveFormulario}
                             />
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="actions-container">
                     <button className="btn-cancelar" onClick={cancelar}>Cancelar</button>
                     <button className="btn-guardar" onClick={guardarCliente}>Guardar Cliente</button>
