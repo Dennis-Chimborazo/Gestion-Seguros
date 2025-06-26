@@ -116,7 +116,7 @@ export function CrearClientes({ mostrarSeccion }) {
                         await ClientesFun.enviarCorreoEmail(({ to: formulario.email_pers, token: urlRandom, pass: pass }), navigate)
                         swal.fire({
                             title: "<label>Exito</label>",
-                            text: "E; usuario ha sido creado con éxito",
+                            text: "El usuario ha sido creado con éxito",
                             timer: 3500,
                         })
                         mostrarSeccion("clientes")

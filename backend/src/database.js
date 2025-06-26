@@ -7,15 +7,20 @@ class DataBase {
     if (DataBase.instancia) {
       return DataBase.instancia;
     }
-
     this.client = new Client({
       user: 'gestorseguros_user',
       host: 'dpg-d1dsn3umcj7s73bf4dkg-a.oregon-postgres.render.com',
       database: 'gestorseguros',
       password: 'a5bTM4ZbC49Fc9K5ulaSGvNwCFlj7vKF',
+<<<<<<< HEAD
+      port: 5432, 
+      ssl: {
+      rejectUnauthorized: false
+=======
       port: 5432,
       ssl: {
         rejectUnauthorized: false
+>>>>>>> 6e21eae14267c610eb6216ce92efe0e1102fb7c0
       }
     });
 

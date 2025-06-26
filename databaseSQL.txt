@@ -186,8 +186,10 @@ CREATE TABLE reembolso (
   id_pers INTEGER,
   id_seguro INTEGER,
   id_estado INTEGER,
+  id_archivos_cliente INTEGER,
   FOREIGN KEY (id_pers) REFERENCES cliente(id_pers),
   FOREIGN KEY (id_seguro) REFERENCES seguros(id_seguro),
+  FOREIGN KEY (id_archivos_cliente) REFERENCES archivos_cliente(id_archivos_cliente),
   FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
 );
 
@@ -215,6 +217,41 @@ CREATE TABLE revision (
   FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
 );
 
+CREATE TABLE archivos_cliente (
+  id_archivos_cliente SERIAL PRIMARY KEY,
+  tipo_archivos_cliente VARCHAR(20) NOT NULL, 
+  archivo BYTEA NOT NULL,    
+  nombre_archivo_cliente TEXT NOT NULL,
+  mime_type_archivo_cliente TEXT NOT NULL, 
+  id_pers INTEGER,
+  FOREIGN KEY (id_pers) REFERENCES cliente(id_pers)
+);
+
+CREATE TABLE pago_cliente (
+  id_pago SERIAL PRIMARY KEY,
+  fecha_pago VARCHAR(20) NOT NULL, 
+  nonto_pago VARCHAR(30) NOT NULL,
+  comprobante_pago VARCHAR(30) NOT NULL, 
+  id_pers INTEGER,
+  id_seguro INTEGER,
+  id_archivos_cliente INTEGER,
+  id_estado INTEGER,
+  FOREIGN KEY (id_pers) REFERENCES cliente(id_pers),
+  FOREIGN KEY (id_seguro) REFERENCES seguros(id_seguro),
+  FOREIGN KEY (id_archivos_cliente) REFERENCES archivos_cliente(id_archivos_cliente),
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
+
+CREATE TABLE revision_pago (
+  id_revision_pago SERIAL PRIMARY KEY,
+  fecha_revision_pago VARCHAR(20) NOT NULL,
+  descripcion_revision_pago VARCHAR(512) NOT NULL,
+  id_pago INTEGER,
+  id_estado INTEGER,
+  FOREIGN KEY (id_pago) REFERENCES pago_cliente(id_pago),
+  FOREIGN KEY (id_estado) REFERENCES estado(id_estado)
+);
+
 -- País
 INSERT INTO pais (nom_pais) VALUES ('Ecuador');
 
@@ -230,7 +267,7 @@ INSERT INTO ciudad (nom_ciud, id_provin) VALUES
 
 -- Estados
 INSERT INTO estado (nom_estado) VALUES 
-('activo'), ('inactivo'), ('pendiente'), ('preactivo'),('revicion'),('aprovado'),('rechazado');
+('activo'), ('inactivo'), ('pendiente'), ('preactivo'),('revicion'),('aprobado'),('rechazado');
 
 -- Roles
 INSERT INTO roles (nom_rol) VALUES 

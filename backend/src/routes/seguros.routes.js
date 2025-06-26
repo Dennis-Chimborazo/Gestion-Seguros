@@ -254,10 +254,10 @@ router.post("/validar-token-contr", async (req, res) => {
 });
 
 router.put("/activar-seguro", async (req, res) => {
-  const { id, idvalid } = req.body;
+  const { id } = req.body;
   const estadoActivo = '1';
 
-  if (!id || !idvalid) {
+  if (!id ) {
     return res.status(400).json({ error: "Faltan datos requeridos (id o idvalid)." });
   }
   try {
@@ -270,11 +270,6 @@ router.put("/activar-seguro", async (req, res) => {
     if (updateResult.rowCount === 0) {
       return res.status(404).json({ error: "contratacion no encontrada no encontrado." });
     }
-
-    await database.query(
-      "DELETE FROM validar_contratacion WHERE id_val_contra = $1",
-      [idvalid]
-    );
 
     res.status(200).json({ message: "Contrato de seguro valiado correctamente." });
 
@@ -336,6 +331,22 @@ router.get("/reembolso-seguros-clientes", async (req, res) => {
                   INNER JOIN tipo_seguro tp ON tp.id_tip_seg = s.id_tip_seg
                   WHERE s.id_pers = $1 and s.id_estado = 1`;
     const values = [id_pers];
+    const data = await database.query(query, values);
+    res.json(data.rows);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el empleado", error });
+  }
+});
+
+router.get("/buscar-seguros-id", async (req, res) => {
+  try {
+    const id_seguro = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+    if (!id_seguro) {
+      return res.status(400).json({ message: id_pers });
+    }
+    const query = `SELECT id_seguro,monto_seguro, tiempo_seguro
+	    FROM seguros WHERE id_seguro = $1`;
+    const values = [id_seguro];
     const data = await database.query(query, values);
     res.json(data.rows);
   } catch (error) {

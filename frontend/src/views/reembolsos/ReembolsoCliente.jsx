@@ -4,6 +4,7 @@ import ReembolsoFun from './ReembolsoFun';
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import swal from "sweetalert2";
+import Archivos from '../../services/Archivos';
 
 const ReembolsoCliente = ({ id, mostrarSeccion }) => {
   const [reembolsoPdf, setReembolsoPdf] = useState(null);
@@ -27,11 +28,13 @@ const ReembolsoCliente = ({ id, mostrarSeccion }) => {
       toast.error("Por favor, suba su factura en formato pdf.");
       return;
     } else {
-      console.log(formulario)
-      const res = await ReembolsoFun.enviarReembolso({ motivo_reemb: formulario.motivo_reemb, id_pers: formulario.id_pers, id_seguro: formulario.id_seguro }, navigate);
-      const formDatareembo = new FormData();
-      formDatareembo.append('reembolsoPDF', renombrarArchivo(reembolsoPdf, res.id_reemb, id));  // archivo
-      await ReembolsoFun.guardarArhivoReembolso(formDatareembo, id, navigate)
+
+      const formData = new FormData();
+      formData.append('tipo', 'PDF');
+      formData.append('id_pers', formulario.id_pers);
+      formData.append('archivo', renombrarArchivo(reembolsoPdf, id));
+      const resArchivo = await Archivos.guardarArhivo(formData);
+      await ReembolsoFun.enviarReembolso({ id_archivos_cliente: resArchivo.id, motivo_reemb: formulario.motivo_reemb, id_pers: formulario.id_pers, id_seguro: formulario.id_seguro }, navigate);
       swal.fire({
         title: "<label>Exito</label>",
         text: "Solicitud de reembolso enviada con éxito",
@@ -60,8 +63,8 @@ const ReembolsoCliente = ({ id, mostrarSeccion }) => {
     }
   };
 
-  const renombrarArchivo = (archivo, idReemb, idPer) => {
-    const nuevoNombre = `${idReemb}_${idPer}_reembolso.pdf`;
+  const renombrarArchivo = (archivo, idPer) => {
+    const nuevoNombre = `${idPer}_reembolso.pdf`;
     return new File([archivo], nuevoNombre, {
       type: archivo.type,
       lastModified: archivo.lastModified,

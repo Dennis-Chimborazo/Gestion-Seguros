@@ -19,8 +19,6 @@ export function ValidarContratacionSeguro() {
   const verificar = async () => {
     try {
       const res = await GestionContratacionFun.validarTokenContratacion({ url: id }, navigate);
-      console.log(res.idvalid);
-
       const datosCliente = res.client[0];
       const datosSeguro = res.contr[0];
 
@@ -55,7 +53,6 @@ export function ValidarContratacionSeguro() {
     e.preventDefault()
     try {
       const api = await GestionContratacionFun.activarContratacion(({id:cliente.idseguro, idvalid:cliente.idvalid}),navigate)
-      console.log(api)
       if (api) {
         swal.fire({
               title:"<label>Muchas Felicidades</label>",

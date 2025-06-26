@@ -65,8 +65,8 @@ export function CrearContratacion({ mostrarSeccion }) {
         { name: "Telefono", selector: row => row.ape_depen },
         { name: "Sexo", selector: row => row.sexo_depen },
         { name: "Parentesco", selector: row => row.parent_depen },
-        // { name: "Condicion Medica", selector: row => row.boolDis },
-        // { name: "Discapacidad", selector: row => row.boolCond },
+        { name: "Condicion Medica", selector: row => row.boolDis },
+        { name: "Discapacidad", selector: row => row.boolCond },
     ];
 
     const formaPago = [{ value: 12, label: 'Mensual' }, { value: 4, label: 'Trimestral' }, { value: 2, label: 'Semestral' }, { value: 1, label: 'Anual' }];
