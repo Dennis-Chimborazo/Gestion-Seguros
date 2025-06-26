@@ -12,9 +12,9 @@ class DataBase {
       host: 'dpg-d1dsn3umcj7s73bf4dkg-a.oregon-postgres.render.com',
       database: 'gestorseguros',
       password: 'a5bTM4ZbC49Fc9K5ulaSGvNwCFlj7vKF',
-      port: 5432, 
+      port: 5432,
       ssl: {
-      rejectUnauthorized: false
+        rejectUnauthorized: false
       }
     });
 
