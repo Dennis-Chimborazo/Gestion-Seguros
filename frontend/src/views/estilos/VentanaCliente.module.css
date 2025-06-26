@@ -2,6 +2,7 @@
   display: flex;
   height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden; /* Prevenir scroll en el contenedor principal */
 }
 
 .sidebar {
@@ -12,44 +13,91 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: fixed; /* Fijar el sidebar */
+  left: 0;
+  top: 0;
+  height: 100vh; /* Altura completa de la ventana */
+  overflow-y: auto; /* Permitir scroll solo en el sidebar si es necesario */
+  z-index: 1000; /* Asegurar que esté por encima del contenido */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
 }
 
 .sidebar img {
-  width: 100px;
-  height: 100px;
-  margin-bottom: 20px;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 15px;
   border-radius: 50%;
-  border: dodgerblue;
+  border: 3px solid #3b82f6;
   border-style: solid;
+  object-fit: cover; /* Asegurar que la imagen se ajuste bien */
+  transition: transform 0.3s ease;
+}
+
+.sidebar img:hover {
+  transform: scale(1.05); /* Efecto de zoom sutil al hover */
 }
 
 .sidebar h2 {
-  font-size: 18px;
-  margin-bottom: 30px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.sidebar p {
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #cbd5e1;
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 .sidebar ul {
   list-style: none;
   padding: 0;
   width: 100%;
+  flex: 1; /* Permitir que la lista se expanda */
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Espaciado entre elementos */
 }
 
 .sidebar li {
-  margin: 15px 0;
+  margin: 0; /* Quitar márgenes para usar gap en su lugar */
   width: 100%;
 }
 
 .sidebar a {
   text-decoration: none;
   color: white;
-  padding: 10px 15px;
+  padding: 12px 15px;
   display: block;
   border-radius: 8px;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  border: none; /* Para cuando se use como button */
+  background: none; /* Para cuando se use como button */
+  width: 100%; /* Para cuando se use como button */
+  box-sizing: border-box;
 }
 
 .sidebar a:hover {
   background-color: #334155; /* hover gris más claro */
+  transform: translateX(3px); /* Efecto de desplazamiento sutil */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar a:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.sidebar a:active {
+  transform: translateX(1px);
 }
 
 .main {
@@ -92,6 +140,10 @@
   flex: 1;
   padding: 40px;
   background-color: #f1f5f9;
+  margin-left: 250px; /* Compensar el ancho del sidebar fijo */
+  height: 100vh; /* Altura completa */
+  overflow-y: auto; /* Permitir scroll solo en el contenido principal */
+  box-sizing: border-box; /* Incluir padding en el cálculo del ancho */
 }
 .bienvenida {
   padding: 2rem;
@@ -121,4 +173,74 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilos para el scrollbar del sidebar */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #0f172a;
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Estilos para el scrollbar del contenido principal */
+.mainContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mainContent::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+.mainContent::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.mainContent::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+  
+  .mainContent {
+    margin-left: 200px;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    padding: 15px;
+  }
+  
+  .mainContent {
+    margin-left: 0;
+    padding: 15px;
+    height: auto;
+  }
 }

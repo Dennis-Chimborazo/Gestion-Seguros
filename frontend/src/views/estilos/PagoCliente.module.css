@@ -1,5 +1,5 @@
-.reembolsoClienteContainer {
-  max-width: 700px;
+.pagoClienteContainer {
+  max-width: 800px;
   margin: auto;
   padding: 2rem;
   background-color: #ffffff;
@@ -14,11 +14,11 @@
   margin-bottom: 2rem;
   color: #2c3e50;
   font-weight: 700;
-  border-bottom: 3px solid #3498db;
+  border-bottom: 3px solid #e67e22;
   padding-bottom: 0.5rem;
 }
 
-.reembolsoClienteForm {
+.pagoClienteForm {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -48,9 +48,9 @@
 
 .formGroup input:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: #e67e22;
   background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
 }
 
 .formGroup input.invalid {
@@ -61,6 +61,12 @@
 .formGroup input.valid {
   border-color: #27ae60;
   background-color: #f0f9f0;
+}
+
+.formGroupRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
 .validationMessage {
@@ -105,24 +111,72 @@
 }
 
 .selectContainer :global(.css-13cymwt-control:hover) {
-  border-color: #3498db !important;
+  border-color: #e67e22 !important;
 }
 
 .selectContainer :global(.css-13cymwt-control--is-focused) {
-  border-color: #3498db !important;
+  border-color: #e67e22 !important;
   background-color: #ffffff !important;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1) !important;
 }
 
 .selectContainer :global(.css-1pahdxg-control) {
-  border: 2px solid #3498db !important;
+  border: 2px solid #e67e22 !important;
   background-color: #ffffff !important;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1) !important;
 }
 
 .selectContainer :global(.css-1dimb5e-singleValue) {
   color: #34495e !important;
   font-weight: 500 !important;
+}
+
+.infoSeguroSection {
+  background-color: #fff8f0;
+  border: 2px solid #f39c12;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.infoSeguroTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #e67e22;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.infoSeguroGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.infoSeguroItem {
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem;
+  background-color: #ffffff;
+  border-radius: 6px;
+  border-left: 4px solid #f39c12;
+}
+
+.infoSeguroLabel {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.3rem;
+}
+
+.infoSeguroValue {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  font-weight: 700;
 }
 
 .fileUploadSection {
@@ -136,10 +190,10 @@
 }
 
 .fileUploadSection:hover {
-  border-color: #3498db;
-  background-color: #f0f8ff;
+  border-color: #e67e22;
+  background-color: #fef9f3;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.15);
+  box-shadow: 0 6px 20px rgba(230, 126, 34, 0.15);
 }
 
 .fileUploadSection.dragOver {
@@ -155,7 +209,7 @@
 .fileLabel {
   display: inline-block;
   padding: 0.8rem 1.5rem;
-  background-color: #3498db;
+  background-color: #e67e22;
   color: white;
   border-radius: 6px;
   cursor: pointer;
@@ -165,9 +219,9 @@
 }
 
 .fileLabel:hover {
-  background-color: #2980b9;
+  background-color: #d35400;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  box-shadow: 0 4px 8px rgba(230, 126, 34, 0.3);
 }
 
 .fileInfo {
@@ -196,15 +250,64 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .pdfPreview embed {
   border-radius: 8px;
 }
 
+.pdfPlaceholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  color: #6c757d;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.pdfPlaceholder .icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.botonCancelar {
+  padding: 1rem 2rem;
+  background: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.botonCancelar:hover {
+  background: #7f8c8d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(149, 165, 166, 0.3);
+}
+
 .botonEnviar {
   padding: 1rem 2rem;
-  background: linear-gradient(135deg, #3498db, #2980b9);
+  background: linear-gradient(135deg, #e67e22, #d35400);
   color: white;
   border: none;
   border-radius: 8px;
@@ -212,15 +315,14 @@
   font-weight: 700;
   font-size: 1.1rem;
   transition: all 0.3s ease;
-  margin-top: 1rem;
   position: relative;
   overflow: hidden;
 }
 
 .botonEnviar:hover {
-  background: linear-gradient(135deg, #2980b9, #1f5f99);
+  background: linear-gradient(135deg, #d35400, #bf4f00);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+  box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
 }
 
 .botonEnviar:active {
@@ -236,7 +338,7 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .reembolsoClienteContainer {
+  .pagoClienteContainer {
     margin: 1rem;
     padding: 1.5rem;
     max-width: none;
@@ -246,12 +348,24 @@
     font-size: 1.5rem;
   }
   
+  .formGroupRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .infoSeguroGrid {
+    grid-template-columns: 1fr;
+  }
+  
   .fileUploadSection {
     padding: 1.5rem;
   }
   
   .pdfPreview embed {
     height: 250px;
+  }
+  
+  .buttonContainer {
+    flex-direction: column;
   }
 }
 
@@ -267,7 +381,7 @@
   }
 }
 
-.reembolsoClienteContainer {
+.pagoClienteContainer {
   animation: fadeInUp 0.6s ease-out;
 }
 
@@ -279,8 +393,9 @@
 .formGroup:nth-child(1) { animation-delay: 0.1s; }
 .formGroup:nth-child(2) { animation-delay: 0.2s; }
 .selectContainer { animation-delay: 0.3s; }
-.fileUploadSection { animation-delay: 0.4s; }
-.botonEnviar { animation-delay: 0.5s; }
+.infoSeguroSection { animation-delay: 0.4s; }
+.fileUploadSection { animation-delay: 0.5s; }
+.buttonContainer { animation-delay: 0.6s; }
 
 /* Loading spinner for button */
 .botonEnviar.loading {
@@ -305,4 +420,15 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Success states */
+.formGroup.success input {
+  border-color: #27ae60;
+  background-color: #f0f9f0;
+}
+
+.formGroup.error input {
+  border-color: #e74c3c;
+  background-color: #fdf2f2;
 }

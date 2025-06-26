@@ -129,9 +129,9 @@ export function ModalDependientes({ cerrarModal, setListDependientes, listDepend
         </div>
             <h2>Discapacidad</h2>
             <label htmlFor="">Favor detallar los diagnósticos que causaron la discapacidad</label>
-            <input type="text" name="discapci" id="discapci"/> */
+            <input type="text" name="discapci" id="discapci"/> 
           </div>
-          { <div>
+          <div>
             <h2>Condiciones medicas</h2>
             <label htmlFor="">Diagnóstico</label>
             <input type="text" name="condici" id="condici" />
@@ -139,7 +139,7 @@ export function ModalDependientes({ cerrarModal, setListDependientes, listDepend
             <input type="date" name="fecha_ini" id="fecha_ini" />
             <label htmlFor="">Fecha hasta</label>
             <input type="date" name="fecha_fin" id="fecha_fin" />
-          </div> }
+          </div> 
       <div>
         <button type="button" className="btn-cancelar" onClick={cerrarModal}>Cancelar</button>
         <button type="button" className="btn-guardar" onClick={guardarDependiente}>Guardar</button>
