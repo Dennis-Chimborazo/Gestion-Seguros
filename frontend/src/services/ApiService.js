@@ -50,7 +50,6 @@ class ApiService {
   static async get(getApi, id, navigate) {
     const tokenInfo = JSON.parse(localStorage.getItem("login"));
     const token = tokenInfo ? tokenInfo.token : "";
-    console.log(`${apiUrl}${getApi}?id=${id}`)
     const response = await axios.get(`${apiUrl}${getApi}?id=${id}`, {
       headers: {
         "Content-Type": "application/json",
@@ -108,7 +107,20 @@ class ApiService {
     return response.data;
   }
 
-  static async postArchive(postApi, form, navigate) {
+  static async getArchivo(getApi, id) {
+    const tokenInfo = JSON.parse(localStorage.getItem("login"));
+    const token = tokenInfo ? tokenInfo.token : "";
+    const url = `${apiUrl}${getApi}?id=${id}`;
+    const response = await axios.get(url, {
+      responseType: "blob",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const fileURL = URL.createObjectURL(response.data);
+    return fileURL;
+  }
+   static async postArchive(postApi, form, navigate) {
     const response = await axios.post(
       apiUrl + `${postApi}`,
       form,
@@ -118,43 +130,6 @@ class ApiService {
 
     return response.data;
   }
-  
-  static async getArchivo(getApi, id, tipo, navigate) {
-    const tokenInfo = JSON.parse(localStorage.getItem("login"));
-    const token = tokenInfo ? tokenInfo.token : "";
-
-    const url = `${apiUrl}${getApi}/${id}?tipo=${tipo}`;
-
-    const response = await axios.get(url, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return response.data.url;
-  }
-
-  static async getArchivoSearch(getApi, nombreBase, navigate) {
-    const tokenInfo = JSON.parse(localStorage.getItem("login"));
-    const token = tokenInfo ? tokenInfo.token : "";
-    const url = `${apiUrl}${getApi}?nombre=${encodeURIComponent(nombreBase)}`;
-    try {
-      const response = await axios.get(url, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data.url; // Devuelve la URL del PDF
-
-    } catch (error) {
-      console.error("🔴 Error al obtener archivo PDF:", error);
-      if (navigate) navigate("/error");
-      throw error;
-    }
-  }
-
 
 }
 
