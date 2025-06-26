@@ -451,5 +451,17 @@ router.post("/buscar-ruta-token", async (req, res) => {
   }
 });
 
+router.get("/buscar-cliente-cedula", async (req, res) => {
+  const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+  try {
+    const query = `SELECT * FROM cliente WHERE cedr_cli = $1`;
+    const data = await database.query(query, [id]);
+    res.json(data.rows);
+  } catch (error) {
+    console.error("Error en consulta:", error);
+    res.status(500).json({ success: false, message: "Error al obtener datos", error: error.message });
+  }
+});
+
 module.exports = router;
 

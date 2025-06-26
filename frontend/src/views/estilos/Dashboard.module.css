@@ -1,0 +1,96 @@
+/* Dashboard.module.css */
+
+/* General Layout and Background */
+.dashboardContainer {
+  padding: 2.5rem; /* Equivalent to p-10 in Tailwind, slightly more space */
+  background-color: #f4f7fa; /* Light grey background for the whole dashboard */
+  min-height: 100vh; /* Ensures the background covers the full viewport height */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A more modern, clean font */
+}
+
+/* Page Title */
+.dashboardTitle {
+  font-size: 2.5rem; /* Larger than text-3xl */
+  font-weight: 700; /* Bold */
+  color: #2c3e50; /* Darker blue-grey for a professional look */
+  margin-bottom: 2.5rem; /* More space below the title */
+  border-bottom: 3px solid #3498db; /* A subtle blue underline */
+  padding-bottom: 0.75rem; /* Padding for the underline */
+}
+
+/* Summary Cards Grid */
+.summaryCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid for cards */
+  gap: 1.5rem; /* Gap between cards */
+  margin-bottom: 3rem; /* More space below summary cards */
+}
+
+/* Individual Summary Card */
+.summaryCard {
+  background-color: #ffffff; /* White background */
+  border-radius: 1rem; /* Slightly more rounded corners */
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05); /* Softer, more pronounced shadow */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition for hover */
+  border: 1px solid #e0e0e0; /* Subtle border */
+}
+
+.summaryCard:hover {
+  transform: translateY(-5px); /* Lifts the card slightly on hover */
+  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.1); /* Darker shadow on hover */
+}
+
+.summaryCardTitle {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600; /* Semi-bold */
+  color: #34495e; /* Darker text for title */
+  margin-bottom: 0.5rem;
+}
+
+.summaryCardValue {
+  font-size: 3.5rem; /* Even larger for impact */
+  font-weight: 800; /* Extra bold */
+  color: #2980b9; /* A vibrant blue */
+  margin-top: 0.5rem;
+  letter-spacing: -0.05em; /* Slightly tighter letter spacing for numbers */
+}
+
+/* Charts Grid */
+.chartsGrid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default to single column */
+  gap: 2.5rem; /* Gap between charts */
+}
+
+@media (min-width: 768px) {
+  .chartsGrid {
+    grid-template-columns: repeat(2, 1fr); /* Two columns on medium screens and up */
+  }
+}
+
+/* Individual Chart Container */
+.chartContainer {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+.chartTitle {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 1.5rem; /* More space below chart title */
+  text-align: center;
+}
+
+/* Loading State */
+.loadingMessage {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.25rem;
+  color: #7f8c8d;
+}
