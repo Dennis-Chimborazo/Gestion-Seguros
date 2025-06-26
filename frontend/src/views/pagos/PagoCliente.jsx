@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import GestionContratacionFun from "../gestionContratacion/GestionContratacionFun";
 import PagosFun from "./PagosFun";
 import swal from "sweetalert2";
+import Archivos from "../../services/Archivos";
 
 
 export function PagoCliente({ id,mostrarSeccion }) {
@@ -63,7 +64,7 @@ export function PagoCliente({ id,mostrarSeccion }) {
         formData.append('id_pers', id);
         formData.append('archivo', renombrarArchivo(compPagoPdf, id));
         try {
-            const res = await PagosFun.guardarArhivoReembolso(formData); // sin `idCliente`, ya está en formData
+            const res = await Archivos.guardarArhivo(formData); // sin `idCliente`, ya está en formData
             await PagosFun.enviarPago({
                 nonto_pago: formulario.nonto_pago, comprobante_pago: formulario.comprobante_pago,
                 id_pers: id, id_seguro: formulario.id_seguro, id_archivos_cliente: res.id

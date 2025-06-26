@@ -74,23 +74,18 @@ router.get("/pago-cliente/estado/1", async (req, res) => {
 });
 
 // Ruta: pagos con estado 3 o 7
-router.get("/pago-cliente/estado/pendientes", async (req, res) => {
+router.get("/pago-revision-pendientes", async (req, res) => {
   try {
-    const query = `
-      SELECT p.id_pago, p.fecha_pago, p.nonto_pago, p.comprobante_pago,
-             p.id_pers, (c.ape_cli || ' ' || c.nom_cli) AS nombre, c.cedr_cli,
-             p.id_seguro, tp.nom_tip_seg,
-             p.id_archivos_cliente,
-             e.nom_estado
-      FROM pago_cliente p
-      INNER JOIN cliente c ON c.id_pers = p.id_pers
-      INNER JOIN seguros s ON s.id_seguro = p.id_seguro
+    const query = `SELECT pg.id_pago, pg.fecha_pago,pg.nonto_pago,pg.comprobante_pago,pg.id_archivos_cliente,
+    tp.nom_tip_seg,e.nom_estado,(c.ape_cli || ' ' ||c.nom_cli)as nombre,c.cedr_cli
+      FROM pago_cliente pg
+      INNER JOIN seguros s ON s.id_seguro = pg.id_seguro
       INNER JOIN tipo_seguro tp ON tp.id_tip_seg = s.id_tip_seg
-      INNER JOIN estado e ON e.id_estado = p.id_estado
-      WHERE p.id_estado IN (3, 7);
-    `;
+      INNER JOIN estado e ON e.id_estado = pg.id_estado
+      INNER JOIN cliente c ON c.id_pers = pg.id_pers
+      WHERE  pg.id_estado = 3`;
     const result = await database.query(query);
-    res.json(result);
+    res.json(result.rows);
   } catch (error) {
     console.error("Error en consulta estado IN (3,7):", error);
     res.status(500).json({ error: "Error al obtener pagos pendientes." });
@@ -103,20 +98,13 @@ router.get("/pagos-revision-cliente", async (req, res) => {
     return res.status(400).json({ error: "Falta el parámetro 'id_pers'." });
   }
   try {
-    const query = `
-      SELECT 
-        pg.id_pago, 
-        pg.fecha_pago, 
-        pg.nonto_pago, 
-        pg.comprobante_pago, 
-        tp.nom_tip_seg,
-        e.nom_estado
+    const query = ` SELECT pg.id_pago, pg.fecha_pago,pg.nonto_pago, 
+        pg.comprobante_pago,tp.nom_tip_seg,e.nom_estado
       FROM pago_cliente pg
       INNER JOIN seguros s ON s.id_seguro = pg.id_seguro
       INNER JOIN tipo_seguro tp ON tp.id_tip_seg = s.id_tip_seg
       INNER JOIN estado e ON e.id_estado = pg.id_estado
-      WHERE pg.id_pers = $1 AND pg.id_estado IN (3, 7);
-    `;
+      WHERE pg.id_pers = $1 AND pg.id_estado IN (3, 7);`;
     const values = [id_pers];
     const result = await database.query(query, values);
     res.json(result.rows);
@@ -125,6 +113,7 @@ router.get("/pagos-revision-cliente", async (req, res) => {
     res.status(500).json({ error: "Error interno al obtener pagos en revisión." });
   }
 });
+
 router.get("/pagos-aprobados-cliente", async (req, res) => {
   const id_pers = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
 
