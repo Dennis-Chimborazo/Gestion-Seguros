@@ -9,15 +9,15 @@ import PagosFun from "./PagosFun.js";
 
 export function HistorialPagos({ id, mostrarSeccion }) {
     const navigate = useNavigate();
-    const [reviPagos, setReviPagos] = useState();
-    const [filtroReviPagos, setFiltroReviPagos] = useState();
+    const [reviPagos, setReviPagos] = useState([]);
+    const [filtroReviPagos, setFiltroReviPagos] = useState([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         const traterClientes = async () => {
             try {
                 const dataReviPagos = await PagosFun.pagoAprobadosCliente(id, navigate);
-                setFiltroReviPagos(dataReviPagos);
-                setReviPagos(dataReviPagos);
+                setFiltroReviPagos(dataReviPagos || []);
+                setReviPagos(dataReviPagos || []);
             } catch (error) {
                 console.log("Ha ocurrido un error");
             } finally {
@@ -92,8 +92,11 @@ export function HistorialPagos({ id, mostrarSeccion }) {
             setFiltroReviPagos(filtro);
         } else {
             setFiltroReviPagos(reviPagos);
+        } else {
+            setFiltroReviPagos(reviPagos);
         }
     };
+
 
     const borrarFiltro = () => {
         setFiltroReviPagos(reviPagos);

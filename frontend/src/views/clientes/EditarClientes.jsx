@@ -549,7 +549,10 @@ export function EditarClientes({ mostrarSeccion }) {
             tipoPeso = 'lb';
         }
         formulario.peso_cli = peso_cli + " " + tipoPeso;
-
+         if (JSON.stringify(formulario) === JSON.stringify(formularioEdit)) {
+        toast.error('No se detectaron cambios para guardar');
+        return;
+    }
         const response = await ClientesFun.editarCliente(formulario, navigate);
 
         if (response.message === "success") {
@@ -649,11 +652,11 @@ export function EditarClientes({ mostrarSeccion }) {
                             <label className="form-label" htmlFor="idType">Tipo de identificación</label>
                             <div className="checkbox-group">
                                 <div className="checkbox-item">
-                                    <input className="checkbox-input" type="checkbox" id="cedula" name="cedula" onChange={chechkTipoIdentificacion} />
+                                    <input className="checkbox-input" type="checkbox" id="cedula" name="cedula" checked={formulario.tipo_cedr_cli === "cedula"} onChange={chechkTipoIdentificacion} />
                                     <label className="checkbox-label" htmlFor="cedula">Cédula</label>
                                 </div>
                                 <div className="checkbox-item">
-                                    <input className="checkbox-input" type="checkbox" id="pasaporte" name="pasaporte" onChange={chechkTipoIdentificacion} />
+                                    <input className="checkbox-input" type="checkbox" id="pasaporte" name="pasaporte" Checked={formulario.tipo_cedr_cli === "pasaporte"} onChange={chechkTipoIdentificacion} />
                                     <label className="checkbox-label" htmlFor="pasaporte">Pasaporte</label>
                                 </div>
                             </div>

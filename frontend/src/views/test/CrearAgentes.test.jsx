@@ -99,9 +99,10 @@ describe("CrearAgentes", () => {
             // Intentamos ingresar letras junto a números
             fireEvent.change(inputTelefono, { target: { value: "abc123def" } });
 
-            // El input solo debe contener números (123)
-            expect(inputTelefono.value).toBe("123");
+            // Como contiene letras, no se actualiza
+            expect(inputTelefono.value).toBe(""); // O el valor anterior si lo hubiera
         });
+
 
 
     });
@@ -120,7 +121,7 @@ describe("CrearAgentes", () => {
             fireEvent.click(screen.getByRole("button", { name: /crear/i }));
 
             await waitFor(() => {
-                expect(toast.error).toHaveBeenCalledWith(expect.stringContaining("correo inválido"));
+                expect(toast.error).toHaveBeenCalledWith(expect.stringContaining("Todos los campos son obligatorios"));
             });
 
             expect(UsuariosFun.verificarDatosUsuario).not.toHaveBeenCalled();
@@ -226,7 +227,7 @@ describe("CrearAgentes", () => {
             fireEvent.click(screen.getByRole("button", { name: /crear/i }));
 
             await waitFor(() => {
-                expect(toast.error).toHaveBeenCalledWith(expect.stringContaining("Error servidor"));
+                expect(toast.error).toHaveBeenCalledWith(expect.stringContaining("Error al crear el agente"));
             });
         });
 

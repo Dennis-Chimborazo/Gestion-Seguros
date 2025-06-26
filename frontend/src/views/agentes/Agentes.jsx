@@ -98,6 +98,7 @@ export function Agentes({ mostrarSeccion }) {
                         <div className="search-input-container">
                             <input 
                                 type="text" 
+                                data-testid="buscar-agente"
                                 className="search-input"
                                 placeholder="Ingrese número de cédula" 
                                 onChange={filtrarClientes} 

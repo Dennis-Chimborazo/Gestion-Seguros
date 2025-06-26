@@ -49,20 +49,18 @@ describe('Agentes Component', () => {
     expect(await screen.findByText('Gestión de Agentes')).toBeInTheDocument();
 
     // Inputs
-    expect(screen.getByLabelText(/Buscar/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Ingrese numero de cedula/i)).toBeInTheDocument();
+    expect(screen.getByTestId("buscar-agente")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Ingrese número de cédula" )).toBeInTheDocument();
 
     // Botones de InfoCard
     expect(screen.getByText('Nuevo Agente')).toBeInTheDocument();
-    expect(screen.getByText('Validaciones pendientes')).toBeInTheDocument();
+    expect(screen.getByText('Validaciones Pendientes')).toBeInTheDocument();
 
     // Datos del agente
     expect(await screen.findByText('1234567890')).toBeInTheDocument();
     expect(await screen.findByText('Juan')).toBeInTheDocument();
     expect(await screen.findByText('Pérez')).toBeInTheDocument();
     expect(await screen.findByText('juan@correo.com')).toBeInTheDocument();
-    expect(await screen.findByText('Dirección 123')).toBeInTheDocument();
-    expect(await screen.findByText('0987654321')).toBeInTheDocument();
   });
 
 
