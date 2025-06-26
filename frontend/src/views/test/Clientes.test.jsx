@@ -70,7 +70,7 @@ describe("Clientes component", () => {
     await screen.findByText("Juan");
 
     // CORREGIDO: el placeholder exacto es "Ingrese numero de cedula" (sin tilde)
-    const input = screen.getByPlaceholderText("Ingrese numero de cedula");
+    const input = screen.getByPlaceholderText("Ingrese nmero de cedula");
     fireEvent.change(input, { target: { value: "123" } });
 
     expect(screen.getByText("Juan")).toBeInTheDocument();
@@ -82,7 +82,7 @@ describe("Clientes component", () => {
 
     renderWithRouter(<Clientes mostrarSeccion={mockMostrarSeccion} />);
 
-    await screen.findByText("Clientes");
+    await screen.findByText("Gestión de Clientes");
 
     // Puedes hacer esto más robusto si agregas un role/button a InfoCard, pero esto depende de su implementación
     fireEvent.click(screen.getByText("Nuevo Cliente"));
