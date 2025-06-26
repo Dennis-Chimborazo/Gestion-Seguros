@@ -36,16 +36,61 @@ export function VentanaAgente() {
   return (
     <div className={styles.container}>
       <ul className={styles.menu}>
-        <li className={styles.welcomeHeader}><h2>Bienvenido {user?.nom_rol}</h2></li>
-        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("clientes")}>Clientes</button></li>
-        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("GestionContratacion")}>Gestión de contratación</button></li>
-        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("listaRembolso")}>Reembolso</button></li>
-           <li><button className={styles.menuButton} onClick={() => mostrarSeccion("reviPagosAdmin")}>Revisiones de Pagos</button></li>
-        <li><button className={styles.menuButton} onClick={() => mostrarSeccion("reportes")}>Reportes</button></li>
-        <li><button className={`${styles.menuButton} ${styles.logoutButton}`} onClick={cerrarSesion}>Cerrar sesión</button></li>
+        <li className={styles.welcomeHeader}>
+          <h2>Bienvenido {user?.nom_rol}</h2>
+        </li>
+        <li>
+          <button 
+            className={styles.menuButton} 
+            onClick={() => mostrarSeccion("clientes")}
+          >
+            Clientes
+          </button>
+        </li>
+        <li>
+          <button 
+            className={styles.menuButton} 
+            onClick={() => mostrarSeccion("GestionContratacion")}
+          >
+            Gestión de contratación
+          </button>
+        </li>
+        <li>
+          <button 
+            className={styles.menuButton} 
+            onClick={() => mostrarSeccion("listaRembolso")}
+          >
+            Reembolso
+          </button>
+        </li>
+        <li>
+          <button 
+            className={styles.menuButton} 
+            onClick={() => mostrarSeccion("reviPagosAdmin")}
+          >
+            Revisiones de Pagos
+          </button>
+        </li>
+        <li>
+          <button 
+            className={styles.menuButton} 
+            onClick={() => mostrarSeccion("reportes")}
+          >
+            Reportes
+          </button>
+        </li>
+        <li>
+          <button 
+            className={`${styles.menuButton} ${styles.logoutButton}`} 
+            onClick={cerrarSesion}
+          >
+            Cerrar sesión
+          </button>
+        </li>
       </ul>
 
       <section className={styles.section}>
+        {seccionActiva === "inicio" && <DashboardInicioAgente mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "clientes" && <Clientes mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "crearClientes" && <CrearClientes mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "EditarCliente" && <EditarClientes mostrarSeccion={mostrarSeccion} />}
@@ -55,9 +100,11 @@ export function VentanaAgente() {
         {seccionActiva === "listaRembolso" && <ListReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "RevisionRembolso" && <ReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reviPagosAdmin" && <ListaPagosAdmin mostrarSeccion={mostrarSeccion} />}
-        {seccionActiva === "procesoPagosAdmin" && <RevisionPagoAdmin mostrarSeccion={mostrarSeccion} />
+        {seccionActiva === "procesoPagosAdmin" && <RevisionPagoAdmin mostrarSeccion={mostrarSeccion} />}
+        {seccionActiva === "reportes" && <Dashboard mostrarSeccion={mostrarSeccion} />}
       </section>
     </div>
   );
 }
+
 export default VentanaAgente;
