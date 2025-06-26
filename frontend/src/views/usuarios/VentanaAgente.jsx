@@ -56,8 +56,6 @@ export function VentanaAgente() {
         {seccionActiva === "RevisionRembolso" && <ReembolsosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "reviPagosAdmin" && <ListaPagosAdmin mostrarSeccion={mostrarSeccion} />}
         {seccionActiva === "procesoPagosAdmin" && <RevisionPagoAdmin mostrarSeccion={mostrarSeccion} />
-        {seccionActiva === "inicio" && <p>Selecciona una opción del menú.</p>}
-
       </section>
     </div>
   );
