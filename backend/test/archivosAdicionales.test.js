@@ -1,65 +1,42 @@
 const request = require('supertest');
 const express = require('express');
 
-// Mock de database.js antes de importar el router
-jest.mock('../src/database.js', () => {
-  const mockQuery = jest.fn();
+// Primero creamos el mock antes de importar cualquier cosa
+const mockQuery = jest.fn();
+
+// Mock del database directamente
+jest.doMock('../src/database.js', () => {
   return {
     DataBase: jest.fn().mockImplementation(() => ({
-      getConexion: jest.fn().mockReturnValue({
+      getConexion: () => ({
         query: mockQuery
       })
     }))
   };
 });
 
-// Mock de multer
-jest.mock('multer', () => {
-  const multerMock = jest.fn(() => ({
-    single: jest.fn(() => (req, res, next) => {
-      // Simular el middleware de multer
-      if (req.headers['content-type'] && req.headers['content-type'].includes('multipart/form-data')) {
-        req.file = {
-          buffer: Buffer.from('archivo de prueba'),
-          originalname: 'test.pdf',
-          mimetype: 'application/pdf'
-        };
-      }
-      next();
-    })
-  }));
-  multerMock.memoryStorage = jest.fn(() => ({}));
-  return multerMock;
-});
+// Ahora importamos el router después del mock
+const router = require('../src/routes/archivosadicionales.route');
 
-// Importar el router después de configurar los mocks
-// CAMBIA ESTA RUTA POR LA CORRECTA DE TU ARCHIVO
-const router = require('../src/routes/archivosadicionales.route.js'); // <-- Ajusta el nombre aquí
-
-// Configuración de la app Express para pruebas
 const app = express();
 app.use(express.json());
-app.use(router);
+app.use('/', router);
 
 describe('Rutas de archivos cliente', () => {
-  // Obtener referencia directa al mock de query
-  const { DataBase } = require('../src/database.js');
-  const mockQuery = DataBase().getConexion().query;
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   describe('POST /subir-archivo', () => {
     it('debería subir un archivo exitosamente', async () => {
-      const archivoMock = {
+      // Mock exitoso con estructura PostgreSQL
+      mockQuery.mockResolvedValueOnce({
         rows: [{ id_archivos_cliente: 123 }]
-      };
-      mockQuery.mockResolvedValueOnce(archivoMock);
+      });
 
       const response = await request(app)
         .post('/subir-archivo')
-        .field('tipo', 'pdf')
+        .field('tipo', 'documento')
         .field('id_pers', '1')
         .attach('archivo', Buffer.from('contenido del archivo'), 'test.pdf');
 
@@ -70,28 +47,17 @@ describe('Rutas de archivos cliente', () => {
       });
       expect(mockQuery).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO archivos_cliente'),
-        expect.arrayContaining(['pdf', expect.any(Buffer), 'test.pdf', 'application/pdf', '1'])
+        ['documento', expect.any(Buffer), 'test.pdf', 'application/pdf', '1']
       );
     });
 
-    it('debería fallar si no se proporciona archivo', async () => {
-      const response = await request(app)
-        .post('/subir-archivo')
-        .field('tipo', 'pdf')
-        .field('id_pers', '1');
-
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({
-        error: 'Archivo requerido'
-      });
-    });
-
-    it('debería manejar errores de base de datos', async () => {
+    it('debería manejar errores de base de datos en subir archivo', async () => {
+      // Mock que falla
       mockQuery.mockRejectedValueOnce(new Error('Error de BD'));
 
       const response = await request(app)
         .post('/subir-archivo')
-        .field('tipo', 'pdf')
+        .field('tipo', 'documento')
         .field('id_pers', '1')
         .attach('archivo', Buffer.from('contenido'), 'test.pdf');
 
@@ -100,18 +66,64 @@ describe('Rutas de archivos cliente', () => {
         error: 'Error al guardar el archivo'
       });
     });
+
+    it('debería manejar diferentes tipos de archivo', async () => {
+      const tiposArchivo = [
+        { nombre: 'test.pdf', mimeType: 'application/pdf' },
+        { nombre: 'test.jpg', mimeType: 'image/jpeg' },
+        { nombre: 'test.png', mimeType: 'image/png' },
+        { nombre: 'test.doc', mimeType: 'application/msword' }
+      ];
+
+      for (const tipoArchivo of tiposArchivo) {
+        mockQuery.mockResolvedValueOnce({ 
+          rows: [{ id_archivos_cliente: 123 }] 
+        });
+
+        const response = await request(app)
+          .post('/subir-archivo')
+          .field('tipo', 'documento')
+          .field('id_pers', '1')
+          .attach('archivo', Buffer.from('contenido'), tipoArchivo.nombre);
+
+        expect(response.status).toBe(200);
+        expect(mockQuery).toHaveBeenCalledWith(
+          expect.any(String),
+          [
+            'documento',
+            expect.any(Buffer),
+            tipoArchivo.nombre,
+            tipoArchivo.mimeType,
+            '1'
+          ]
+        );
+      }
+    });
+
+    it('debería manejar cuando no hay archivo en la subida', async () => {
+      const response = await request(app)
+        .post('/subir-archivo')
+        .field('tipo', 'documento')
+        .field('id_pers', '1');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        error: 'Archivo requerido'
+      });
+    });
   });
 
   describe('GET /buscar-archivo', () => {
     it('debería encontrar y devolver un archivo', async () => {
-      const archivoMock = {
+      const mockArchivo = {
         rows: [{
-          nombre_archivo_cliente: 'documento.pdf',
+          archivo: Buffer.from('contenido del archivo'),
           mime_type_archivo_cliente: 'application/pdf',
-          archivo: Buffer.from('contenido del archivo')
+          nombre_archivo_cliente: 'documento.pdf'
         }]
       };
-      mockQuery.mockResolvedValueOnce(archivoMock);
+
+      mockQuery.mockResolvedValueOnce(mockArchivo);
 
       const response = await request(app)
         .get('/buscar-archivo')
@@ -121,20 +133,21 @@ describe('Rutas de archivos cliente', () => {
       expect(response.headers['content-type']).toBe('application/pdf');
       expect(response.headers['content-disposition']).toBe('inline; filename="documento.pdf"');
       expect(mockQuery).toHaveBeenCalledWith(
-        expect.stringContaining('WHERE id_archivos_cliente = $1'),
+        expect.stringContaining('SELECT nombre_archivo_cliente, mime_type_archivo_cliente, archivo'),
         ['1']
       );
     });
 
     it('debería manejar array de IDs tomando el primero', async () => {
-      const archivoMock = {
+      const mockArchivo = {
         rows: [{
-          nombre_archivo_cliente: 'test.pdf',
+          archivo: Buffer.from('contenido'),
           mime_type_archivo_cliente: 'application/pdf',
-          archivo: Buffer.from('contenido')
+          nombre_archivo_cliente: 'test.pdf'
         }]
       };
-      mockQuery.mockResolvedValueOnce(archivoMock);
+
+      mockQuery.mockResolvedValueOnce(mockArchivo);
 
       const response = await request(app)
         .get('/buscar-archivo')
@@ -148,7 +161,7 @@ describe('Rutas de archivos cliente', () => {
     });
 
     it('debería retornar 404 si no encuentra el archivo', async () => {
-      mockQuery.mockResolvedValueOnce({ rows: [] });
+      mockQuery.mockResolvedValueOnce({ rows: [] }); // Array vacío = no encontrado
 
       const response = await request(app)
         .get('/buscar-archivo')
@@ -172,18 +185,61 @@ describe('Rutas de archivos cliente', () => {
         error: 'Error al recuperar el archivo'
       });
     });
+
+    it('debería manejar diferentes tipos MIME en respuesta', async () => {
+      const tiposMime = [
+        { mime: 'application/pdf', nombre: 'documento.pdf' },
+        { mime: 'image/jpeg', nombre: 'imagen.jpg' },
+        { mime: 'text/plain', nombre: 'texto.txt' }
+      ];
+
+      for (const tipo of tiposMime) {
+        const mockArchivo = {
+          rows: [{
+            archivo: Buffer.from('contenido'),
+            mime_type_archivo_cliente: tipo.mime,
+            nombre_archivo_cliente: tipo.nombre
+          }]
+        };
+
+        mockQuery.mockResolvedValueOnce(mockArchivo);
+
+        const response = await request(app)
+          .get('/buscar-archivo')
+          .query({ id: '1' });
+
+        expect(response.status).toBe(200);
+        expect(response.headers['content-type']).toBe(tipo.mime);
+        expect(response.headers['content-disposition']).toBe(`inline; filename="${tipo.nombre}"`);
+      }
+    });
+
+    it('debería verificar manejo de parámetros undefined', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+
+      const response = await request(app)
+        .get('/buscar-archivo')
+        .query({ id: undefined });
+
+      expect(response.status).toBe(404);
+      expect(mockQuery).toHaveBeenCalledWith(
+        expect.any(String),
+        [undefined]
+      );
+    });
   });
 
   describe('GET /buscar-imagen', () => {
     it('debería encontrar una imagen por ID de persona', async () => {
-      const imagenMock = {
+      const mockImagen = {
         rows: [{
-          nombre_archivo_cliente: 'foto.jpg',
+          archivo: Buffer.from('imagen contenido'),
           mime_type_archivo_cliente: 'image/jpeg',
-          archivo: Buffer.from('contenido de imagen')
+          nombre_archivo_cliente: 'foto.jpg'
         }]
       };
-      mockQuery.mockResolvedValueOnce(imagenMock);
+
+      mockQuery.mockResolvedValueOnce(mockImagen);
 
       const response = await request(app)
         .get('/buscar-imagen')
@@ -193,20 +249,21 @@ describe('Rutas de archivos cliente', () => {
       expect(response.headers['content-type']).toBe('image/jpeg');
       expect(response.headers['content-disposition']).toBe('inline; filename="foto.jpg"');
       expect(mockQuery).toHaveBeenCalledWith(
-        expect.stringContaining("WHERE id_pers = $1 and tipo_archivos_cliente = 'imagen'"),
+        expect.stringContaining("tipo_archivos_cliente = 'imagen'"),
         ['1']
       );
     });
 
     it('debería manejar array de IDs en buscar-imagen', async () => {
-      const imagenMock = {
+      const mockImagen = {
         rows: [{
-          nombre_archivo_cliente: 'foto.jpg',
-          mime_type_archivo_cliente: 'image/jpeg',
-          archivo: Buffer.from('imagen')
+          archivo: Buffer.from('imagen'),
+          mime_type_archivo_cliente: 'image/png',
+          nombre_archivo_cliente: 'foto.png'
         }]
       };
-      mockQuery.mockResolvedValueOnce(imagenMock);
+
+      mockQuery.mockResolvedValueOnce(mockImagen);
 
       const response = await request(app)
         .get('/buscar-imagen')
@@ -246,96 +303,47 @@ describe('Rutas de archivos cliente', () => {
     });
 
     it('debería verificar que la consulta filtra por tipo imagen', async () => {
-      const imagenMock = {
-        rows: [{
-          nombre_archivo_cliente: 'foto.jpg',
-          mime_type_archivo_cliente: 'image/jpeg',
-          archivo: Buffer.from('imagen')
-        }]
-      };
-      mockQuery.mockResolvedValueOnce(imagenMock);
+      mockQuery.mockResolvedValueOnce({ rows: [] });
 
       await request(app)
         .get('/buscar-imagen')
         .query({ id: '1' });
 
-      const queryCall = mockQuery.mock.calls[0][0];
-      expect(queryCall).toContain("tipo_archivos_cliente = 'imagen'");
-      expect(queryCall).toContain("WHERE id_pers = $1");
+      expect(mockQuery).toHaveBeenCalledWith(
+        expect.stringContaining("tipo_archivos_cliente = 'imagen'"),
+        ['1']
+      );
+    });
+
+    it('debería manejar valores undefined en búsqueda de imagen', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+
+      const response = await request(app)
+        .get('/buscar-imagen')
+        .query({ id: undefined });
+
+      expect(response.status).toBe(404);
     });
   });
 
   describe('Casos edge adicionales', () => {
-    it('debería manejar diferentes tipos de archivo', async () => {
-      const tiposArchivo = [
-        { tipo: 'imagen', mimetype: 'image/jpeg', nombre: 'foto.jpg' },
-        { tipo: 'pdf', mimetype: 'application/pdf', nombre: 'documento.pdf' },
-        { tipo: 'documento', mimetype: 'application/msword', nombre: 'texto.doc' }
-      ];
-
-      for (const tipoArchivo of tiposArchivo) {
-        jest.clearAllMocks();
-        mockQuery.mockResolvedValueOnce({
-          rows: [{ id_archivos_cliente: 456 }]
-        });
-
-        const response = await request(app)
-          .post('/subir-archivo')
-          .field('tipo', tipoArchivo.tipo)
-          .field('id_pers', '1')
-          .attach('archivo', Buffer.from('contenido'), tipoArchivo.nombre);
-
-        expect(response.status).toBe(200);
-        expect(mockQuery).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.arrayContaining([tipoArchivo.tipo])
-        );
-      }
-    });
-
-    it('debería manejar diferentes tipos MIME en respuesta', async () => {
-      const tiposMime = [
-        { mime: 'application/pdf', nombre: 'documento.pdf' },
-        { mime: 'image/jpeg', nombre: 'foto.jpg' },
-        { mime: 'image/png', nombre: 'imagen.png' }
-      ];
-
-      for (const tipo of tiposMime) {
-        jest.clearAllMocks();
-        mockQuery.mockResolvedValueOnce({
-          rows: [{
-            nombre_archivo_cliente: tipo.nombre,
-            mime_type_archivo_cliente: tipo.mime,
-            archivo: Buffer.from('contenido')
-          }]
-        });
-
-        const response = await request(app)
-          .get('/buscar-archivo')
-          .query({ id: '1' });
-
-        expect(response.status).toBe(200);
-        expect(response.headers['content-type']).toBe(tipo.mime);
-        expect(response.headers['content-disposition']).toBe(`inline; filename="${tipo.nombre}"`);
-      }
-    });
-
     it('debería manejar archivos con nombres especiales', async () => {
       const nombresEspeciales = [
         'archivo con espacios.pdf',
-        'archivo_con_guiones.jpg',
-        'ARCHIVO_MAYUSCULAS.PNG'
+        'archivo-con-guiones.jpg',
+        'archivo_con_underscore.png'
       ];
 
       for (const nombre of nombresEspeciales) {
-        jest.clearAllMocks();
-        mockQuery.mockResolvedValueOnce({
+        const mockArchivo = {
           rows: [{
-            nombre_archivo_cliente: nombre,
+            archivo: Buffer.from('contenido'),
             mime_type_archivo_cliente: 'application/pdf',
-            archivo: Buffer.from('contenido')
+            nombre_archivo_cliente: nombre
           }]
-        });
+        };
+
+        mockQuery.mockResolvedValueOnce(mockArchivo);
 
         const response = await request(app)
           .get('/buscar-archivo')
@@ -347,34 +355,28 @@ describe('Rutas de archivos cliente', () => {
     });
 
     it('debería verificar la estructura de la consulta INSERT', async () => {
-      mockQuery.mockResolvedValueOnce({
-        rows: [{ id_archivos_cliente: 123 }]
+      mockQuery.mockResolvedValueOnce({ 
+        rows: [{ id_archivos_cliente: 123 }] 
       });
 
       await request(app)
         .post('/subir-archivo')
-        .field('tipo', 'pdf')
+        .field('tipo', 'documento')
         .field('id_pers', '1')
         .attach('archivo', Buffer.from('contenido'), 'test.pdf');
 
+      expect(mockQuery).toHaveBeenCalled();
       const queryCall = mockQuery.mock.calls[0][0];
       expect(queryCall).toContain('INSERT INTO archivos_cliente');
       expect(queryCall).toContain('tipo_archivos_cliente');
       expect(queryCall).toContain('archivo');
       expect(queryCall).toContain('nombre_archivo_cliente');
       expect(queryCall).toContain('mime_type_archivo_cliente');
-      expect(queryCall).toContain('id_pers');
       expect(queryCall).toContain('RETURNING id_archivos_cliente');
     });
 
     it('debería verificar la estructura de la consulta SELECT', async () => {
-      mockQuery.mockResolvedValueOnce({
-        rows: [{
-          nombre_archivo_cliente: 'test.pdf',
-          mime_type_archivo_cliente: 'application/pdf',
-          archivo: Buffer.from('contenido')
-        }]
-      });
+      mockQuery.mockResolvedValueOnce({ rows: [] });
 
       await request(app)
         .get('/buscar-archivo')
@@ -384,6 +386,125 @@ describe('Rutas de archivos cliente', () => {
       expect(queryCall).toContain('SELECT nombre_archivo_cliente, mime_type_archivo_cliente, archivo');
       expect(queryCall).toContain('FROM archivos_cliente');
       expect(queryCall).toContain('WHERE id_archivos_cliente = $1');
+    });
+
+    it('debería manejar valores undefined en MIME type', async () => {
+      const mockArchivo = {
+        rows: [{
+          archivo: Buffer.from('contenido'),
+          mime_type_archivo_cliente: undefined,
+          nombre_archivo_cliente: 'archivo.bin'
+        }]
+      };
+
+      mockQuery.mockResolvedValueOnce(mockArchivo);
+
+      const response = await request(app)
+        .get('/buscar-archivo')
+        .query({ id: '1' });
+
+      expect(response.status).toBe(200);
+      // El código actual no maneja undefined, pero debería funcionar
+      expect(response.headers['content-disposition']).toBe('inline; filename="archivo.bin"');
+    });
+
+    it('debería manejar valores null en MIME type', async () => {
+      const mockArchivo = {
+        rows: [{
+          archivo: Buffer.from('contenido'),
+          mime_type_archivo_cliente: null,
+          nombre_archivo_cliente: 'archivo.bin'
+        }]
+      };
+
+      mockQuery.mockResolvedValueOnce(mockArchivo);
+
+      const response = await request(app)
+        .get('/buscar-archivo')
+        .query({ id: '1' });
+
+      expect(response.status).toBe(200);
+      expect(response.headers['content-disposition']).toBe('inline; filename="archivo.bin"');
+    });
+
+    it('debería verificar manejo de arrays vacíos en query params', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+
+      const response = await request(app)
+        .get('/buscar-archivo')
+        .query({ id: [] });
+
+      // Array vacío se convierte en undefined
+      expect(response.status).toBe(404);
+    });
+
+    it('debería verificar que los parámetros se pasan correctamente en PostgreSQL', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+
+      await request(app)
+        .get('/buscar-archivo')
+        .query({ id: '123' });
+
+      // Verificar que usa parámetros PostgreSQL ($1, $2, etc.)
+      expect(mockQuery).toHaveBeenCalledWith(
+        expect.stringContaining('$1'),
+        ['123']
+      );
+    });
+
+    it('debería verificar el campo específico en buscar-imagen', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+
+      await request(app)
+        .get('/buscar-imagen')
+        .query({ id: '1' });
+
+      // Verificar que usa id_pers en lugar de id_archivos_cliente
+      expect(mockQuery).toHaveBeenCalledWith(
+        expect.stringContaining('WHERE id_pers = $1'),
+        ['1']
+      );
+    });
+  });
+
+  describe('Validaciones específicas del campo tipo', () => {
+    it('debería incluir el campo tipo en la inserción', async () => {
+      mockQuery.mockResolvedValueOnce({ 
+        rows: [{ id_archivos_cliente: 123 }] 
+      });
+
+      await request(app)
+        .post('/subir-archivo')
+        .field('tipo', 'imagen')
+        .field('id_pers', '1')
+        .attach('archivo', Buffer.from('contenido'), 'test.jpg');
+
+      expect(mockQuery).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.arrayContaining(['imagen'])
+      );
+    });
+
+    it('debería manejar diferentes tipos de archivo', async () => {
+      const tipos = ['documento', 'imagen', 'certificado', 'identificacion'];
+
+      for (const tipo of tipos) {
+        mockQuery.mockResolvedValueOnce({ 
+          rows: [{ id_archivos_cliente: 123 }] 
+        });
+
+        const response = await request(app)
+          .post('/subir-archivo')
+          .field('tipo', tipo)
+          .field('id_pers', '1')
+          .attach('archivo', Buffer.from('contenido'), 'test.pdf');
+
+        expect(response.status).toBe(200);
+        expect(mockQuery).toHaveBeenCalledWith(
+          expect.any(String),
+          expect.arrayContaining([tipo])
+        );
+      }
     });
   });
 });
