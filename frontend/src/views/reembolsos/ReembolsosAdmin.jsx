@@ -41,7 +41,7 @@ export function ReembolsosAdmin({ mostrarSeccion }) {
                     try {
                         const descripcion_revision = `Se han revisado los datos proporcionados por el cliente 
                         para validar el reembolso, verificando que cumplan con los requisitos establecidos y se da por aprovado 
-                        el mmismo.`;
+                        el mismo.`;
                         const res = await ReembolsoFun.aceptarRevisionReembolso({ descripcion_revision: descripcion_revision, id_reemb: reembolso.id_reemb }, navigate);
                         if (res?.success) {
                             swal.fire({

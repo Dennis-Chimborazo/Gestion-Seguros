@@ -18,6 +18,8 @@ export function RevisionPagoAdmin({ mostrarSeccion }) {
     const cargarDatos = async () => {
       const revData = JSON.parse(localStorage.getItem("revisionPagos"));
       if (revData && revData.revision) {
+                console.log(revData.revision)
+
         setPago(revData.revision);
         const pdf = await Archivos.traerArchivo(revData.revision.id_archivos_cliente, navigate);
         setPdfUrl(pdf);
@@ -31,15 +33,24 @@ export function RevisionPagoAdmin({ mostrarSeccion }) {
     if (accion === 'aceptado') {
       swal.fire({
         title: "<label>Confirmacion</label>",
-        text: "Esta seguro de aceptar el reembolso dado una revision rigurosa",
+        text: "Esta seguro haber validado la informacion el pago",
         showDenyButton: true,
         denyButtonText: "No",
         confirmButtonText: "Si"
       }).then(async (respuesta) => {
         if (respuesta.isConfirmed) {
           try {
-
-
+            const descripcion = `Se han revisado los datos proporcionados por el cliente 
+                        para validar el pago, verificando que cumplan con los requisitos establecidos`;
+            const res = await PagosFun.aceptarRevisionPago({ descripcion_revision_pago: descripcion, id_pago: pago.id_pago }, navigate);
+            if (res?.success) {
+              swal.fire({
+                title: "<label> Exito</label>",
+                text: "Se ha vvalidado el pago con éxito",
+                timer: 3500,
+              })
+              mostrarSeccion("reviPagosAdmin");
+            }
           } catch (error) {
             swal.fire({
               title: "<label>Advertencia</label>",
