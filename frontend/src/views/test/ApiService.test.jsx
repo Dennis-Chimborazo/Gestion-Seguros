@@ -25,7 +25,7 @@ describe('ApiService', () => {
 
       // CORRECCIÓN: Usar toEqual en lugar de objectContaining para mayor flexibilidad
       expect(mockAxios.get).toHaveBeenCalledWith(
-        "http://localhost:4000/ruta/fake",
+        "https://gestion-seguros-backend.onrender.com/ruta/fake",
         {
           headers: {
             "Content-Type": "application/json", // Sin el espacio extra
@@ -80,7 +80,7 @@ describe('ApiService', () => {
       const result = await ApiService.getAll('ruta/fake', navigateMock);
 
       expect(mockAxios.get).toHaveBeenCalledWith(
-        "http://localhost:4000/ruta/fake",
+        "https://gestion-seguros-backend.onrender.com/ruta/fake",
         {
           headers: {
             "Content-Type": "application/json",
@@ -137,7 +137,7 @@ describe('ApiService', () => {
       const result = await ApiService.post('user/create', mockForm, navigateMock);
 
       expect(mockAxios.post).toHaveBeenCalledWith(
-        'http://localhost:4000/user/create',
+        'https://gestion-seguros-backend.onrender.com/user/create',
         mockForm,
         {
           headers: {
@@ -168,7 +168,7 @@ describe('ApiService', () => {
 
       await ApiService.post('api/endpoint', mockForm, navigateMock);
 
-      expect(consoleSpy).toHaveBeenCalledWith('http://localhost:4000/api/endpoint');
+      expect(consoleSpy).toHaveBeenCalledWith('https://gestion-seguros-backend.onrender.com/api/endpoint');
 
       consoleSpy.mockRestore();
     });
@@ -184,7 +184,7 @@ describe('ApiService', () => {
       const result = await ApiService.get('search/endpoint', 123, navigateMock);
 
       expect(mockAxios.get).toHaveBeenCalledWith(
-        'http://localhost:4000/search/endpoint?id=123',
+        'https://gestion-seguros-backend.onrender.com/search/endpoint?id=123',
         {
           headers: {
             "Content-Type": "application/json",
@@ -216,7 +216,7 @@ describe('ApiService', () => {
       const result = await ApiService.get('search/endpoint', 456, navigateMock);
 
       expect(mockAxios.get).toHaveBeenCalledWith(
-        'http://localhost:4000/search/endpoint?id=456',
+        'https://gestion-seguros-backend.onrender.com/search/endpoint?id=456',
         {
           headers: {
             "Content-Type": "application/json",
@@ -248,7 +248,7 @@ describe('ApiService', () => {
       const result = await ApiService.put('user/update', mockForm, navigateMock);
 
       expect(mockAxios.put).toHaveBeenCalledWith(
-        'http://localhost:4000/user/update',
+        'https://gestion-seguros-backend.onrender.com/user/update',
         mockForm,
         {
           headers: {
@@ -279,7 +279,7 @@ describe('ApiService', () => {
       const result = await ApiService.delete('user/delete', mockForm);
 
       expect(mockAxios.delete).toHaveBeenCalledWith(
-        'http://localhost:4000/user/delete',
+        'https://gestion-seguros-backend.onrender.com/user/delete',
         {
           data: mockForm,
           headers: {
@@ -316,7 +316,7 @@ describe('ApiService', () => {
       const result = await ApiService.login(mockForm);
 
       expect(mockAxios.post).toHaveBeenCalledWith(
-        'http://localhost:4000/user/ingreso',
+        'https://gestion-seguros-backend.onrender.com/user/ingreso',
         mockForm,
         {
           headers: {
@@ -345,7 +345,7 @@ describe('ApiService', () => {
       const result = await ApiService.login(mockForm);
 
       expect(mockAxios.post).toHaveBeenCalledWith(
-        'http://localhost:4000/user/ingreso',
+        'https://gestion-seguros-backend.onrender.com/user/ingreso',
         mockForm,
         expect.objectContaining({
           headers: expect.objectContaining({

@@ -95,13 +95,13 @@ describe("EditarClientes component", () => {
     ClientesFun.actualizarCliente.mockResolvedValue(true);
     ClientesFun.actualizarEstadoCliente.mockResolvedValue(true);
     ClientesFun.buscarDireccionCliente.mockResolvedValue([
-      { 
-        id_pais: 1, 
-        id_provin: 1, 
-        id_ciud: 1, 
-        nom_pais: "Ecuador", 
-        nom_provin: "Pichincha", 
-        nom_ciud: "Quito" 
+      {
+        id_pais: 1,
+        id_provin: 1,
+        id_ciud: 1,
+        nom_pais: "Ecuador",
+        nom_provin: "Pichincha",
+        nom_ciud: "Quito"
       }
     ]);
   });
@@ -121,10 +121,12 @@ describe("EditarClientes component", () => {
     expect(screen.getByPlaceholderText("Ingrese los nombres")).toHaveValue("Juan");
     expect(screen.getByPlaceholderText("Ingrese la nacionalidad")).toHaveValue("Ecuatoriana");
     expect(screen.getByPlaceholderText("Ingrese ID")).toHaveValue("1234567890");
-    expect(screen.getByText("Editar")).toBeInTheDocument();
+    expect(screen.getByText("Guardar Cambios")).toBeInTheDocument();
     expect(screen.getByText("Cancelar")).toBeInTheDocument();
 
-    expect(document.getElementById("cedula").checked).toBe(true);
+    await waitFor(() => {
+  expect(document.getElementById("cedula").checked).toBe(true);
+});
     expect(document.getElementById("masculino").checked).toBe(true);
     expect(document.getElementById("soltero").checked).toBe(true);
 
@@ -255,21 +257,25 @@ describe("EditarClientes component", () => {
   });
 
   test("muestra error cuando no hay cambios y se intenta guardar", async () => {
-    const { toast } = require("sonner");
-
     // Render component
     await act(async () => {
       renderWithRouter(<EditarClientes mostrarSeccion={mockMostrarSeccion} />);
     });
 
-    // Trigger guardar sin cambios
+    // Dispara el clic en el botón de guardar
+    const btnGuardar = screen.getByRole('button', { name: /guardar cambios/i });
     await act(async () => {
-      fireEvent.click(screen.getByText("Editar"));
+      fireEvent.click(btnGuardar);
     });
 
-    expect(toast.error).toHaveBeenCalled();
+    // Espera que toast.error haya sido llamado
+    await waitFor(() => {
+      expect(require("sonner").toast.error).toHaveBeenCalled();
+    });
+
     expect(ClientesFun.actualizarCliente).not.toHaveBeenCalled();
   });
+
 
   test("permite cancelar el formulario con confirmación", async () => {
     const swal = require("sweetalert2");
@@ -289,7 +295,7 @@ describe("EditarClientes component", () => {
   });
 
 
-test("permite cancelar el formulario sin confirmación", async () => {
+  test("permite cancelar el formulario sin confirmación", async () => {
     const swal = require("sweetalert2");
     // No se simula la confirmación
     swal.fire.mockResolvedValue({ isConfirmed: false }); // Esta línea se elimina
@@ -301,7 +307,7 @@ test("permite cancelar el formulario sin confirmación", async () => {
     await act(async () => {
       fireEvent.click(screen.getByText("Cancelar"));
     });
-});
+  });
 
 
 });

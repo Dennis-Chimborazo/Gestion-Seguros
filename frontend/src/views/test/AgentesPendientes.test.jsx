@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { act } from "react-dom/test-utils"; 
+import { act } from "react-dom/test-utils";
 import { MemoryRouter } from "react-router-dom";
 import { AgentesPendientes } from "../agentes/AgentesPendientes";
 import AgenteFun from "../agentes/AgenteFun";
@@ -196,11 +196,13 @@ describe("AgentesPendientes", () => {
 
   describe("Modal", () => {
     it("abre el modal al hacer clic en el ícono de correo", async () => {
-      render(
-        <MemoryRouter>
-          <AgentesPendientes mostrarSeccion={mostrarSeccion} />
-        </MemoryRouter>
-      );
+      await act(async () => {
+        render(
+          <MemoryRouter>
+            <AgentesPendientes mostrarSeccion={mostrarSeccion} />
+          </MemoryRouter>
+        );
+      });
 
       await waitFor(() => expect(screen.getByTestId("icono-correo-0")).toBeInTheDocument());
 

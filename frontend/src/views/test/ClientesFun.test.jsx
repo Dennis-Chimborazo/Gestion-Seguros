@@ -121,10 +121,16 @@ describe("ClientesFun", () => {
     expect(result).toEqual(mockResponse);
   });
 
-  test("buscarcliente llama a ApiService.get", async () => {
-    ApiService.get = jest.fn().mockResolvedValue(mockResponse);  // asegura que sea espía
+  test("buscarcliente llama a ApiService.getNull", async () => {
+    const mockResponse = [{ id: 15, nombre: 'Juan' }]; // ejemplo respuesta mock
+    const mockNavigate = jest.fn();
+
+    // Mockeamos getNull, no get
+    ApiService.getNull = jest.fn().mockResolvedValue(mockResponse);
+
     const result = await ClientesFun.buscarcliente(15, mockNavigate);
-    expect(ApiService.get).toHaveBeenCalledWith("client/buscarclienteID", 15, mockNavigate);
+
+    expect(ApiService.getNull).toHaveBeenCalledWith("client/buscarclienteID", 15, mockNavigate);
     expect(result).toEqual(mockResponse);
   });
 

@@ -73,14 +73,14 @@ describe("CrearClientes component", () => {
       renderWithRouter(<CrearClientes mostrarSeccion={mockMostrarSeccion} />);
     });
 
-    expect(screen.getByText("Nuevo cliente")).toBeInTheDocument();
+    expect(screen.getByText("Registro de Nuevo Cliente")).toBeInTheDocument();
     
     // Verificamos elementos clave del formulario
     expect(screen.getByPlaceholderText("Ingrese los apellidos")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Ingrese los nombres")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Ingrese la nacionalidad")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Ingrese ID")).toBeInTheDocument();
-    expect(screen.getByText("Guardar")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Ingrese número de identificación")).toBeInTheDocument();
+    expect(screen.getByText("Guardar Cliente")).toBeInTheDocument();
     expect(screen.getByText("Cancelar")).toBeInTheDocument();
   });
 
@@ -89,7 +89,7 @@ describe("CrearClientes component", () => {
       renderWithRouter(<CrearClientes mostrarSeccion={mockMostrarSeccion} />);
     });
 
-    expect(ClientesFun.traerPaises).toHaveBeenCalledTimes(1);
+    expect(ClientesFun.traerPaises).toHaveBeenCalledTimes(2);
   });
 
   test("verifica selección de tipo de identificación", async () => {
@@ -222,7 +222,7 @@ describe("CrearClientes component", () => {
 
     // Hacer clic en guardar sin llenar campos
     await act(async () => {
-      fireEvent.click(screen.getByText("Guardar"));
+      fireEvent.click(screen.getByText("Guardar Cliente"));
     });
 
     // Verificar que se muestra algún mensaje de error
