@@ -91,6 +91,7 @@ export function RevisionPagoAdmin({ mostrarSeccion }) {
           <p><strong>Comprobante de pago (PDF):</strong></p>
           <embed
             src={pdfUrl}
+            data-testid="pdf-embed"
             type="application/pdf"
             width="100%"
             height="400px"

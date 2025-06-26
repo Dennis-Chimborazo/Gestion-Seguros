@@ -8,7 +8,6 @@
     "@mui/material": "^7.1.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
     "axios": "1.5",
     "firebase": "^11.7.3",
     "react": "^19.1.0",
@@ -83,6 +82,7 @@
     "@testing-library/user-event": "^14.6.1",
     "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
+    "react-select-event": "^5.5.1",
     "sonar-scanner": "^3.1.0"
   }
 }

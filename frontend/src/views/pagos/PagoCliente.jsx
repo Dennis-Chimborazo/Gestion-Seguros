@@ -82,7 +82,7 @@ export function PagoCliente({ id,mostrarSeccion }) {
     return (
         <div>
             <div>
-                <label htmlFor="">Seleccione su seguro</label>
+                <label htmlFor="" data-testid="label-select-seguro">Seleccione su seguro</label>
                 <Select
                     options={Array.isArray(seguros) ? seguros.map((s) => ({
                         value: s.id_seguro,
@@ -98,9 +98,9 @@ export function PagoCliente({ id,mostrarSeccion }) {
                 <label htmlFor="">Tipo de Pago: {InfoSeguros?.tiempo_seguro}</label>
             </div>
             <div>
-                <label htmlFor="">Monto depositado:</label>
+                <label  htmlFor="montoDepositado">Monto depositado:</label>
                 <input type="number" name="montoDepositado" id="montoDepositado" onChange={(e) => setFormulario({ ...formulario, nonto_pago: e.target.value })} />
-                <label htmlFor="">Numero comprobante</label>
+                <label htmlFor="numeroComprobante">Numero comprobante</label>
                 <input type="number" name="numeroComprobante" id="numeroComprobante" onChange={(e) => setFormulario({ ...formulario, comprobante_pago: e.target.value })} />
             </div>
             <div>

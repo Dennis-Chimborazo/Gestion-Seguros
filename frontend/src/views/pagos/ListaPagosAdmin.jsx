@@ -53,13 +53,17 @@ export function ListaPagosAdmin({ mostrarSeccion }) {
     ];
 
     const filtrarClientes = (e) => {
-        if (e.target.value !== '') {
-            const filtro = Reembolsos.filter((a) =>
-                a.cedr_cli && a.cedr_cli.startsWith(e.target.value)
+        const valor = e.target.value;
+        if (valor !== "") {
+            const filtrado = Reembolsos.filter((r) =>
+                r.cedr_cli?.startsWith(valor)
             );
-            setFiltroReem(filtro);
+            setFiltroReem(filtrado);
+        } else {
+            setFiltroReem(Reembolsos);
         }
     };
+
     const revisionPagos = (row) => {
         localStorage.setItem("revisionPagos", JSON.stringify({
             edit: true,

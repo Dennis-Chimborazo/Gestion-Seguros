@@ -8,11 +8,15 @@ export function InfoPagoRechazado({ cerrarModalRechazado }) {
 
   useEffect(() => {
     const valores = async () => {
-      const data = JSON.parse(localStorage.getItem("revisionPago"));
-      if (data && data.revision) {
-        const res = await PagosFun.infoPagoRechazado(data.revision.id_pago,navigate);
-        setInfoRevision(res[0]); 
-        localStorage.removeItem("revisionPago");
+      try {
+        const data = JSON.parse(localStorage.getItem("revisionPago"));
+        if (data && data.revision) {
+          const res = await PagosFun.infoPagoRechazado(data.revision.id_pago, navigate);
+          setInfoRevision(res[0]);
+          localStorage.removeItem("revisionPago");
+        }
+      } catch (error) {
+        console.log(error);  // Puedes también mostrar algún estado de error si quieres
       }
     };
     valores();
