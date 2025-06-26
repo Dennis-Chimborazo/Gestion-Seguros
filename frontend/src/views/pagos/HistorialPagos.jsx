@@ -16,7 +16,6 @@ export function HistorialPagos({ id, mostrarSeccion }) {
         const traterClientes = async () => {
             try {
                 const dataReviPagos = await PagosFun.pagoAprobadosCliente(id, navigate);
-                console.log(dataReviPagos);
                 setFiltroReviPagos(dataReviPagos);
                 setReviPagos(dataReviPagos);
             } catch (error) {

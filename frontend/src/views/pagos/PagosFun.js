@@ -18,6 +18,21 @@ static async enviarPago(formulario, navigate) {
     const response = await ApiService.getAll("pago/pago-revision-pendientes", navigate);
     return response;
   }
+
+   static async aceptarRevisionPago(formulario, navigate) {
+    const response = await ApiService.post("pago/save-revision-aprovado", formulario, navigate);
+    return response;
+  }
+
+  static async rechazarRevisionPago(formulario, navigate) {
+    const response = await ApiService.post("pago/save-revision-rechasada", formulario, navigate);
+    return response;
+  }
+
+  static async infoPagoRechazado(id, navigate) {
+    const response = await ApiService.get("pago/buscar-pago-rechazado", id, navigate);
+    return response;
+  }
 }
 
 export default PagosFun;

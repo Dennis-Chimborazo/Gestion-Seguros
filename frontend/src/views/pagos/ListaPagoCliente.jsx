@@ -21,7 +21,6 @@ export function ListaPagoCliente({ id, mostrarSeccion }) {
         const traterClientes = async () => {
             try {
                 const dataReviPagos = await PagosFun.pagoRevisionCliente(id, navigate);
-                console.log(dataReviPagos);
                 setFiltroReviPagos(dataReviPagos);
                 setReviPagos(dataReviPagos);
             } catch (error) {
@@ -97,7 +96,7 @@ export function ListaPagoCliente({ id, mostrarSeccion }) {
     ];
 
     const mostrarModalRechazado = (row) => {
-        localStorage.setItem("revisionReembolso", JSON.stringify({
+        localStorage.setItem("revisionPago", JSON.stringify({
             edit: true,
             revision: row
         }));
