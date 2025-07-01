@@ -1,7 +1,10 @@
 import axios from "axios";
 import swal from "sweetalert";
 
-const apiUrl = "https://gestion-seguros-backend.onrender.com/";
+const apiUrl = window.location.hostname === "localhost"
+  ? "http://localhost:4000/"
+  : "https://gestion-seguros-backend.onrender.com/";
+
 
 class ApiService {
 
