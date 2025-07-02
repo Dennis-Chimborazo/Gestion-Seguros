@@ -1,4 +1,7 @@
 import pkg from 'pg';
+import dotenv from 'dotenv';
+dotenv.config();
+
 const { Client } = pkg;
 
 class DataBase {
@@ -7,12 +10,13 @@ class DataBase {
     if (DataBase.instancia) {
       return DataBase.instancia;
     }
+
     this.client = new Client({
-      user: 'gestorseguros_user',
-      host: 'dpg-d1dsn3umcj7s73bf4dkg-a.oregon-postgres.render.com',
-      database: 'gestorseguros',
-      password: 'a5bTM4ZbC49Fc9K5ulaSGvNwCFlj7vKF',
-      port: 5432,
+      user: process.env.DB_USER,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD,
+      port: process.env.DB_PORT,
       ssl: {
         rejectUnauthorized: false
       }
@@ -21,6 +25,7 @@ class DataBase {
     this.#connect();
     DataBase.instancia = this;
   }
+
   async #connect() {
     try {
       await this.client.connect();
@@ -35,7 +40,3 @@ class DataBase {
   }
 }
 export { DataBase };
-
-
-
-

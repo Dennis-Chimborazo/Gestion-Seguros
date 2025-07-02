@@ -1,0 +1,14 @@
+FROM node:20
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+# Copia el archivo .env al contenedor
+COPY .env .env
+
+EXPOSE 3000
+CMD ["node", "index.js"]
