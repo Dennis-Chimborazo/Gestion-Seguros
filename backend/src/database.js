@@ -1,8 +1,7 @@
-import pkg from 'pg';
-import dotenv from 'dotenv';
-dotenv.config();
+// database.js
+require('dotenv').config(); // ✅ forma CommonJS
 
-const { Client } = pkg;
+const { Client } = require('pg');
 
 class DataBase {
   static instancia;
@@ -10,7 +9,6 @@ class DataBase {
     if (DataBase.instancia) {
       return DataBase.instancia;
     }
-
     this.client = new Client({
       user: process.env.DB_USER,
       host: process.env.DB_HOST,
@@ -39,4 +37,5 @@ class DataBase {
     return this.client;
   }
 }
-export { DataBase };
+
+module.exports = { DataBase };
