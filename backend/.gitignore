@@ -1,4 +1,4 @@
-.env
+
 /node_modules
 #conexcion base de datos
 database.js
