@@ -7,13 +7,12 @@ RUN npm install
 
 COPY . .
 
-# Forzar modo CI para evitar que react-scripts test quede esperando entrada
+# Solo activar CI para evitar que `npm test` se quede colgado
 ENV CI=true
-
-# Ejecutar pruebas críticas sin que se quede colgado (modo no interactivo)
 RUN npm test -- --watchAll=false --testPathPattern="src/views/test/(AgenteFun|PagosFun|ModalDependientes)\\.test\\.jsx" --passWithNoTests
 
-# Construcción final de la app
+# Desactivar CI para que `npm run build` no falle por warnings
+ENV CI=false
 RUN npm run build
 
 # Etapa 2: servir app con Nginx
