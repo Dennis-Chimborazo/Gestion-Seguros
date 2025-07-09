@@ -7,9 +7,13 @@ RUN npm install
 
 COPY . .
 
-# Ejecutar pruebas antes de hacer el build (sólo los tests críticos)
-RUN npm test -- --testPathPattern="src/views/test/(AgenteFun|PagosFun|ModalDependientes)\\.test\\.jsx" --passWithNoTests || true
+# Forzar modo CI para evitar que react-scripts test quede esperando entrada
+ENV CI=true
 
+# Ejecutar pruebas críticas sin que se quede colgado (modo no interactivo)
+RUN npm test -- --watchAll=false --testPathPattern="src/views/test/(AgenteFun|PagosFun|ModalDependientes)\\.test\\.jsx" --passWithNoTests
+
+# Construcción final de la app
 RUN npm run build
 
 # Etapa 2: servir app con Nginx
