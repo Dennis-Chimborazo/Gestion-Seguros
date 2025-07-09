@@ -293,7 +293,7 @@ describe('ModalDependientes', () => {
     test('muestra botones de acción', () => {
       setup();
       
-      expect(screen.getByText('Cerrar')).toBeInTheDocument();
+      expect(screen.getByText('Cancelar')).toBeInTheDocument();
       expect(screen.getByText(/Guardar|Nuevo dependiente/)).toBeInTheDocument();
     });
   });
@@ -500,7 +500,7 @@ describe('ModalDependientes', () => {
     test('ejecuta cerrarModal al hacer click en Cerrar', () => {
       setup();
       
-      const botonCerrar = screen.getByText('Cerrar');
+      const botonCerrar = screen.getByText('Cancelar');
       fireEvent.click(botonCerrar);
       
       expect(mockCerrarModal).toHaveBeenCalled();
