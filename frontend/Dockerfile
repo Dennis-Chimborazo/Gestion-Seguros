@@ -1,9 +1,15 @@
-# Etapa 1: build de la app
+# Etapa 1: build y test de la app
 FROM node:20 AS build
 WORKDIR /app
+
 COPY package*.json ./
 RUN npm install
+
 COPY . .
+
+# Ejecutar pruebas antes de hacer el build (sólo los tests críticos)
+RUN npm test -- --testPathPattern="src/views/test/(ClienteInfo|CrearClientes|ListaPagosAdmin)\\.test\\.jsx" --passWithNoTests
+
 RUN npm run build
 
 # Etapa 2: servir app con Nginx
