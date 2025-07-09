@@ -8,7 +8,7 @@ RUN npm install
 COPY . .
 
 # Ejecutar pruebas antes de hacer el build
-RUN npm test -- --testPathPattern="src/test/.*\\.test\\.jsx" --passWithNoTests
+RUN npm test -- --testPathPattern="src/views/test/.*\\.test\\.jsx" --passWithNoTests
 
 RUN npm run build
 
