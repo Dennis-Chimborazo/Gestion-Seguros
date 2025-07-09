@@ -1,4 +1,3 @@
-# Etapa 1: build y test de la app
 FROM node:20 AS build
 WORKDIR /app
 
@@ -6,7 +5,10 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-# Etapa 2: servir app con Nginx
+
+# Ejecutar el build para generar la carpeta build
+RUN npm run build
+
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 80
