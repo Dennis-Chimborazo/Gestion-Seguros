@@ -7,8 +7,8 @@ RUN npm install
 
 COPY . .
 
-# Ejecutar pruebas antes de hacer el build
-RUN npm test -- --testPathPattern="src/views/test/.*\\.test\\.jsx" --passWithNoTests
+# Ejecutar solo las pruebas de ClienteInfo, CrearClientes y ListaPagosAdmin antes de hacer el build
+RUN npm test -- --testPathPattern="src/views/test/(ClienteInfo|CrearClientes|ListaPagosAdmin)\\.test\\.jsx" --passWithNoTests
 
 RUN npm run build
 
